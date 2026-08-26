@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Canário">
+<meta name="robots" content="noindex, nofollow">
+<title>Canário do microfone — Pronunciation Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy-900:#080D17;
+  --navy-850:#0B1220;
+  --navy-800:#111A2B;
+  --navy-750:#16223A;
+  --navy-700:#1D2C48;
+
+  --ink:#ECEFF4;
+  --ink-dim:#94A1B8;
+  --ink-faint:#5C6B85;
+
+  --brass:#D6B073;
+  --brass-hi:#EFD3A0;
+  --brass-dim:#8A7346;
+
+  --amber:#CE9548;
+  --copper:#BE6E3B;
+  --rust:#A9482F;
+
+  --r-sm:10px; --r-md:14px; --r-lg:18px;
+  --ease:cubic-bezier(.2,.7,.2,1);
+  --t:200ms;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{
+  background:var(--navy-900);
+  color:var(--ink);
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-variant-numeric:tabular-nums;
+  -webkit-font-smoothing:antialiased;
+  padding:max(18px,env(safe-area-inset-top)) 16px calc(18px + env(safe-area-inset-bottom));
+  display:flex; justify-content:center;
+}
+.app{width:100%; max-width:440px; display:flex; flex-direction:column; gap:14px}
+:focus-visible{outline:2px solid var(--brass); outline-offset:3px; border-radius:6px}
+
+h1{font-size:13px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-faint); margin:0}
+.sub{font-size:13px; line-height:1.55; color:var(--ink-dim); margin:0}
+
+.card{background:var(--navy-850); border-radius:var(--r-lg); padding:16px; box-shadow:0 1px 0 rgba(255,255,255,.03) inset, 0 8px 24px rgba(0,0,0,.35)}
+.card h2{font-size:10.5px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-faint); margin:0 0 12px}
+
+.kv{display:flex; justify-content:space-between; gap:12px; font-size:13px; padding:6px 0; border-bottom:1px solid var(--navy-800)}
+.kv:last-child{border-bottom:none}
+.kv .k{color:var(--ink-faint)}
+.kv .v{color:var(--ink); text-align:right; word-break:break-word}
+.v.ok{color:var(--brass)} .v.warn{color:var(--amber)} .v.bad{color:var(--rust)}
+
+.cycle{display:flex; gap:8px; margin-bottom:14px}
+.seg{flex:1; height:4px; border-radius:99px; background:var(--navy-700); transition:background var(--t) var(--ease)}
+.seg.pass{background:var(--brass)} .seg.fail{background:var(--copper)} .seg.now{background:var(--ink-dim)}
+
+button{font:inherit; cursor:pointer; border:none; border-radius:var(--r-md); transition:background var(--t) var(--ease), color var(--t) var(--ease)}
+.btn{width:100%; padding:13px 16px; font-size:15px; background:var(--navy-750); color:var(--ink); text-align:center}
+.btn:hover{background:var(--navy-700)}
+.btn.primary{background:var(--brass); color:#1A1206; font-weight:600; padding:18px 16px; font-size:17px}
+.btn.primary:hover{background:var(--brass-hi)}
+.btn.primary[disabled]{background:var(--navy-700); color:var(--ink-faint); cursor:default}
+.row{display:flex; gap:8px}
+
+.meter{height:8px; border-radius:99px; background:var(--navy-800); overflow:hidden; margin:14px 0 8px}
+.meter i{display:block; height:100%; width:0%; background:var(--brass); border-radius:99px}
+.timer{font-size:28px; font-weight:600; text-align:center; letter-spacing:.02em}
+.timer small{font-size:12px; font-weight:400; color:var(--ink-faint); display:block; letter-spacing:.14em; text-transform:uppercase; margin-top:4px}
+
+.verdict{border-left:3px solid var(--navy-700); padding:10px 0 10px 12px; margin-top:12px; font-size:13.5px; line-height:1.5}
+.verdict.pass{border-color:var(--brass)}
+.verdict.fail{border-color:var(--rust)}
+.verdict b{display:block; font-size:11px; letter-spacing:.14em; text-transform:uppercase; margin-bottom:4px; color:var(--ink-faint)}
+
+ol.steps{margin:0; padding-left:18px; font-size:13.5px; line-height:1.65; color:var(--ink-dim)}
+ol.steps b{color:var(--ink); font-weight:600}
+
+textarea{width:100%; height:150px; background:var(--navy-900); color:var(--ink-dim); border:1px solid var(--navy-700);
+  border-radius:var(--r-sm); padding:10px; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:11.5px; line-height:1.5; resize:vertical}
+
+audio{width:100%; margin-top:12px}
+.foot{text-align:center; font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:#2E3B52; padding:8px 0 4px}
+@media (prefers-reduced-motion:reduce){*{transition:none !important; animation:none !important}}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div>
+    <h1>Canário do microfone</h1>
+    <p class="sub">Passo 1 da Fatia 1. Este teste decide se o PWA no iOS aguenta gravar mais de uma vez. Nada mais é construído antes de ele passar três ciclos.</p>
+  </div>
+
+  <div class="card">
+    <h2>Ambiente</h2>
+    <div id="env"></div>
+  </div>
+
+  <div class="card">
+    <h2>Ciclo <span id="cyclenum">1</span> de 3</h2>
+    <div class="cycle" id="cycle"><i class="seg now"></i><i class="seg"></i><i class="seg"></i></div>
+
+    <button class="btn" id="tone">Tocar tom de 1 s (testa a saída)</button>
+
+    <div class="meter"><i id="level"></i></div>
+    <div class="timer" id="timer">0,0<small>segundos gravados</small></div>
+
+    <button class="btn primary" id="rec" style="margin-top:14px">Gravar 3 segundos</button>
+
+    <div id="playback"></div>
+    <div id="verdict"></div>
+  </div>
+
+  <div class="card">
+    <h2>Como rodar</h2>
+    <ol class="steps">
+      <li>Abra pelo Safari, toque em compartilhar e <b>Adicionar à Tela de Início</b>. Feche o Safari.</li>
+      <li>Abra pelo ícone. Toque em gravar. Confira se o playback tem som.</li>
+      <li><b>Feche o app de verdade</b> — deslize para cima e remova do multitarefa. Não basta minimizar.</li>
+      <li>Reabra pelo ícone e grave de novo. Repita até o ciclo 3.</li>
+      <li>Repita o ciclo 1 com AirPods conectados, só para ver o que a leitura de dispositivo devolve.</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>Relatório desta sessão</h2>
+    <p class="sub" style="margin:-4px 0 12px">O log zera quando o app fecha. Copie antes de fechar, ou anote só o veredito de cada ciclo.</p>
+    <textarea id="log" readonly></textarea>
+    <button class="btn" id="copy" style="margin-top:8px">Copiar relatório</button>
+  </div>
+
+  <div class="foot">Twenty Nine Cyber</div>
+</div>
+
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+  const DUR = 3000;
+  let cycle = 1, lines = [], lastStream = null, audioCtx = null;
+
+  /* ── ambiente ─────────────────────────────────────────────── */
+  const standalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+  function kv(k, v, cls){ return '<div class="kv"><span class="k">'+k+'</span><span class="v '+(cls||'')+'">'+v+'</span></div>'; }
+
+  const env = [
+    kv('Modo', standalone ? 'Instalado (standalone)' : 'Aba do Safari', standalone ? 'ok' : 'warn'),
+    kv('Contexto seguro', window.isSecureContext ? 'HTTPS' : 'Inseguro — getUserMedia não roda', window.isSecureContext ? 'ok' : 'bad'),
+    kv('getUserMedia', navigator.mediaDevices && navigator.mediaDevices.getUserMedia ? 'Disponível' : 'Ausente', navigator.mediaDevices ? 'ok' : 'bad'),
+    kv('MediaRecorder', typeof MediaRecorder !== 'undefined' ? 'Disponível' : 'Ausente', typeof MediaRecorder !== 'undefined' ? 'ok' : 'bad'),
+    kv('Sistema', navigator.userAgent.replace(/^Mozilla\/5\.0 \(/, '').split(')')[0])
+  ].join('');
+  $('env').innerHTML = env;
+  log('--- app aberto | ' + (standalone ? 'standalone' : 'safari') + ' | ' + new Date().toLocaleTimeString('pt-BR'));
+
+  function log(s){ lines.push(s); $('log').value = lines.join('\n'); }
+
+  /* ── tom de saída (roda antes do microfone, de propósito) ── */
+  $('tone').addEventListener('click', async () => {
+    try{
+      audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+      await audioCtx.resume();
+      const osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
+      osc.frequency.value = 440; gain.gain.value = .0001;
+      osc.connect(gain).connect(audioCtx.destination);
+      const t = audioCtx.currentTime;
+      gain.gain.exponentialRampToValueAtTime(.25, t + .05);
+      gain.gain.exponentialRampToValueAtTime(.0001, t + 1);
+      osc.start(t); osc.stop(t + 1.05);
+      log('tom tocado | contexto ' + audioCtx.state + ' | saída ' + audioCtx.sampleRate + ' Hz');
+    }catch(e){ log('tom FALHOU: ' + e.name + ' — ' + e.message); }
+  });
+
+  /* ── gravação ─────────────────────────────────────────────── */
+  document.addEventListener('keydown', e => { if(e.code === 'Space' && !e.repeat){ e.preventDefault(); $('rec').click(); } });
+  $('rec').addEventListener('click', run);
+
+  async function run(){
+    const btn = $('rec');
+    btn.disabled = true; btn.textContent = 'Pedindo permissão…';
+    $('verdict').innerHTML = ''; $('playback').innerHTML = '';
+    const t0 = performance.now();
+
+    let stream;
+    try{
+      stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation:false, noiseSuppression:false, autoGainControl:false } });
+    }catch(e){
+      return fail('getUserMedia recusou: ' + e.name + ' — ' + e.message);
+    }
+    lastStream = stream;
+
+    const track = stream.getAudioTracks()[0];
+    const st = track.getSettings ? track.getSettings() : {};
+    let label = track.label || '(sem rótulo)';
+    const bt = /bluetooth|airpod|headset|hands-?free/i.test(label);
+    const rate = st.sampleRate || (audioCtx && audioCtx.sampleRate) || 0;
+
+    log('ciclo ' + cycle + ' | permissão em ' + Math.round(performance.now() - t0) + ' ms | entrada: ' + label +
+        ' | sampleRate ' + (rate || '?') + ' | canais ' + (st.channelCount || '?') + (bt ? ' | BLUETOOTH DETECTADO' : ''));
+
+    /* medidor de nível */
+    let meterCtx, analyser, raf, peak = 0;
+    try{
+      meterCtx = new (window.AudioContext || window.webkitAudioContext)();
+      await meterCtx.resume();
+      analyser = meterCtx.createAnalyser(); analyser.fftSize = 1024;
+      meterCtx.createMediaStreamSource(stream).connect(analyser);
+      const buf = new Uint8Array(analyser.fftSize);
+      const tick = () => {
+        analyser.getByteTimeDomainData(buf);
+        let max = 0;
+        for(let i=0;i<buf.length;i++){ const d = Math.abs(buf[i] - 128) / 128; if(d > max) max = d; }
+        if(max > peak) peak = max;
+        $('level').style.width = Math.min(100, max * 140) + '%';
+        raf = requestAnimationFrame(tick);
+      };
+      tick();
+    }catch(e){ log('medidor indisponível: ' + e.name); }
+
+    /* MediaRecorder */
+    let mr, chunks = [];
+    const mime = ['audio/mp4','audio/webm;codecs=opus','audio/webm'].find(m => window.MediaRecorder && MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(m)) || '';
+    try{
+      mr = mime ? new MediaRecorder(stream, { mimeType: mime }) : new MediaRecorder(stream);
+    }catch(e){
+      cleanup(); return fail('MediaRecorder não pôde iniciar: ' + e.name + ' — ' + e.message);
+    }
+    mr.ondataavailable = ev => { if(ev.data && ev.data.size) chunks.push(ev.data); };
+
+    mr.onstop = () => {
+      cleanup();
+      const blob = new Blob(chunks, { type: mime || 'audio/mp4' });
+      log('ciclo ' + cycle + ' | formato ' + (mime || 'default') + ' | ' + blob.size + ' bytes | pico ' + Math.round(peak * 100) + '%');
+
+      if(blob.size < 1000) return fail('Gravou, mas o arquivo veio vazio (' + blob.size + ' bytes). É o sintoma do bug de standalone no iOS.');
+      if(peak < 0.02)      return fail('Arquivo gerado, mas sem sinal audível (pico ' + Math.round(peak*100) + '%). Microfone mudo ou capturado por outro app.');
+
+      const a = document.createElement('audio'); a.controls = true; a.src = URL.createObjectURL(blob);
+      $('playback').appendChild(a);
+      pass('Gravou ' + blob.size + ' bytes, pico de ' + Math.round(peak*100) + '%, entrada "' + label + '"' +
+           (bt ? '. Atenção: entrada bluetooth — o score da Azure não seria confiável assim.' : '. Escute o playback antes de dar o ciclo por bom.'));
+    };
+
+    function cleanup(){
+      if(raf) cancelAnimationFrame(raf);
+      $('level').style.width = '0%';
+      if(meterCtx) meterCtx.close().catch(()=>{});
+      stream.getTracks().forEach(t => t.stop());
+      lastStream = null;
+    }
+
+    try{ mr.start(); }
+    catch(e){ cleanup(); return fail('start() falhou: ' + e.name + ' — ' + e.message); }
+
+    btn.textContent = 'Gravando…';
+    const started = performance.now();
+    const tick = setInterval(() => {
+      const s = (performance.now() - started) / 1000;
+      $('timer').innerHTML = s.toFixed(1).replace('.', ',') + '<small>segundos gravados</small>';
+    }, 60);
+
+    setTimeout(() => {
+      clearInterval(tick);
+      $('timer').innerHTML = '3,0<small>segundos gravados</small>';
+      if(mr.state !== 'inactive') mr.stop();
+    }, DUR);
+  }
+
+  /* ── veredito ─────────────────────────────────────────────── */
+  function pass(msg){ verdict(true, msg); }
+  function fail(msg){
+    if(lastStream){ lastStream.getTracks().forEach(t => t.stop()); lastStream = null; }
+    verdict(false, msg);
+  }
+  function verdict(ok, msg){
+    $('verdict').innerHTML = '<div class="verdict ' + (ok ? 'pass' : 'fail') + '"><b>' +
+      (ok ? 'Ciclo ' + cycle + ' passou' : 'Ciclo ' + cycle + ' falhou') + '</b>' + msg + '</div>';
+    log('ciclo ' + cycle + ' => ' + (ok ? 'PASSOU' : 'FALHOU') + ' — ' + msg);
+
+    const segs = $('cycle').children;
+    if(segs[cycle-1]) segs[cycle-1].className = 'seg ' + (ok ? 'pass' : 'fail');
+
+    const btn = $('rec');
+    if(cycle < 3){
+      cycle++;
+      $('cyclenum').textContent = cycle;
+      if(segs[cycle-1]) segs[cycle-1].className = 'seg now';
+      btn.disabled = false;
+      btn.textContent = 'Gravar 3 segundos';
+    }else{
+      btn.textContent = 'Três ciclos registrados';
+    }
+  }
+
+  /* ── relatório ────────────────────────────────────────────── */
+  $('copy').addEventListener('click', async () => {
+    const el = $('log');
+    try{ await navigator.clipboard.writeText(el.value); $('copy').textContent = 'Copiado'; }
+    catch(e){ el.removeAttribute('readonly'); el.select(); el.setSelectionRange(0, 99999); $('copy').textContent = 'Selecionado — toque em copiar'; }
+    setTimeout(() => { $('copy').textContent = 'Copiar relatório'; }, 2500);
+  });
+})();
+</script>
+</body>
+</html>

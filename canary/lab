@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Lab">
+<meta name="robots" content="noindex, nofollow">
+<title>Fatia 2 — Pronunciation Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy-900:#080D17; --navy-850:#0B1220; --navy-800:#111A2B;
+  --navy-750:#16223A; --navy-700:#1D2C48;
+  --ink:#ECEFF4; --ink-dim:#94A1B8; --ink-faint:#5C6B85;
+  --brass:#D6B073; --brass-hi:#EFD3A0;
+  --amber:#CE9548; --copper:#BE6E3B; --rust:#A9482F;
+  --r-sm:10px; --r-md:14px; --r-lg:18px;
+  --ease:cubic-bezier(.2,.7,.2,1); --t:200ms;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{
+  background:var(--navy-900); color:var(--ink);
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-variant-numeric:tabular-nums; -webkit-font-smoothing:antialiased;
+  padding:max(18px,env(safe-area-inset-top)) 16px calc(18px + env(safe-area-inset-bottom));
+  display:flex; justify-content:center;
+}
+.app{width:100%; max-width:440px; display:flex; flex-direction:column; gap:14px}
+:focus-visible{outline:2px solid var(--brass); outline-offset:3px; border-radius:6px}
+h1{font-size:13px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-faint); margin:0}
+.sub{font-size:13px; line-height:1.55; color:var(--ink-dim); margin:0}
+.card{background:var(--navy-850); border-radius:var(--r-lg); padding:16px; box-shadow:0 1px 0 rgba(255,255,255,.03) inset, 0 8px 24px rgba(0,0,0,.35)}
+.card h2{font-size:10.5px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-faint); margin:0 0 12px}
+.kv{display:flex; justify-content:space-between; gap:12px; font-size:13px; padding:6px 0; border-bottom:1px solid var(--navy-800)}
+.kv:last-child{border-bottom:none}
+.kv .k{color:var(--ink-faint)}
+.kv .v{color:var(--ink); text-align:right; word-break:break-word}
+.v.ok{color:var(--brass)} .v.warn{color:var(--amber)} .v.bad{color:var(--rust)}
+button{font:inherit; cursor:pointer; border:none; border-radius:var(--r-md); transition:background var(--t) var(--ease)}
+.btn{width:100%; padding:13px 16px; font-size:15px; background:var(--navy-750); color:var(--ink); text-align:center; margin-top:8px}
+.btn:hover{background:var(--navy-700)}
+.btn.primary{background:var(--brass); color:#1A1206; font-weight:600; padding:18px 16px; font-size:17px}
+.btn.primary:hover{background:var(--brass-hi)}
+.btn[disabled]{background:var(--navy-700); color:var(--ink-faint); cursor:default}
+.phrase{background:var(--navy-900); border-radius:var(--r-sm); padding:14px; font-size:18px; line-height:1.5; border:1px solid var(--navy-700)}
+.targets{display:flex; gap:6px; flex-wrap:wrap; margin-top:10px}
+.chip{background:var(--navy-800); color:var(--brass); border-radius:99px; padding:4px 11px; font-size:14px}
+.progress{font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:10px}
+.meter{height:8px; border-radius:99px; background:var(--navy-800); overflow:hidden; margin:14px 0 4px}
+.meter i{display:block; height:100%; width:0%; background:var(--brass); border-radius:99px}
+.scores{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px}
+.score{background:var(--navy-800); border-radius:var(--r-sm); padding:12px}
+.score b{display:block; font-size:24px; font-weight:600; color:var(--brass); line-height:1.1}
+.score span{display:block; font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-faint); margin-top:4px}
+.verdict{border-left:3px solid var(--navy-700); padding:10px 0 10px 12px; margin-top:12px; font-size:13.5px; line-height:1.5}
+.verdict.pass{border-color:var(--brass)} .verdict.fail{border-color:var(--rust)}
+.verdict b{display:block; font-size:11px; letter-spacing:.14em; text-transform:uppercase; margin-bottom:4px; color:var(--ink-faint)}
+.plist{display:flex; flex-direction:column; gap:2px}
+.prow{display:flex; align-items:center; gap:10px; padding:9px 8px; border-radius:var(--r-sm); cursor:pointer; background:transparent; width:100%; text-align:left; color:var(--ink)}
+.prow:hover{background:var(--navy-800)}
+.prow.sel{background:var(--navy-800)}
+.prow .sym{font-size:17px; width:38px; color:var(--brass)}
+.prow .bar{flex:1; height:6px; border-radius:99px; background:var(--navy-800); overflow:hidden}
+.prow .bar i{display:block; height:100%; border-radius:99px; background:var(--brass)}
+.prow .num{font-size:13px; width:34px; text-align:right; color:var(--ink-dim)}
+.prow .n{font-size:11px; width:44px; text-align:right; color:var(--ink-faint)}
+.st-weak .bar i{background:var(--rust)} .st-improving .bar i{background:var(--amber)}
+svg.curve{width:100%; height:130px; display:block; margin-top:12px}
+textarea{width:100%; height:120px; background:var(--navy-900); color:var(--ink-dim); border:1px solid var(--navy-700);
+  border-radius:var(--r-sm); padding:10px; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:11px; line-height:1.45; resize:vertical}
+.foot{text-align:center; font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:#2E3B52; padding:8px 0 4px}
+@media (prefers-reduced-motion:reduce){*{transition:none !important}}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/microsoft-cognitiveservices-speech-sdk@1/distrib/browser/microsoft.cognitiveservices.speech.sdk.bundle-min.js"></script>
+</head>
+<body>
+<div class="app">
+
+  <div>
+    <h1>Fatia 2 — persistência</h1>
+    <p class="sub">Grava a tentativa no Firestore, acumula estatística por fonema e desenha a curva. Sem fila e sem heatmap ainda.</p>
+  </div>
+
+  <div class="card">
+    <h2>Sessão</h2>
+    <div id="session"></div>
+    <button class="btn primary" id="login">Entrar com Google</button>
+  </div>
+
+  <div class="card" id="drillcard" style="display:none">
+    <h2>Item</h2>
+    <div class="progress" id="progress"></div>
+    <div class="phrase" id="phrase"></div>
+    <div class="targets" id="targets"></div>
+    <div class="meter"><i id="level"></i></div>
+    <button class="btn primary" id="rec">Gravar</button>
+    <div id="verdict"></div>
+    <div id="scores"></div>
+    <button class="btn" id="next" style="display:none">Próximo item</button>
+  </div>
+
+  <div class="card">
+    <h2>Curva por fonema</h2>
+    <div id="stats"><p class="sub" style="margin:0">Nada gravado ainda.</p></div>
+    <div id="curvebox"></div>
+    <button class="btn" id="reload">Recarregar</button>
+  </div>
+
+  <div class="card">
+    <h2>Teste das rules</h2>
+    <p class="sub" style="margin:0 0 4px">Tenta ler seus dados sem autenticação. Tem que falhar.</p>
+    <button class="btn" id="pentest">Tentar acesso não autenticado</button>
+    <div id="pentestout"></div>
+  </div>
+
+  <div class="card">
+    <h2>Log</h2>
+    <textarea id="log" readonly></textarea>
+  </div>
+
+  <div class="foot">Twenty Nine Cyber</div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+import {
+  getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect,
+  getRedirectResult, onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
+import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-functions.js";
+import {
+  getFirestore, doc, collection, addDoc, setDoc, updateDoc, getDoc, getDocs,
+  serverTimestamp, runTransaction, query, orderBy
+} from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAUi8gBzhogTS1qpAOk8nmwTGsP42URFnk",
+  authDomain: "pronunciation-lab-29cyber.firebaseapp.com",
+  projectId: "pronunciation-lab-29cyber",
+  storageBucket: "pronunciation-lab-29cyber.firebasestorage.app",
+  messagingSenderId: "228197203836",
+  appId: "1:228197203836:web:20397be05d1ed32aec2ef9"
+};
+
+/* Itens desenhados sobre o resultado real do teste de ontem:
+   ð átono, l em coda, v e z finais, θ em cluster. */
+const ITEMS = [
+  { id:"i01", text:"They said that the other brother bothered them rather than the mother.", targets:["ð"] },
+  { id:"i02", text:"The cool girl felt the small ball still fell well.",                    targets:["l"] },
+  { id:"i03", text:"She loves the gloves and believes the leaves have moved.",             targets:["v","z"] },
+  { id:"i04", text:"The three thrifty athletes threw the thick thread.",                   targets:["θ","ɹ"] },
+  { id:"i05", text:"This thing is worth more than those three things.",                    targets:["θ","ð"] },
+  { id:"i06", text:"Every visitor believed the vivid village was very beautiful.",         targets:["v"] }
+];
+
+const PASS_ACCURACY = 85;
+const PASS_PHONEME  = 80;
+
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+const issueSpeechToken = httpsCallable(getFunctions(app, "us-central1"), "issueSpeechToken");
+
+const $ = id => document.getElementById(id);
+const lines = [];
+function log(s){ lines.push(new Date().toLocaleTimeString("pt-BR") + "  " + s); $("log").value = lines.join("\n"); $("log").scrollTop = 1e6; }
+function kv(k,v,c){ return `<div class="kv"><span class="k">${k}</span><span class="v ${c||""}">${v}</span></div>`; }
+
+let uid = null, sessionId = null, idx = 0, attemptNumber = 1;
+let itemsAttempted = 0, itemsPassed = 0;
+
+/* ── auth ─────────────────────────────────────────────────── */
+getRedirectResult(auth).catch(e => log("redirect: " + e.code));
+
+$("login").addEventListener("click", async () => {
+  const p = new GoogleAuthProvider();
+  try{ await signInWithPopup(auth, p); }
+  catch(e){ log("popup falhou: " + e.code); try{ await signInWithRedirect(auth, p); }catch(e2){ log("redirect falhou: " + e2.code); } }
+});
+
+onAuthStateChanged(auth, async user => {
+  if(!user){
+    uid = null;
+    $("session").innerHTML = kv("Conta","não autenticado","warn");
+    $("login").style.display = "block";
+    $("drillcard").style.display = "none";
+    return;
+  }
+  uid = user.uid;
+  $("login").style.display = "none";
+  $("session").innerHTML = kv("Conta", user.email, "ok");
+  log("autenticado como " + user.email);
+  await startSession();
+  renderItem();
+  await loadStats();
+});
+
+async function startSession(){
+  const ref = await addDoc(collection(db, `users/${uid}/sessions`), {
+    startedAt: serverTimestamp(), endedAt: null, mode: "lesson",
+    itemsAttempted: 0, itemsPassed: 0, avgAccuracy: 0, avgProsody: 0, warmupFlag: "ok"
+  });
+  sessionId = ref.id;
+  $("session").innerHTML += kv("Sessão", sessionId.slice(0,8) + "…");
+  log("sessão criada: " + sessionId);
+}
+
+/* ── item corrente ────────────────────────────────────────── */
+function renderItem(){
+  const it = ITEMS[idx];
+  $("drillcard").style.display = "block";
+  $("progress").textContent = `Item ${idx+1} de ${ITEMS.length} · tentativa ${attemptNumber}`;
+  $("phrase").textContent = it.text;
+  $("targets").innerHTML = it.targets.map(p => `<span class="chip">${p}</span>`).join("");
+  $("verdict").innerHTML = ""; $("scores").innerHTML = "";
+  $("next").style.display = "none";
+  $("rec").disabled = false; $("rec").textContent = "Gravar";
+}
+
+$("next").addEventListener("click", () => {
+  idx = (idx + 1) % ITEMS.length;
+  attemptNumber = 1;
+  renderItem();
+});
+
+/* ── medidor ──────────────────────────────────────────────── */
+async function startMeter(){
+  try{
+    const stream = await navigator.mediaDevices.getUserMedia({ audio:true });
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    await ctx.resume();
+    const an = ctx.createAnalyser(); an.fftSize = 1024;
+    ctx.createMediaStreamSource(stream).connect(an);
+    const label = (stream.getAudioTracks()[0] || {}).label || "";
+    const buf = new Uint8Array(an.fftSize);
+    let peak = 0, raf;
+    (function tick(){
+      an.getByteTimeDomainData(buf);
+      let max = 0;
+      for(let i=0;i<buf.length;i++){ const d = Math.abs(buf[i]-128)/128; if(d>max) max=d; }
+      if(max>peak) peak = max;
+      $("level").style.width = Math.min(100, max*140) + "%";
+      raf = requestAnimationFrame(tick);
+    })();
+    return { label, stop(){ cancelAnimationFrame(raf); $("level").style.width="0%";
+      stream.getTracks().forEach(t=>t.stop()); ctx.close().catch(()=>{}); return peak; } };
+  }catch(e){ log("medidor não iniciou: " + e.name); return { label:"", stop(){ return -1; } }; }
+}
+
+/* ── gravar e avaliar ─────────────────────────────────────── */
+$("rec").addEventListener("click", async () => {
+  const it = ITEMS[idx];
+  $("rec").disabled = true; $("rec").textContent = "Pedindo token…";
+  $("verdict").innerHTML = ""; $("scores").innerHTML = "";
+
+  let token, region;
+  try{
+    const r = await issueSpeechToken();
+    token = r.data.token; region = r.data.region;
+  }catch(e){
+    $("rec").disabled = false; $("rec").textContent = "Gravar";
+    log("token falhou: " + e.code);
+    return verdict(false, "Não consegui token: " + e.code);
+  }
+
+  const S = window.SpeechSDK;
+  const sc = S.SpeechConfig.fromAuthorizationToken(token, region);
+  sc.speechRecognitionLanguage = "en-US";
+
+  const pa = new S.PronunciationAssessmentConfig(
+    it.text, S.PronunciationAssessmentGradingSystem.HundredMark,
+    S.PronunciationAssessmentGranularity.Phoneme, true
+  );
+  pa.phonemeAlphabet = "IPA";
+  pa.enableProsodyAssessment = true;
+
+  const rec = new S.SpeechRecognizer(sc, S.AudioConfig.fromDefaultMicrophoneInput());
+  pa.applyTo(rec);
+
+  const meter = await startMeter();
+  if(/bluetooth|airpod|headset|hands-?free/i.test(meter.label)){
+    log("ATENÇÃO: entrada parece bluetooth (" + meter.label + ") — score não é confiável");
+  }
+  $("rec").textContent = "Gravando… fale agora";
+
+  rec.recognizeOnceAsync(async result => {
+    const peak = meter.stop();
+    $("rec").disabled = false; $("rec").textContent = "Gravar";
+
+    if(result.reason === S.ResultReason.Canceled){
+      const d = S.CancellationDetails.fromResult(result);
+      log("cancelado: " + d.errorDetails); rec.close();
+      return verdict(false, "Cancelado pela Azure: " + d.errorDetails);
+    }
+    if(result.reason === S.ResultReason.NoMatch){
+      rec.close();
+      return verdict(false, "A Azure não reconheceu fala. Pico do microfone: " + Math.round(peak*100) + "%.");
+    }
+
+    const raw = result.properties.getProperty(S.PropertyId.SpeechServiceResponse_JsonResult);
+    rec.close();
+    const parsed = JSON.parse(raw);
+    const best = parsed.NBest[0];
+    const s = best.PronunciationAssessment;
+
+    /* Redução antes de gravar: fora offsets e durations, que respondem
+       pela maior parte do volume e nenhuma tela usa. */
+    const words = (best.Words || []).map(w => ({
+      word: w.Word,
+      accuracy: w.PronunciationAssessment ? w.PronunciationAssessment.AccuracyScore : 0,
+      errorType: w.PronunciationAssessment ? w.PronunciationAssessment.ErrorType : "None",
+      syllables: (w.Syllables || []).map(y => ({ syllable: y.Syllable, accuracy: y.PronunciationAssessment.AccuracyScore })),
+      phonemes: (w.Phonemes || []).map(p => ({ phoneme: p.Phoneme, accuracy: p.PronunciationAssessment.AccuracyScore }))
+    }));
+
+    /* §6: passa se accuracy da frase ≥ 85 E toda ocorrência
+       do fonema-alvo ≥ 80. */
+    const offenders = [];
+    for(const w of words)
+      for(const ph of w.phonemes)
+        if(it.targets.includes(ph.phoneme) && ph.accuracy < PASS_PHONEME)
+          offenders.push(`${ph.phoneme} em "${w.word}" (${Math.round(ph.accuracy)})`);
+
+    const passed = s.AccuracyScore >= PASS_ACCURACY && offenders.length === 0;
+
+    $("scores").innerHTML = `<div class="scores">
+      <div class="score"><b>${Math.round(s.PronScore)}</b><span>Geral</span></div>
+      <div class="score"><b>${Math.round(s.AccuracyScore)}</b><span>Accuracy</span></div>
+      <div class="score"><b>${Math.round(s.FluencyScore)}</b><span>Fluency</span></div>
+      <div class="score"><b>${Math.round(s.ProsodyScore ?? 0)}</b><span>Prosódia</span></div>
+    </div>`;
+
+    verdict(passed,
+      passed ? "Item aprovado. Accuracy " + Math.round(s.AccuracyScore) + " e nenhum alvo abaixo de " + PASS_PHONEME + "."
+             : (s.AccuracyScore < PASS_ACCURACY ? "Accuracy " + Math.round(s.AccuracyScore) + ", abaixo de " + PASS_ACCURACY + ". " : "") +
+               (offenders.length ? "Alvos fracos: " + offenders.join(", ") + "." : ""));
+
+    $("next").style.display = "block";
+
+    /* ── grava ─────────────────────────────────────────── */
+    try{
+      await addDoc(collection(db, `users/${uid}/attempts`), {
+        sessionId, itemId: it.id, referenceText: it.text,
+        attemptNumber,
+        audioDurationMs: Math.round((result.duration || 0) / 10000),
+        scores: {
+          accuracy: s.AccuracyScore, fluency: s.FluencyScore,
+          completeness: s.CompletenessScore, prosody: s.ProsodyScore ?? 0,
+          pronunciation: s.PronScore
+        },
+        words, targetPhonemes: it.targets, passed,
+        createdAt: serverTimestamp()
+      });
+      log("attempt gravado | item " + it.id + " | passed=" + passed);
+
+      itemsAttempted++; if(passed) itemsPassed++;
+      await updateDoc(doc(db, `users/${uid}/sessions/${sessionId}`), {
+        mode: "lesson", itemsAttempted, itemsPassed
+      });
+
+      await updatePhonemeStats(words);
+      await loadStats();
+    }catch(e){
+      log("FALHA ao gravar: " + (e.code || e.message));
+      verdict(false, "O score saiu, mas a gravação no Firestore falhou: " + (e.code || e.message));
+    }
+
+    attemptNumber++;
+    $("progress").textContent = `Item ${idx+1} de ${ITEMS.length} · tentativa ${attemptNumber}`;
+  },
+  err => { meter.stop(); $("rec").disabled=false; $("rec").textContent="Gravar"; rec.close();
+           log("erro do recognizer: " + err); verdict(false, String(err)); });
+});
+
+function verdict(ok, msg){
+  $("verdict").innerHTML = `<div class="verdict ${ok?"pass":"fail"}"><b>${ok?"Aprovado":"Reprovado"}</b>${msg}</div>`;
+}
+
+/* ── phonemeStats, uma transação para todos os fonemas ────── */
+async function updatePhonemeStats(words){
+  const perPhoneme = new Map();   // fonema -> { scores:[], words:Set }
+  for(const w of words)
+    for(const ph of w.phonemes){
+      if(!perPhoneme.has(ph.phoneme)) perPhoneme.set(ph.phoneme, { scores:[], words:new Set() });
+      const e = perPhoneme.get(ph.phoneme);
+      e.scores.push(ph.accuracy);
+      if(w.accuracy < 70) e.words.add(w.word);
+    }
+
+  const entries = [...perPhoneme.entries()];
+  const refs = entries.map(([p]) => doc(db, `users/${uid}/phonemeStats/${encodeURIComponent(p)}`));
+
+  await runTransaction(db, async tx => {
+    const snaps = await Promise.all(refs.map(r => tx.get(r)));
+    entries.forEach(([phoneme, e], i) => {
+      const prev = snaps[i].exists() ? snaps[i].data() : { attempts:0, last20:[], worstWords:[] };
+      const mean = e.scores.reduce((a,b)=>a+b,0) / e.scores.length;
+      const last20 = [...(prev.last20 || []), Math.round(mean)].slice(-20);
+      const avg = last20.reduce((a,b)=>a+b,0) / last20.length;
+      const worst = [...new Set([...(prev.worstWords || []), ...e.words])].slice(0,10);
+      tx.set(refs[i], {
+        phoneme,
+        attempts: (prev.attempts || 0) + 1,
+        avgScore: Math.round(avg * 10) / 10,
+        last20, worstWords: worst,
+        status: avg >= 85 ? "mastered" : avg >= 70 ? "improving" : "weak",
+        lastSeenAt: serverTimestamp()
+      });
+    });
+  });
+  log("phonemeStats atualizado: " + entries.length + " fonemas");
+}
+
+/* ── curva ────────────────────────────────────────────────── */
+let stats = [];
+async function loadStats(){
+  if(!uid) return;
+  try{
+    const snap = await getDocs(collection(db, `users/${uid}/phonemeStats`));
+    stats = snap.docs.map(d => d.data()).sort((a,b) => a.avgScore - b.avgScore);
+    if(!stats.length){ $("stats").innerHTML = '<p class="sub" style="margin:0">Nada gravado ainda.</p>'; return; }
+    $("stats").innerHTML = '<div class="plist">' + stats.map((s,i) =>
+      `<button class="prow st-${s.status}" data-i="${i}">
+         <span class="sym">${s.phoneme}</span>
+         <span class="bar"><i style="width:${Math.max(2, s.avgScore)}%"></i></span>
+         <span class="num">${Math.round(s.avgScore)}</span>
+         <span class="n">${s.attempts}×</span>
+       </button>`).join("") + '</div>';
+    document.querySelectorAll(".prow").forEach(b =>
+      b.addEventListener("click", () => drawCurve(Number(b.dataset.i), b)));
+  }catch(e){ log("não consegui ler phonemeStats: " + (e.code || e.message)); }
+}
+
+function drawCurve(i, btn){
+  document.querySelectorAll(".prow").forEach(x => x.classList.remove("sel"));
+  btn.classList.add("sel");
+  const s = stats[i], pts = s.last20 || [];
+  if(pts.length < 2){
+    $("curvebox").innerHTML = `<p class="sub" style="margin-top:12px">Fonema ${s.phoneme}: ${pts.length} ponto. A curva aparece a partir do segundo.</p>`;
+    return;
+  }
+  const W = 400, H = 130, PAD = 8;
+  const x = j => PAD + j * (W - PAD*2) / (pts.length - 1);
+  const y = v => H - PAD - (v/100) * (H - PAD*2);
+  const line = pts.map((v,j) => `${j?"L":"M"}${x(j).toFixed(1)},${y(v).toFixed(1)}`).join(" ");
+  const dots = pts.map((v,j) => `<circle cx="${x(j).toFixed(1)}" cy="${y(v).toFixed(1)}" r="2.5" fill="var(--brass)"/>`).join("");
+  $("curvebox").innerHTML = `
+    <p class="sub" style="margin:12px 0 0">Fonema ${s.phoneme} · média ${Math.round(s.avgScore)} · ${s.attempts} tentativas
+    ${s.worstWords && s.worstWords.length ? "<br>Palavras problemáticas: " + s.worstWords.join(", ") : ""}</p>
+    <svg class="curve" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+      <line x1="${PAD}" y1="${y(80)}" x2="${W-PAD}" y2="${y(80)}" stroke="var(--navy-700)" stroke-dasharray="4 4"/>
+      <path d="${line}" fill="none" stroke="var(--brass)" stroke-width="2" stroke-linejoin="round"/>
+      ${dots}
+    </svg>`;
+}
+
+$("reload").addEventListener("click", loadStats);
+
+/* ── teste das rules ──────────────────────────────────────── */
+$("pentest").addEventListener("click", async () => {
+  if(!uid) return $("pentestout").innerHTML = '<div class="verdict fail"><b>Sem alvo</b>Faça login primeiro, para eu ter um uid para tentar ler.</div>';
+  const anonApp = initializeApp(firebaseConfig, "anon-" + Date.now());
+  const anonDb = getFirestore(anonApp);
+  try{
+    await getDocs(collection(anonDb, `users/${uid}/attempts`));
+    $("pentestout").innerHTML = '<div class="verdict fail"><b>Falhou</b>Um cliente sem autenticação conseguiu ler seus attempts. As rules não estão valendo.</div>';
+    log("PENTEST: leitura anônima PASSOU — rules furadas");
+  }catch(e){
+    const denied = (e.code || "").includes("permission-denied");
+    $("pentestout").innerHTML = `<div class="verdict ${denied?"pass":"fail"}"><b>${denied?"Negado":"Erro inesperado"}</b>${e.code || e.message}</div>`;
+    log("PENTEST: " + (e.code || e.message));
+  }
+});
+</script>
+</body>
+</html>

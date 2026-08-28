@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Sessão">
+<meta name="robots" content="noindex, nofollow">
+<title>Fatia 3 — Pronunciation Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy-900:#080D17; --navy-850:#0B1220; --navy-800:#111A2B;
+  --navy-750:#16223A; --navy-700:#1D2C48;
+  --ink:#ECEFF4; --ink-dim:#94A1B8; --ink-faint:#5C6B85;
+  --brass:#D6B073; --brass-hi:#EFD3A0;
+  --amber:#CE9548; --copper:#BE6E3B; --rust:#A9482F;
+  --r-sm:10px; --r-md:14px; --r-lg:18px;
+  --ease:cubic-bezier(.2,.7,.2,1); --t:200ms;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{
+  background:var(--navy-900); color:var(--ink);
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-variant-numeric:tabular-nums; -webkit-font-smoothing:antialiased;
+  padding:max(18px,env(safe-area-inset-top)) 16px calc(18px + env(safe-area-inset-bottom));
+  display:flex; justify-content:center;
+}
+.app{width:100%; max-width:440px; display:flex; flex-direction:column; gap:14px}
+:focus-visible{outline:2px solid var(--brass); outline-offset:3px; border-radius:6px}
+h1{font-size:13px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-faint); margin:0}
+.sub{font-size:13px; line-height:1.55; color:var(--ink-dim); margin:0}
+.card{background:var(--navy-850); border-radius:var(--r-lg); padding:16px; box-shadow:0 1px 0 rgba(255,255,255,.03) inset, 0 8px 24px rgba(0,0,0,.35)}
+.card h2{font-size:10.5px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-faint); margin:0 0 12px}
+.kv{display:flex; justify-content:space-between; gap:12px; font-size:13px; padding:6px 0; border-bottom:1px solid var(--navy-800)}
+.kv:last-child{border-bottom:none}
+.kv .k{color:var(--ink-faint)}
+.kv .v{color:var(--ink); text-align:right; word-break:break-word}
+.v.ok{color:var(--brass)} .v.warn{color:var(--amber)} .v.bad{color:var(--rust)}
+button{font:inherit; cursor:pointer; border:none; border-radius:var(--r-md); transition:background var(--t) var(--ease)}
+.btn{width:100%; padding:13px 16px; font-size:15px; background:var(--navy-750); color:var(--ink); text-align:center; margin-top:8px}
+.btn:hover{background:var(--navy-700)}
+.btn.primary{background:var(--brass); color:#1A1206; font-weight:600; padding:18px 16px; font-size:17px}
+.btn.primary:hover{background:var(--brass-hi)}
+.btn[disabled]{background:var(--navy-700); color:var(--ink-faint); cursor:default}
+.phrase{background:var(--navy-900); border-radius:var(--r-sm); padding:14px; font-size:18px; line-height:1.5; border:1px solid var(--navy-700)}
+.targets{display:flex; gap:6px; flex-wrap:wrap; margin-top:10px}
+.chip{background:var(--navy-800); color:var(--brass); border-radius:99px; padding:4px 11px; font-size:14px}
+.head{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px}
+.head .pos{font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-faint)}
+.dots{display:flex; gap:5px}
+.dots i{width:7px; height:7px; border-radius:99px; background:var(--navy-700); display:block}
+.dots i.used{background:var(--copper)} .dots i.now{background:var(--ink-dim)}
+.track{display:flex; gap:3px; margin-bottom:12px}
+.track i{flex:1; height:3px; border-radius:99px; background:var(--navy-700)}
+.track i.pass{background:var(--brass)} .track i.fail{background:var(--copper)} .track i.now{background:var(--ink-dim)}
+.meter{height:8px; border-radius:99px; background:var(--navy-800); overflow:hidden; margin:14px 0 4px}
+.meter i{display:block; height:100%; width:0%; background:var(--brass); border-radius:99px}
+.scores{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px}
+.score{background:var(--navy-800); border-radius:var(--r-sm); padding:12px}
+.score b{display:block; font-size:24px; font-weight:600; color:var(--brass); line-height:1.1}
+.score span{display:block; font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-faint); margin-top:4px}
+.verdict{border-left:3px solid var(--navy-700); padding:10px 0 10px 12px; margin-top:12px; font-size:13.5px; line-height:1.5}
+.verdict.pass{border-color:var(--brass)} .verdict.fail{border-color:var(--rust)}
+.verdict b{display:block; font-size:11px; letter-spacing:.14em; text-transform:uppercase; margin-bottom:4px; color:var(--ink-faint)}
+.qrow{display:flex; align-items:center; gap:10px; font-size:13px; padding:7px 0; border-bottom:1px solid var(--navy-800)}
+.qrow:last-child{border-bottom:none}
+.qrow .t{flex:1; color:var(--ink-dim); overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.qrow .d{color:var(--ink-faint); font-size:12px}
+.qrow .due{color:var(--brass)}
+textarea{width:100%; height:120px; background:var(--navy-900); color:var(--ink-dim); border:1px solid var(--navy-700);
+  border-radius:var(--r-sm); padding:10px; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:11px; line-height:1.45; resize:vertical}
+.foot{text-align:center; font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:#2E3B52; padding:8px 0 4px}
+@media (prefers-reduced-motion:reduce){*{transition:none !important}}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/microsoft-cognitiveservices-speech-sdk@1/distrib/browser/microsoft.cognitiveservices.speech.sdk.bundle-min.js"></script>
+</head>
+<body>
+<div class="app">
+
+  <div>
+    <h1>Fatia 3 — fila e cobrança</h1>
+    <p class="sub">A sessão é montada pelo que está vencido. Aprovou, sobe na escada; reprovou três vezes, volta para amanhã.</p>
+  </div>
+
+  <div class="card">
+    <h2>Sessão</h2>
+    <div id="session"></div>
+    <button class="btn primary" id="login">Entrar com Google</button>
+    <button class="btn primary" id="start" style="display:none">Começar sessão</button>
+    <button class="btn" id="seed" style="display:none">Semear a fila (uma vez só)</button>
+  </div>
+
+  <div class="card" id="drillcard" style="display:none">
+    <h2>Item</h2>
+    <div class="track" id="track"></div>
+    <div class="head">
+      <span class="pos" id="pos"></span>
+      <span class="dots" id="dots"></span>
+    </div>
+    <div class="phrase" id="phrase"></div>
+    <div class="targets" id="targets"></div>
+    <div class="meter"><i id="level"></i></div>
+    <button class="btn primary" id="rec">Gravar</button>
+    <div id="verdict"></div>
+    <div id="scores"></div>
+    <button class="btn" id="next" style="display:none">Continuar</button>
+  </div>
+
+  <div class="card" id="summary" style="display:none">
+    <h2>Fim da sessão</h2>
+    <div id="summaryout"></div>
+  </div>
+
+  <div class="card">
+    <h2>Fila</h2>
+    <div id="queue"><p class="sub" style="margin:0">Faça login para ver.</p></div>
+    <button class="btn" id="reloadq">Recarregar fila</button>
+  </div>
+
+  <div class="card">
+    <h2>Log</h2>
+    <textarea id="log" readonly></textarea>
+  </div>
+
+  <div class="foot">Twenty Nine Cyber</div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+import {
+  getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect,
+  getRedirectResult, onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
+import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-functions.js";
+import {
+  getFirestore, doc, collection, addDoc, setDoc, updateDoc, getDocs,
+  serverTimestamp, runTransaction, Timestamp
+} from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAUi8gBzhogTS1qpAOk8nmwTGsP42URFnk",
+  authDomain: "pronunciation-lab-29cyber.firebaseapp.com",
+  projectId: "pronunciation-lab-29cyber",
+  storageBucket: "pronunciation-lab-29cyber.firebasestorage.app",
+  messagingSenderId: "228197203836",
+  appId: "1:228197203836:web:20397be05d1ed32aec2ef9"
+};
+
+const SEED = [
+  { id:"i01", text:"They said that the other brother bothered them rather than the mother.", targets:["ð"] },
+  { id:"i02", text:"The cool girl felt the small ball still fell well.",                    targets:["l"] },
+  { id:"i03", text:"She loves the gloves and believes the leaves have moved.",             targets:["v","z"] },
+  { id:"i04", text:"The three thrifty athletes threw the thick thread.",                   targets:["θ","ɹ"] },
+  { id:"i05", text:"This thing is worth more than those three things.",                    targets:["θ","ð"] },
+  { id:"i06", text:"Every visitor believed the vivid village was very beautiful.",         targets:["v"] }
+];
+
+const PASS_ACCURACY = 85;
+const PASS_PHONEME  = 80;
+const MAX_ATTEMPTS  = 3;
+const SESSION_SIZE  = 10;
+const LADDER        = [1, 3, 7, 21];
+
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+const issueSpeechToken = httpsCallable(getFunctions(app, "us-central1"), "issueSpeechToken");
+
+const $ = id => document.getElementById(id);
+const lines = [];
+function log(s){ lines.push(new Date().toLocaleTimeString("pt-BR") + "  " + s); $("log").value = lines.join("\n"); $("log").scrollTop = 1e6; }
+function kv(k,v,c){ return `<div class="kv"><span class="k">${k}</span><span class="v ${c||""}">${v}</span></div>`; }
+function verdict(ok,msg){ $("verdict").innerHTML = `<div class="verdict ${ok?"pass":"fail"}"><b>${ok?"Aprovado":"Reprovado"}</b>${msg}</div>`; }
+
+let uid = null, sessionId = null;
+let plan = [], pos = 0, attemptNumber = 1;
+let results = [];              // 'pass' | 'fail' por item do plano
+let accSum = 0, prosSum = 0, attemptsCount = 0;
+
+/* ── auth ─────────────────────────────────────────────────── */
+getRedirectResult(auth).catch(e => log("redirect: " + e.code));
+$("login").addEventListener("click", async () => {
+  const p = new GoogleAuthProvider();
+  try{ await signInWithPopup(auth, p); }
+  catch(e){ log("popup falhou: " + e.code); try{ await signInWithRedirect(auth, p); }catch(e2){ log("redirect falhou: " + e2.code); } }
+});
+
+onAuthStateChanged(auth, async user => {
+  if(!user){
+    uid = null;
+    $("session").innerHTML = kv("Conta","não autenticado","warn");
+    $("login").style.display = "block"; $("start").style.display = "none"; $("seed").style.display = "none";
+    return;
+  }
+  uid = user.uid;
+  $("login").style.display = "none";
+  $("session").innerHTML = kv("Conta", user.email, "ok");
+  log("autenticado como " + user.email);
+  await loadQueue();
+});
+
+/* ── fila ─────────────────────────────────────────────────── */
+let queue = [];
+async function loadQueue(){
+  const snap = await getDocs(collection(db, `users/${uid}/drillQueue`));
+  queue = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  const now = Date.now();
+  const due = queue.filter(q => q.state !== "retired" && q.dueAt && q.dueAt.toMillis() <= now);
+
+  if(!queue.length){
+    $("queue").innerHTML = '<p class="sub" style="margin:0">Fila vazia. Semeie para começar.</p>';
+    $("seed").style.display = "block"; $("start").style.display = "none";
+    return;
+  }
+
+  $("seed").style.display = "none";
+  queue.sort((a,b) => (a.dueAt?.toMillis()||0) - (b.dueAt?.toMillis()||0));
+  $("queue").innerHTML = queue.map(q => {
+    const ms = q.dueAt ? q.dueAt.toMillis() - now : 0;
+    const label = ms <= 0 ? "vencido" : ms < 864e5 ? "em " + Math.round(ms/36e5) + " h" : "em " + Math.ceil(ms/864e5) + " d";
+    return `<div class="qrow">
+      <span class="t">${q.text}</span>
+      <span class="d">${q.intervalDays}d · ${q.timesPassed}/${q.timesShown}</span>
+      <span class="${ms<=0?"due":"d"}">${label}</span></div>`;
+  }).join("");
+
+  $("session").innerHTML = kv("Conta", auth.currentUser.email, "ok") + kv("Vencidos agora", due.length, due.length ? "ok" : "warn");
+  $("start").style.display = due.length ? "block" : "none";
+  if(!due.length){
+    const next = queue.find(q => q.state !== "retired");
+    if(next) log("nada vencido. próximo item em " + Math.ceil((next.dueAt.toMillis()-now)/36e5) + " h");
+  }
+}
+
+$("reloadq").addEventListener("click", loadQueue);
+
+$("seed").addEventListener("click", async () => {
+  $("seed").disabled = true;
+  const now = Timestamp.now();
+  for(const it of SEED){
+    await setDoc(doc(db, `users/${uid}/drillQueue/${it.id}`), {
+      text: it.text, targetPhonemes: it.targets, note: "",
+      source: "manual", state: "new", dueAt: now,
+      intervalDays: 1, timesShown: 0, timesPassed: 0, lastResult: null
+    });
+  }
+  log("fila semeada com " + SEED.length + " itens");
+  $("seed").disabled = false;
+  await loadQueue();
+});
+
+/* ── montagem da sessão ───────────────────────────────────── */
+$("start").addEventListener("click", async () => {
+  const now = Date.now();
+  const due = queue.filter(q => q.state !== "retired" && q.dueAt && q.dueAt.toMillis() <= now)
+                   .sort((a,b) => a.dueAt.toMillis() - b.dueAt.toMillis());
+  plan = due.slice(0, SESSION_SIZE);
+
+  /* Fila pequena: repete os vencidos até completar a sessão, em vez
+     de encerrar em três itens. Sai naturalmente quando a Fatia 4
+     gerar material novo. */
+  if(plan.length < SESSION_SIZE && due.length)
+    while(plan.length < SESSION_SIZE) plan.push(due[plan.length % due.length]);
+
+  const ref = await addDoc(collection(db, `users/${uid}/sessions`), {
+    startedAt: serverTimestamp(), endedAt: null, mode: "lesson",
+    itemsAttempted: 0, itemsPassed: 0, avgAccuracy: 0, avgProsody: 0, warmupFlag: "ok"
+  });
+  sessionId = ref.id;
+  pos = 0; attemptNumber = 1; results = []; accSum = 0; prosSum = 0; attemptsCount = 0;
+
+  log("sessão " + sessionId.slice(0,8) + " montada com " + plan.length + " itens");
+  $("start").style.display = "none";
+  $("summary").style.display = "none";
+  renderItem();
+});
+
+function renderItem(){
+  const it = plan[pos];
+  $("drillcard").style.display = "block";
+  $("track").innerHTML = plan.map((_,i) =>
+    `<i class="${results[i] ? results[i] : i===pos ? "now" : ""}"></i>`).join("");
+  $("pos").textContent = `Item ${pos+1} de ${plan.length}`;
+  $("dots").innerHTML = [1,2,3].map(n =>
+    `<i class="${n < attemptNumber ? "used" : n === attemptNumber ? "now" : ""}"></i>`).join("");
+  $("phrase").textContent = it.text;
+  $("targets").innerHTML = (it.targetPhonemes||[]).map(p => `<span class="chip">${p}</span>`).join("");
+  $("verdict").innerHTML = ""; $("scores").innerHTML = "";
+  $("next").style.display = "none";
+  $("rec").disabled = false; $("rec").textContent = "Gravar";
+}
+
+/* ── medidor ──────────────────────────────────────────────── */
+async function startMeter(){
+  try{
+    const stream = await navigator.mediaDevices.getUserMedia({ audio:true });
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    await ctx.resume();
+    const an = ctx.createAnalyser(); an.fftSize = 1024;
+    ctx.createMediaStreamSource(stream).connect(an);
+    const label = (stream.getAudioTracks()[0]||{}).label || "";
+    const buf = new Uint8Array(an.fftSize);
+    let peak = 0, raf;
+    (function tick(){
+      an.getByteTimeDomainData(buf);
+      let max = 0;
+      for(let i=0;i<buf.length;i++){ const d = Math.abs(buf[i]-128)/128; if(d>max) max=d; }
+      if(max>peak) peak = max;
+      $("level").style.width = Math.min(100, max*140) + "%";
+      raf = requestAnimationFrame(tick);
+    })();
+    return { label, stop(){ cancelAnimationFrame(raf); $("level").style.width="0%";
+      stream.getTracks().forEach(t=>t.stop()); ctx.close().catch(()=>{}); return peak; } };
+  }catch(e){ log("medidor não iniciou: " + e.name); return { label:"", stop(){ return -1; } }; }
+}
+
+/* ── gravar ───────────────────────────────────────────────── */
+$("rec").addEventListener("click", async () => {
+  const it = plan[pos];
+  $("rec").disabled = true; $("rec").textContent = "Pedindo token…";
+
+  let token, region;
+  try{ const r = await issueSpeechToken(); token = r.data.token; region = r.data.region; }
+  catch(e){ $("rec").disabled=false; $("rec").textContent="Gravar"; log("token falhou: "+e.code);
+            return verdict(false, "Não consegui token: " + e.code); }
+
+  const S = window.SpeechSDK;
+  const sc = S.SpeechConfig.fromAuthorizationToken(token, region);
+  sc.speechRecognitionLanguage = "en-US";
+  const pa = new S.PronunciationAssessmentConfig(
+    it.text, S.PronunciationAssessmentGradingSystem.HundredMark,
+    S.PronunciationAssessmentGranularity.Phoneme, true);
+  pa.phonemeAlphabet = "IPA";
+  pa.enableProsodyAssessment = true;
+  const rec = new S.SpeechRecognizer(sc, S.AudioConfig.fromDefaultMicrophoneInput());
+  pa.applyTo(rec);
+
+  const meter = await startMeter();
+  if(/bluetooth|airpod|headset|hands-?free/i.test(meter.label))
+    log("ATENÇÃO: entrada parece bluetooth (" + meter.label + ") — score não confiável");
+  $("rec").textContent = "Gravando… fale agora";
+
+  rec.recognizeOnceAsync(async result => {
+    const peak = meter.stop();
+    $("rec").disabled = false; $("rec").textContent = "Gravar";
+
+    if(result.reason === S.ResultReason.Canceled){
+      const d = S.CancellationDetails.fromResult(result); rec.close();
+      log("cancelado: " + d.errorDetails);
+      return verdict(false, "Cancelado pela Azure: " + d.errorDetails);
+    }
+    if(result.reason === S.ResultReason.NoMatch){
+      rec.close();
+      return verdict(false, "A Azure não reconheceu fala. Pico: " + Math.round(peak*100) + "%. Esta não conta como tentativa.");
+    }
+
+    const parsed = JSON.parse(result.properties.getProperty(S.PropertyId.SpeechServiceResponse_JsonResult));
+    rec.close();
+    const best = parsed.NBest[0], s = best.PronunciationAssessment;
+
+    const words = (best.Words||[]).map(w => ({
+      word: w.Word,
+      accuracy: w.PronunciationAssessment ? w.PronunciationAssessment.AccuracyScore : 0,
+      errorType: w.PronunciationAssessment ? w.PronunciationAssessment.ErrorType : "None",
+      syllables: (w.Syllables||[]).map(y => ({ syllable:y.Syllable, accuracy:y.PronunciationAssessment.AccuracyScore })),
+      phonemes: (w.Phonemes||[]).map(p => ({ phoneme:p.Phoneme, accuracy:p.PronunciationAssessment.AccuracyScore }))
+    }));
+
+    const targets = it.targetPhonemes || [];
+    const offenders = [];
+    for(const w of words) for(const ph of w.phonemes)
+      if(targets.includes(ph.phoneme) && ph.accuracy < PASS_PHONEME)
+        offenders.push(`${ph.phoneme} em "${w.word}" (${Math.round(ph.accuracy)})`);
+
+    const passed = s.AccuracyScore >= PASS_ACCURACY && offenders.length === 0;
+
+    $("scores").innerHTML = `<div class="scores">
+      <div class="score"><b>${Math.round(s.PronScore)}</b><span>Geral</span></div>
+      <div class="score"><b>${Math.round(s.AccuracyScore)}</b><span>Accuracy</span></div>
+      <div class="score"><b>${Math.round(s.FluencyScore)}</b><span>Fluency</span></div>
+      <div class="score"><b>${Math.round(s.ProsodyScore ?? 0)}</b><span>Prosódia</span></div></div>`;
+
+    accSum += s.AccuracyScore; prosSum += (s.ProsodyScore ?? 0); attemptsCount++;
+
+    try{
+      await addDoc(collection(db, `users/${uid}/attempts`), {
+        sessionId, itemId: it.id, referenceText: it.text, attemptNumber,
+        audioDurationMs: Math.round((result.duration||0)/10000),
+        scores: { accuracy:s.AccuracyScore, fluency:s.FluencyScore, completeness:s.CompletenessScore,
+                  prosody:s.ProsodyScore ?? 0, pronunciation:s.PronScore },
+        words, targetPhonemes: targets, passed, createdAt: serverTimestamp()
+      });
+      await updatePhonemeStats(words);
+      log("attempt " + attemptNumber + " do item " + it.id + " | passed=" + passed);
+    }catch(e){ log("FALHA ao gravar attempt: " + (e.code||e.message)); }
+
+    if(passed){
+      await finishItem(it, true);
+      verdict(true, "Accuracy " + Math.round(s.AccuracyScore) + ", nenhum alvo abaixo de " + PASS_PHONEME + ". Próxima cobrança em " + nextInterval(it) + " dias.");
+      $("next").style.display = "block"; $("rec").disabled = true;
+    }else if(attemptNumber >= MAX_ATTEMPTS){
+      await finishItem(it, false);
+      verdict(false, "Três tentativas sem passar. O item volta para amanhã e a sessão segue — travar aqui não ajudaria." +
+        (offenders.length ? "<br>Alvos fracos: " + offenders.join(", ") : ""));
+      $("next").style.display = "block"; $("rec").disabled = true;
+    }else{
+      attemptNumber++;
+      verdict(false,
+        (s.AccuracyScore < PASS_ACCURACY ? "Accuracy " + Math.round(s.AccuracyScore) + ", abaixo de " + PASS_ACCURACY + ". " : "") +
+        (offenders.length ? "Alvos fracos: " + offenders.join(", ") + ". " : "") +
+        "Tentativa " + attemptNumber + " de " + MAX_ATTEMPTS + ".");
+      $("dots").innerHTML = [1,2,3].map(n =>
+        `<i class="${n < attemptNumber ? "used" : n === attemptNumber ? "now" : ""}"></i>`).join("");
+    }
+  },
+  err => { meter.stop(); $("rec").disabled=false; $("rec").textContent="Gravar"; rec.close();
+           log("erro do recognizer: " + err); verdict(false, String(err)); });
+});
+
+function nextInterval(it){
+  const i = LADDER.indexOf(it.intervalDays);
+  return LADDER[Math.min(i + 1, LADDER.length - 1)];
+}
+
+/* ── escada do §6 ─────────────────────────────────────────── */
+async function finishItem(it, passed){
+  const days = passed ? nextInterval(it) : 1;
+  const due = Timestamp.fromMillis(Date.now() + days * 864e5);
+  const state = passed ? (days >= 21 ? "review" : "learning") : "hard";
+
+  try{
+    await updateDoc(doc(db, `users/${uid}/drillQueue/${it.id}`), {
+      text: it.text, state, dueAt: due, intervalDays: days,
+      timesShown: (it.timesShown||0) + 1,
+      timesPassed: (it.timesPassed||0) + (passed ? 1 : 0),
+      lastResult: passed ? "pass" : "fail"
+    });
+    it.intervalDays = days; it.timesShown = (it.timesShown||0)+1;
+    it.timesPassed = (it.timesPassed||0)+(passed?1:0); it.dueAt = due;
+    log("item " + it.id + " reagendado para " + days + " dia(s)");
+  }catch(e){ log("FALHA ao reagendar: " + (e.code||e.message)); }
+
+  results[pos] = passed ? "pass" : "fail";
+  try{
+    await updateDoc(doc(db, `users/${uid}/sessions/${sessionId}`), {
+      mode: "lesson",
+      itemsAttempted: results.filter(Boolean).length,
+      itemsPassed: results.filter(r => r === "pass").length
+    });
+  }catch(e){ log("FALHA ao atualizar sessão: " + (e.code||e.message)); }
+}
+
+/* ── avançar / fechar sessão ──────────────────────────────── */
+$("next").addEventListener("click", async () => {
+  pos++; attemptNumber = 1;
+  if(pos < plan.length) return renderItem();
+
+  $("drillcard").style.display = "none";
+  const passedCount = results.filter(r => r === "pass").length;
+  const avgAcc = attemptsCount ? accSum / attemptsCount : 0;
+  const avgPros = attemptsCount ? prosSum / attemptsCount : 0;
+
+  try{
+    await updateDoc(doc(db, `users/${uid}/sessions/${sessionId}`), {
+      mode: "lesson", endedAt: serverTimestamp(),
+      itemsAttempted: plan.length, itemsPassed: passedCount,
+      avgAccuracy: Math.round(avgAcc*10)/10, avgProsody: Math.round(avgPros*10)/10
+    });
+    log("sessão fechada | " + passedCount + "/" + plan.length + " aprovados");
+  }catch(e){ log("FALHA ao fechar sessão: " + (e.code||e.message)); }
+
+  $("summaryout").innerHTML =
+    kv("Itens", plan.length) +
+    kv("Aprovados", passedCount, passedCount === plan.length ? "ok" : "warn") +
+    kv("Gravações", attemptsCount) +
+    kv("Accuracy média", Math.round(avgAcc)) +
+    kv("Prosódia média", Math.round(avgPros));
+  $("summary").style.display = "block";
+  await loadQueue();
+});
+
+/* ── phonemeStats ─────────────────────────────────────────── */
+async function updatePhonemeStats(words){
+  const per = new Map();
+  for(const w of words) for(const ph of w.phonemes){
+    if(!per.has(ph.phoneme)) per.set(ph.phoneme, { scores:[], words:new Set() });
+    const e = per.get(ph.phoneme);
+    e.scores.push(ph.accuracy);
+    if(w.accuracy < 70) e.words.add(w.word);
+  }
+  const entries = [...per.entries()];
+  const refs = entries.map(([p]) => doc(db, `users/${uid}/phonemeStats/${encodeURIComponent(p)}`));
+  await runTransaction(db, async tx => {
+    const snaps = await Promise.all(refs.map(r => tx.get(r)));
+    entries.forEach(([phoneme, e], i) => {
+      const prev = snaps[i].exists() ? snaps[i].data() : { attempts:0, last20:[], worstWords:[] };
+      const mean = e.scores.reduce((a,b)=>a+b,0) / e.scores.length;
+      const last20 = [...(prev.last20||[]), Math.round(mean)].slice(-20);
+      const avg = last20.reduce((a,b)=>a+b,0) / last20.length;
+      tx.set(refs[i], {
+        phoneme, attempts: (prev.attempts||0) + 1,
+        avgScore: Math.round(avg*10)/10, last20,
+        worstWords: [...new Set([...(prev.worstWords||[]), ...e.words])].slice(0,10),
+        status: avg >= 85 ? "mastered" : avg >= 70 ? "improving" : "weak",
+        lastSeenAt: serverTimestamp()
+      });
+    });
+  });
+}
+</script>
+</body>
+</html>

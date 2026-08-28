@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Sessão">
+<meta name="robots" content="noindex, nofollow">
+<title>Sessão com modelo — Pronunciation Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy-900:#080D17; --navy-850:#0B1220; --navy-800:#111A2B;
+  --navy-750:#16223A; --navy-700:#1D2C48;
+  --ink:#ECEFF4; --ink-dim:#94A1B8; --ink-faint:#5C6B85;
+  --brass:#D6B073; --brass-hi:#EFD3A0;
+  --amber:#CE9548; --copper:#BE6E3B; --rust:#A9482F;
+  --r-sm:10px; --r-md:14px; --r-lg:18px;
+  --ease:cubic-bezier(.2,.7,.2,1); --t:200ms;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{
+  background:var(--navy-900); color:var(--ink);
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-variant-numeric:tabular-nums; -webkit-font-smoothing:antialiased;
+  padding:max(18px,env(safe-area-inset-top)) 16px calc(18px + env(safe-area-inset-bottom));
+  display:flex; justify-content:center;
+}
+.app{width:100%; max-width:440px; display:flex; flex-direction:column; gap:14px}
+:focus-visible{outline:2px solid var(--brass); outline-offset:3px; border-radius:6px}
+h1{font-size:13px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-faint); margin:0}
+.sub{font-size:13px; line-height:1.55; color:var(--ink-dim); margin:0}
+.card{background:var(--navy-850); border-radius:var(--r-lg); padding:16px; box-shadow:0 1px 0 rgba(255,255,255,.03) inset, 0 8px 24px rgba(0,0,0,.35)}
+.card h2{font-size:10.5px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-faint); margin:0 0 12px}
+.kv{display:flex; justify-content:space-between; gap:12px; font-size:13px; padding:6px 0; border-bottom:1px solid var(--navy-800)}
+.kv:last-child{border-bottom:none}
+.kv .k{color:var(--ink-faint)}
+.kv .v{color:var(--ink); text-align:right; word-break:break-word}
+.v.ok{color:var(--brass)} .v.warn{color:var(--amber)} .v.bad{color:var(--rust)}
+button{font:inherit; cursor:pointer; border:none; border-radius:var(--r-md); transition:background var(--t) var(--ease)}
+.btn{width:100%; padding:13px 16px; font-size:15px; background:var(--navy-750); color:var(--ink); text-align:center; margin-top:8px}
+.btn:hover{background:var(--navy-700)}
+.btn.primary{background:var(--brass); color:#1A1206; font-weight:600; padding:18px 16px; font-size:17px}
+.btn.primary:hover{background:var(--brass-hi)}
+.btn[disabled]{background:var(--navy-700); color:var(--ink-faint); cursor:default}
+.row2{display:grid; grid-template-columns:1fr 1fr; gap:8px}
+.row2 .btn{margin-top:0}
+.phrase{background:var(--navy-900); border-radius:var(--r-sm); padding:14px; font-size:18px; line-height:1.5; border:1px solid var(--navy-700)}
+.targets{display:flex; gap:6px; flex-wrap:wrap; margin-top:10px}
+.chip{background:var(--navy-800); color:var(--brass); border-radius:99px; padding:4px 11px; font-size:14px}
+.head{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px}
+.head .pos{font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-faint)}
+.dots{display:flex; gap:5px}
+.dots i{width:7px; height:7px; border-radius:99px; background:var(--navy-700); display:block}
+.dots i.used{background:var(--copper)} .dots i.now{background:var(--ink-dim)}
+.track{display:flex; gap:3px; margin-bottom:12px}
+.track i{flex:1; height:3px; border-radius:99px; background:var(--navy-700)}
+.track i.pass{background:var(--brass)} .track i.fail{background:var(--copper)} .track i.now{background:var(--ink-dim)}
+.meter{height:8px; border-radius:99px; background:var(--navy-800); overflow:hidden; margin:14px 0 4px}
+.meter i{display:block; height:100%; width:0%; background:var(--brass); border-radius:99px}
+.scores{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px}
+.score{background:var(--navy-800); border-radius:var(--r-sm); padding:12px}
+.score b{display:block; font-size:24px; font-weight:600; color:var(--brass); line-height:1.1}
+.score span{display:block; font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-faint); margin-top:4px}
+.verdict{border-left:3px solid var(--navy-700); padding:10px 0 10px 12px; margin-top:12px; font-size:13.5px; line-height:1.5}
+.verdict.pass{border-color:var(--brass)} .verdict.fail{border-color:var(--rust)}
+.verdict b{display:block; font-size:11px; letter-spacing:.14em; text-transform:uppercase; margin-bottom:4px; color:var(--ink-faint)}
+.note{background:var(--navy-800); border-radius:var(--r-sm); padding:12px; font-size:13.5px; line-height:1.6; color:var(--ink-dim); margin-top:12px}
+.note b{color:var(--brass); font-weight:600}
+.ab{margin-top:12px; padding:12px; background:var(--navy-800); border-radius:var(--r-sm)}
+.ab .lbl{font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:8px}
+.playing{background:var(--brass) !important; color:#1A1206 !important}
+.qrow{display:flex; align-items:center; gap:10px; font-size:13px; padding:7px 0; border-bottom:1px solid var(--navy-800)}
+.qrow:last-child{border-bottom:none}
+.qrow .t{flex:1; color:var(--ink-dim); overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.qrow .d{color:var(--ink-faint); font-size:12px}
+.qrow .due{color:var(--brass)}
+textarea{width:100%; height:120px; background:var(--navy-900); color:var(--ink-dim); border:1px solid var(--navy-700);
+  border-radius:var(--r-sm); padding:10px; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:11px; line-height:1.45; resize:vertical}
+.foot{text-align:center; font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:#2E3B52; padding:8px 0 4px}
+@media (prefers-reduced-motion:reduce){*{transition:none !important}}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/microsoft-cognitiveservices-speech-sdk@1/distrib/browser/microsoft.cognitiveservices.speech.sdk.bundle-min.js"></script>
+</head>
+<body>
+<div class="app">
+
+  <div>
+    <h1>Sessão com modelo</h1>
+    <p class="sub">Ouve o modelo, tenta, e compara sua gravação com a referência. O número vem depois da correção, não no lugar dela.</p>
+  </div>
+
+  <div class="card">
+    <h2>Sessão</h2>
+    <div id="session"></div>
+    <button class="btn primary" id="login">Entrar com Google</button>
+    <button class="btn primary" id="start" style="display:none">Começar sessão</button>
+    <button class="btn" id="seed" style="display:none">Semear a fila (uma vez só)</button>
+  </div>
+
+  <div class="card" id="drillcard" style="display:none">
+    <h2>Item</h2>
+    <div class="track" id="track"></div>
+    <div class="head">
+      <span class="pos" id="pos"></span>
+      <span class="dots" id="dots"></span>
+    </div>
+    <div class="phrase" id="phrase"></div>
+    <div class="targets" id="targets"></div>
+    <div id="notebox"></div>
+
+    <div class="row2" style="margin-top:12px">
+      <button class="btn" id="model">Ouvir modelo</button>
+      <button class="btn" id="modelslow">Devagar</button>
+    </div>
+
+    <div class="meter"><i id="level"></i></div>
+    <button class="btn primary" id="rec">Gravar</button>
+
+    <div id="verdict"></div>
+    <div id="abbox"></div>
+    <div id="scores"></div>
+    <button class="btn" id="next" style="display:none">Continuar</button>
+  </div>
+
+  <div class="card" id="summary" style="display:none">
+    <h2>Fim da sessão</h2>
+    <div id="summaryout"></div>
+  </div>
+
+  <div class="card">
+    <h2>Fila</h2>
+    <div id="queue"><p class="sub" style="margin:0">Faça login para ver.</p></div>
+    <button class="btn" id="reloadq">Recarregar fila</button>
+  </div>
+
+  <div class="card">
+    <h2>Log</h2>
+    <textarea id="log" readonly></textarea>
+  </div>
+
+  <div class="foot">Twenty Nine Cyber</div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+import {
+  getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect,
+  getRedirectResult, onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
+import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-functions.js";
+import {
+  getFirestore, doc, collection, addDoc, setDoc, updateDoc, getDocs,
+  serverTimestamp, runTransaction, Timestamp
+} from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAUi8gBzhogTS1qpAOk8nmwTGsP42URFnk",
+  authDomain: "pronunciation-lab-29cyber.firebaseapp.com",
+  projectId: "pronunciation-lab-29cyber",
+  storageBucket: "pronunciation-lab-29cyber.firebasestorage.app",
+  messagingSenderId: "228197203836",
+  appId: "1:228197203836:web:20397be05d1ed32aec2ef9"
+};
+
+/* Notas escritas à mão. Viram material gerado na Fatia 4. */
+const SEED = [
+  { id:"i01", text:"They said that the other brother bothered them rather than the mother.", targets:["ð"],
+    note:"<b>ð</b> é a ponta da língua tocando de leve a borda dos dentes de cima, <b>com voz</b> — a garganta vibra. O português não tem esse som, então ele vira /d/ por reflexo. Teste: ponha a mão na garganta; se não vibrar, saiu errado. Em palavra átona como <i>that</i> o som encurta, mas não some." },
+  { id:"i02", text:"The cool girl felt the small ball still fell well.", targets:["l"],
+    note:"O <b>L final</b> do inglês americano é escuro: a ponta da língua sobe até o céu da boca <b>e o fundo da língua também sobe</b>. No português brasileiro esse L virou /u/ — <i>Brasil</i> sai <i>Brasiu</i>. Se <i>ball</i> soar como <i>bou</i>, a ponta da língua não encostou." },
+  { id:"i03", text:"She loves the gloves and believes the leaves have moved.", targets:["v","z"],
+    note:"O problema aqui é <b>ensurdecimento no fim</b>: /v/ vira /f/ e /z/ vira /s/. O português não sustenta sonoridade em final de palavra, e o inglês sustenta. Segure a vibração até o fim de <i>loves</i> e <i>leaves</i> — deve durar um pouco mais do que parece natural." },
+  { id:"i04", text:"The three thrifty athletes threw the thick thread.", targets:["θ","ɹ"],
+    note:"<b>θɹ</b> é o cluster mais difícil da lista. Língua entre os dentes <b>sem voz</b> para o θ, e imediatamente o R americano, que não toca nada — a língua recua e as bordas encostam nos molares. O erro comum é meter uma vogal no meio: <i>ther-ee</i> em vez de <i>three</i>." },
+  { id:"i05", text:"This thing is worth more than those three things.", targets:["θ","ð"],
+    note:"Mesma posição de língua, diferença só de <b>voz</b>: <i>thing</i> é surdo (θ), <i>this</i> é sonoro (ð). A frase alterna os dois de propósito. Mão na garganta: <i>this</i> vibra, <i>thing</i> não." },
+  { id:"i06", text:"Every visitor believed the vivid village was very beautiful.", targets:["v"],
+    note:"O <b>v</b> é lábio-dental: dente de cima sobre o lábio de baixo, com ar passando e vibrando. Os lábios <b>não</b> se fecham — se fecharem, vira /b/. Em <i>vivid village</i> o som aparece três vezes seguidas, o que expõe o deslize." }
+];
+
+const PASS_ACCURACY = 85;
+const PASS_PHONEME  = 80;
+const MAX_ATTEMPTS  = 3;
+const SESSION_SIZE  = 10;
+const LADDER        = [1, 3, 7, 21];
+const VOICE         = "en-US-AriaNeural";
+const MAX_NOTES     = 2;   // §5: orçamento de correção
+
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+const issueSpeechToken = httpsCallable(getFunctions(app, "us-central1"), "issueSpeechToken");
+
+const $ = id => document.getElementById(id);
+const lines = [];
+function log(s){ lines.push(new Date().toLocaleTimeString("pt-BR") + "  " + s); $("log").value = lines.join("\n"); $("log").scrollTop = 1e6; }
+function kv(k,v,c){ return `<div class="kv"><span class="k">${k}</span><span class="v ${c||""}">${v}</span></div>`; }
+function verdict(ok,msg){ $("verdict").innerHTML = `<div class="verdict ${ok?"pass":"fail"}"><b>${ok?"Aprovado":"Reprovado"}</b>${msg}</div>`; }
+const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+
+let uid = null, sessionId = null;
+let plan = [], pos = 0, attemptNumber = 1;
+let results = [], accSum = 0, prosSum = 0, attemptsCount = 0;
+let lastUserAudio = null;   // Blob da última gravação do usuário
+
+/* ── token com cache: vale 9 min, serve para TTS e assessment ─ */
+let tokenCache = { token:null, region:null, exp:0 };
+async function getToken(){
+  if(tokenCache.token && Date.now() < tokenCache.exp) return tokenCache;
+  const r = await issueSpeechToken();
+  tokenCache = { token:r.data.token, region:r.data.region,
+                 exp: Date.now() + (r.data.expiresInSeconds - 30) * 1000 };
+  log("token novo | " + tokenCache.region);
+  return tokenCache;
+}
+
+/* ── TTS ──────────────────────────────────────────────────── */
+const ttsCache = new Map();
+async function synth(text, rate){
+  const key = text + "|" + (rate || "1");
+  if(ttsCache.has(key)) return ttsCache.get(key);
+
+  const { token, region } = await getToken();
+  const S = window.SpeechSDK;
+  const cfg = S.SpeechConfig.fromAuthorizationToken(token, region);
+  cfg.speechSynthesisVoiceName = VOICE;
+  cfg.speechSynthesisOutputFormat = S.SpeechSynthesisOutputFormat.Audio16Khz32KBitRateMonoMp3;
+
+  const ssml = `<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="en-US">
+    <voice name="${VOICE}"><prosody rate="${rate || "0%"}">${esc(text)}</prosody></voice></speak>`;
+
+  const blob = await new Promise((res, rej) => {
+    const syn = new S.SpeechSynthesizer(cfg, null);   // null = não toca sozinho
+    syn.speakSsmlAsync(ssml,
+      r => {
+        syn.close();
+        if(r.reason === S.ResultReason.SynthesizingAudioCompleted)
+          res(new Blob([r.audioData], { type:"audio/mpeg" }));
+        else rej(new Error("TTS falhou: " + r.errorDetails));
+      },
+      e => { syn.close(); rej(new Error(String(e))); });
+  });
+
+  ttsCache.set(key, blob);
+  return blob;
+}
+
+let currentAudio = null;
+function playBlob(blob){
+  return new Promise(res => {
+    if(currentAudio){ currentAudio.pause(); currentAudio = null; }
+    const a = new Audio(URL.createObjectURL(blob));
+    currentAudio = a;
+    a.onended = () => res();
+    a.onerror = () => res();
+    a.play().catch(() => res());
+  });
+}
+
+async function playModel(btn, rate){
+  const it = plan[pos];
+  btn.disabled = true; btn.classList.add("playing");
+  const old = btn.textContent; btn.textContent = "…";
+  try{ await playBlob(await synth(it.text, rate)); }
+  catch(e){ log("TTS falhou: " + e.message); }
+  btn.disabled = false; btn.classList.remove("playing"); btn.textContent = old;
+}
+
+$("model").addEventListener("click", e => playModel(e.currentTarget, "0%"));
+$("modelslow").addEventListener("click", e => playModel(e.currentTarget, "-35%"));
+
+/* ── auth ─────────────────────────────────────────────────── */
+getRedirectResult(auth).catch(e => log("redirect: " + e.code));
+$("login").addEventListener("click", async () => {
+  const p = new GoogleAuthProvider();
+  try{ await signInWithPopup(auth, p); }
+  catch(e){ log("popup falhou: " + e.code); try{ await signInWithRedirect(auth, p); }catch(e2){ log("redirect falhou: " + e2.code); } }
+});
+
+onAuthStateChanged(auth, async user => {
+  if(!user){
+    uid = null;
+    $("session").innerHTML = kv("Conta","não autenticado","warn");
+    $("login").style.display="block"; $("start").style.display="none"; $("seed").style.display="none";
+    return;
+  }
+  uid = user.uid;
+  $("login").style.display = "none";
+  $("session").innerHTML = kv("Conta", user.email, "ok");
+  log("autenticado como " + user.email);
+  await loadQueue();
+});
+
+/* ── fila ─────────────────────────────────────────────────── */
+let queue = [];
+async function loadQueue(){
+  const snap = await getDocs(collection(db, `users/${uid}/drillQueue`));
+  queue = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+  const now = Date.now();
+  const due = queue.filter(q => q.state !== "retired" && q.dueAt && q.dueAt.toMillis() <= now);
+
+  if(!queue.length){
+    $("queue").innerHTML = '<p class="sub" style="margin:0">Fila vazia. Semeie para começar.</p>';
+    $("seed").style.display="block"; $("start").style.display="none"; return;
+  }
+  $("seed").style.display = "none";
+  queue.sort((a,b) => (a.dueAt?.toMillis()||0) - (b.dueAt?.toMillis()||0));
+  $("queue").innerHTML = queue.map(q => {
+    const ms = q.dueAt ? q.dueAt.toMillis() - now : 0;
+    const label = ms <= 0 ? "vencido" : ms < 864e5 ? "em " + Math.round(ms/36e5) + " h" : "em " + Math.ceil(ms/864e5) + " d";
+    return `<div class="qrow"><span class="t">${q.text}</span>
+      <span class="d">${q.intervalDays}d · ${q.timesPassed}/${q.timesShown}</span>
+      <span class="${ms<=0?"due":"d"}">${label}</span></div>`;
+  }).join("");
+  $("session").innerHTML = kv("Conta", auth.currentUser.email, "ok") +
+                           kv("Vencidos agora", due.length, due.length ? "ok" : "warn");
+  $("start").style.display = due.length ? "block" : "none";
+}
+$("reloadq").addEventListener("click", loadQueue);
+
+$("seed").addEventListener("click", async () => {
+  $("seed").disabled = true;
+  const now = Timestamp.now();
+  for(const it of SEED)
+    await setDoc(doc(db, `users/${uid}/drillQueue/${it.id}`), {
+      text: it.text, targetPhonemes: it.targets, note: it.note,
+      source: "manual", state: "new", dueAt: now,
+      intervalDays: 1, timesShown: 0, timesPassed: 0, lastResult: null
+    });
+  log("fila semeada com " + SEED.length + " itens");
+  $("seed").disabled = false;
+  await loadQueue();
+});
+
+/* ── sessão ───────────────────────────────────────────────── */
+$("start").addEventListener("click", async () => {
+  const now = Date.now();
+  const due = queue.filter(q => q.state !== "retired" && q.dueAt && q.dueAt.toMillis() <= now)
+                   .sort((a,b) => a.dueAt.toMillis() - b.dueAt.toMillis());
+  plan = due.slice(0, SESSION_SIZE);
+  if(plan.length < SESSION_SIZE && due.length)
+    while(plan.length < SESSION_SIZE) plan.push(due[plan.length % due.length]);
+
+  const ref = await addDoc(collection(db, `users/${uid}/sessions`), {
+    startedAt: serverTimestamp(), endedAt:null, mode:"lesson",
+    itemsAttempted:0, itemsPassed:0, avgAccuracy:0, avgProsody:0, warmupFlag:"ok"
+  });
+  sessionId = ref.id;
+  pos = 0; attemptNumber = 1; results = []; accSum = 0; prosSum = 0; attemptsCount = 0;
+  log("sessão " + sessionId.slice(0,8) + " montada com " + plan.length + " itens");
+  $("start").style.display="none"; $("summary").style.display="none";
+  renderItem();
+});
+
+function renderItem(){
+  const it = plan[pos];
+  $("drillcard").style.display = "block";
+  $("track").innerHTML = plan.map((_,i) => `<i class="${results[i] || (i===pos ? "now" : "")}"></i>`).join("");
+  $("pos").textContent = `Item ${pos+1} de ${plan.length}`;
+  $("dots").innerHTML = [1,2,3].map(n => `<i class="${n<attemptNumber?"used":n===attemptNumber?"now":""}"></i>`).join("");
+  $("phrase").textContent = it.text;
+  $("targets").innerHTML = (it.targetPhonemes||[]).map(p => `<span class="chip">${p}</span>`).join("");
+  $("notebox").innerHTML = it.note ? `<div class="note">${it.note}</div>` : "";
+  $("verdict").innerHTML=""; $("scores").innerHTML=""; $("abbox").innerHTML="";
+  $("next").style.display="none";
+  $("rec").disabled=false; $("rec").textContent="Gravar";
+  lastUserAudio = null;
+}
+
+$("next").addEventListener("click", async () => {
+  pos++; attemptNumber = 1;
+  if(pos < plan.length) return renderItem();
+
+  $("drillcard").style.display = "none";
+  const passedCount = results.filter(r => r === "pass").length;
+  const avgAcc = attemptsCount ? accSum/attemptsCount : 0;
+  const avgPros = attemptsCount ? prosSum/attemptsCount : 0;
+  try{
+    await updateDoc(doc(db, `users/${uid}/sessions/${sessionId}`), {
+      mode:"lesson", endedAt: serverTimestamp(),
+      itemsAttempted: plan.length, itemsPassed: passedCount,
+      avgAccuracy: Math.round(avgAcc*10)/10, avgProsody: Math.round(avgPros*10)/10
+    });
+    log("sessão fechada | " + passedCount + "/" + plan.length + " aprovados");
+  }catch(e){ log("FALHA ao fechar sessão: " + (e.code||e.message)); }
+
+  $("summaryout").innerHTML = kv("Itens", plan.length) +
+    kv("Aprovados", passedCount, passedCount===plan.length?"ok":"warn") +
+    kv("Gravações", attemptsCount) + kv("Accuracy média", Math.round(avgAcc)) +
+    kv("Prosódia média", Math.round(avgPros));
+  $("summary").style.display = "block";
+  await loadQueue();
+});
+
+/* ── captura: um stream só, alimentando SDK e MediaRecorder ── */
+async function startCapture(){
+  const stream = await navigator.mediaDevices.getUserMedia({ audio:true });
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+  await ctx.resume();
+  const an = ctx.createAnalyser(); an.fftSize = 1024;
+  ctx.createMediaStreamSource(stream).connect(an);
+  const buf = new Uint8Array(an.fftSize);
+  let peak = 0, raf;
+  (function tick(){
+    an.getByteTimeDomainData(buf);
+    let max = 0;
+    for(let i=0;i<buf.length;i++){ const d = Math.abs(buf[i]-128)/128; if(d>max) max=d; }
+    if(max>peak) peak = max;
+    $("level").style.width = Math.min(100, max*140) + "%";
+    raf = requestAnimationFrame(tick);
+  })();
+
+  /* Cópia local da fala, para a comparação A/B. */
+  let mr = null, chunks = [];
+  try{
+    const mime = ["audio/mp4","audio/webm;codecs=opus","audio/webm"]
+      .find(m => window.MediaRecorder?.isTypeSupported?.(m));
+    mr = mime ? new MediaRecorder(stream, { mimeType:mime }) : new MediaRecorder(stream);
+    mr.ondataavailable = e => { if(e.data?.size) chunks.push(e.data); };
+    mr.start();
+  }catch(e){ log("cópia local indisponível: " + e.name); }
+
+  return {
+    stream,
+    label: (stream.getAudioTracks()[0]||{}).label || "",
+    stop(){
+      cancelAnimationFrame(raf); $("level").style.width = "0%";
+      if(mr && mr.state !== "inactive"){
+        mr.onstop = () => { if(chunks.length) lastUserAudio = new Blob(chunks, { type: mr.mimeType || "audio/mp4" }); };
+        mr.stop();
+      }
+      stream.getTracks().forEach(t => t.stop());
+      ctx.close().catch(()=>{});
+      return peak;
+    }
+  };
+}
+
+/* ── gravar e avaliar ─────────────────────────────────────── */
+$("rec").addEventListener("click", async () => {
+  const it = plan[pos];
+  $("rec").disabled = true; $("rec").textContent = "Pedindo token…";
+  $("abbox").innerHTML = "";
+
+  let token, region;
+  try{ ({ token, region } = await getToken()); }
+  catch(e){ $("rec").disabled=false; $("rec").textContent="Gravar"; log("token falhou: "+e.code);
+            return verdict(false, "Não consegui token: " + e.code); }
+
+  const S = window.SpeechSDK;
+  const sc = S.SpeechConfig.fromAuthorizationToken(token, region);
+  sc.speechRecognitionLanguage = "en-US";
+  const pa = new S.PronunciationAssessmentConfig(
+    it.text, S.PronunciationAssessmentGradingSystem.HundredMark,
+    S.PronunciationAssessmentGranularity.Phoneme, true);
+  pa.phonemeAlphabet = "IPA";
+  pa.enableProsodyAssessment = true;
+
+  let cap, audioConfig;
+  try{
+    cap = await startCapture();
+    audioConfig = S.AudioConfig.fromStreamInput(cap.stream);
+  }catch(e){
+    log("stream compartilhado falhou (" + e.message + ") — usando microfone direto, sem cópia local");
+    if(cap) cap.stop();
+    cap = { label:"", stop(){ return -1; } };
+    audioConfig = S.AudioConfig.fromDefaultMicrophoneInput();
+  }
+
+  if(/bluetooth|airpod|headset|hands-?free/i.test(cap.label))
+    log("ATENÇÃO: entrada parece bluetooth (" + cap.label + ") — score não confiável");
+
+  const rec = new S.SpeechRecognizer(sc, audioConfig);
+  pa.applyTo(rec);
+  $("rec").textContent = "Gravando… fale agora";
+
+  rec.recognizeOnceAsync(async result => {
+    const peak = cap.stop();
+    $("rec").disabled = false; $("rec").textContent = "Gravar";
+
+    if(result.reason === S.ResultReason.Canceled){
+      const d = S.CancellationDetails.fromResult(result); rec.close();
+      log("cancelado: " + d.errorDetails);
+      return verdict(false, "Cancelado pela Azure: " + d.errorDetails);
+    }
+    if(result.reason === S.ResultReason.NoMatch){
+      rec.close();
+      return verdict(false, "A Azure não reconheceu fala. Pico: " + Math.round(peak*100) + "%. Não conta como tentativa.");
+    }
+
+    const parsed = JSON.parse(result.properties.getProperty(S.PropertyId.SpeechServiceResponse_JsonResult));
+    rec.close();
+    const best = parsed.NBest[0], s = best.PronunciationAssessment;
+
+    const words = (best.Words||[]).map(w => ({
+      word: w.Word,
+      accuracy: w.PronunciationAssessment ? w.PronunciationAssessment.AccuracyScore : 0,
+      errorType: w.PronunciationAssessment ? w.PronunciationAssessment.ErrorType : "None",
+      syllables: (w.Syllables||[]).map(y => ({ syllable:y.Syllable, accuracy:y.PronunciationAssessment.AccuracyScore })),
+      phonemes: (w.Phonemes||[]).map(p => ({ phoneme:p.Phoneme, accuracy:p.PronunciationAssessment.AccuracyScore }))
+    }));
+
+    const targets = it.targetPhonemes || [];
+    const offenders = [];
+    for(const w of words) for(const ph of w.phonemes)
+      if(targets.includes(ph.phoneme) && ph.accuracy < PASS_PHONEME)
+        offenders.push({ ph:ph.phoneme, word:w.word, score:ph.accuracy });
+    offenders.sort((a,b) => a.score - b.score);
+
+    const passed = s.AccuracyScore >= PASS_ACCURACY && offenders.length === 0;
+    const shown = offenders.slice(0, MAX_NOTES);
+    if(offenders.length > MAX_NOTES)
+      log("outros alvos fracos (não mostrados): " + offenders.slice(MAX_NOTES).map(o => `${o.ph}/${o.word}=${Math.round(o.score)}`).join(", "));
+
+    $("scores").innerHTML = `<div class="scores">
+      <div class="score"><b>${Math.round(s.PronScore)}</b><span>Geral</span></div>
+      <div class="score"><b>${Math.round(s.AccuracyScore)}</b><span>Accuracy</span></div>
+      <div class="score"><b>${Math.round(s.FluencyScore)}</b><span>Fluency</span></div>
+      <div class="score"><b>${Math.round(s.ProsodyScore ?? 0)}</b><span>Prosódia</span></div></div>`;
+
+    accSum += s.AccuracyScore; prosSum += (s.ProsodyScore ?? 0); attemptsCount++;
+
+    try{
+      await addDoc(collection(db, `users/${uid}/attempts`), {
+        sessionId, itemId: it.id, referenceText: it.text, attemptNumber,
+        audioDurationMs: Math.round((result.duration||0)/10000),
+        scores: { accuracy:s.AccuracyScore, fluency:s.FluencyScore, completeness:s.CompletenessScore,
+                  prosody:s.ProsodyScore ?? 0, pronunciation:s.PronScore },
+        words, targetPhonemes: targets, passed, createdAt: serverTimestamp()
+      });
+      await updatePhonemeStats(words);
+      log("attempt " + attemptNumber + " do item " + it.id + " | passed=" + passed);
+    }catch(e){ log("FALHA ao gravar attempt: " + (e.code||e.message)); }
+
+    const worst = shown[0] ? shown[0].word : null;
+    renderAB(worst);
+
+    if(passed){
+      await finishItem(it, true);
+      verdict(true, "Accuracy " + Math.round(s.AccuracyScore) + ", nenhum alvo abaixo de " + PASS_PHONEME +
+                    ". Próxima cobrança em " + nextInterval(it) + " dias.");
+      $("next").style.display="block"; $("rec").disabled = true;
+    }else if(attemptNumber >= MAX_ATTEMPTS){
+      await finishItem(it, false);
+      verdict(false, "Três tentativas. O item volta amanhã e a sessão segue." +
+        (shown.length ? "<br>" + shown.map(o => `<b>${o.ph}</b> em "${o.word}" (${Math.round(o.score)})`).join("<br>") : ""));
+      $("next").style.display="block"; $("rec").disabled = true;
+      /* Reprovou: ouve o modelo antes de seguir. */
+      setTimeout(() => playModel($("model"), "0%"), 400);
+    }else{
+      attemptNumber++;
+      verdict(false,
+        (s.AccuracyScore < PASS_ACCURACY ? "Accuracy " + Math.round(s.AccuracyScore) + ", abaixo de " + PASS_ACCURACY + ".<br>" : "") +
+        (shown.length ? shown.map(o => `<b>${o.ph}</b> em "${o.word}" (${Math.round(o.score)})`).join("<br>") + "<br>" : "") +
+        "Ouça o modelo e tente de novo. Tentativa " + attemptNumber + " de " + MAX_ATTEMPTS + ".");
+      $("dots").innerHTML = [1,2,3].map(n => `<i class="${n<attemptNumber?"used":n===attemptNumber?"now":""}"></i>`).join("");
+      setTimeout(() => playModel($("model"), "0%"), 400);
+    }
+  },
+  err => { cap.stop(); $("rec").disabled=false; $("rec").textContent="Gravar"; rec.close();
+           log("erro do recognizer: " + err); verdict(false, String(err)); });
+});
+
+/* ── comparação A/B ───────────────────────────────────────── */
+function renderAB(worstWord){
+  const it = plan[pos];
+  $("abbox").innerHTML = `
+    <div class="ab">
+      <div class="lbl">Comparar</div>
+      <div class="row2">
+        <button class="btn" id="abplay">Você × modelo</button>
+        <button class="btn" id="abmine">Só você</button>
+      </div>
+      ${worstWord ? `<button class="btn" id="abword">Ouvir só «${worstWord}» devagar</button>` : ""}
+    </div>`;
+
+  $("abplay").addEventListener("click", async e => {
+    const b = e.currentTarget; b.disabled = true; b.classList.add("playing");
+    const old = b.textContent;
+    if(lastUserAudio){ b.textContent = "você…"; await playBlob(lastUserAudio); await new Promise(r=>setTimeout(r,350)); }
+    b.textContent = "modelo…";
+    try{ await playBlob(await synth(it.text, "0%")); }catch(err){ log("TTS falhou: " + err.message); }
+    b.disabled = false; b.classList.remove("playing"); b.textContent = old;
+  });
+
+  $("abmine").addEventListener("click", async e => {
+    if(!lastUserAudio) return log("sem cópia local desta gravação");
+    const b = e.currentTarget; b.disabled = true; b.classList.add("playing");
+    await playBlob(lastUserAudio);
+    b.disabled = false; b.classList.remove("playing");
+  });
+
+  if(worstWord) $("abword").addEventListener("click", async e => {
+    const b = e.currentTarget; b.disabled = true; b.classList.add("playing");
+    try{ await playBlob(await synth(worstWord, "-45%")); }catch(err){ log("TTS falhou: " + err.message); }
+    b.disabled = false; b.classList.remove("playing");
+  });
+}
+
+/* ── escada ───────────────────────────────────────────────── */
+function nextInterval(it){
+  const i = LADDER.indexOf(it.intervalDays);
+  return LADDER[Math.min(i+1, LADDER.length-1)];
+}
+
+async function finishItem(it, passed){
+  const days = passed ? nextInterval(it) : 1;
+  const due = Timestamp.fromMillis(Date.now() + days*864e5);
+  const state = passed ? (days >= 21 ? "review" : "learning") : "hard";
+  try{
+    await updateDoc(doc(db, `users/${uid}/drillQueue/${it.id}`), {
+      text: it.text, state, dueAt: due, intervalDays: days,
+      timesShown: (it.timesShown||0)+1,
+      timesPassed: (it.timesPassed||0)+(passed?1:0),
+      lastResult: passed ? "pass" : "fail"
+    });
+    it.intervalDays = days; it.timesShown = (it.timesShown||0)+1;
+    it.timesPassed = (it.timesPassed||0)+(passed?1:0); it.dueAt = due;
+    log("item " + it.id + " reagendado para " + days + " dia(s)");
+  }catch(e){ log("FALHA ao reagendar: " + (e.code||e.message)); }
+
+  results[pos] = passed ? "pass" : "fail";
+  try{
+    await updateDoc(doc(db, `users/${uid}/sessions/${sessionId}`), {
+      mode:"lesson",
+      itemsAttempted: results.filter(Boolean).length,
+      itemsPassed: results.filter(r => r === "pass").length
+    });
+  }catch(e){ log("FALHA ao atualizar sessão: " + (e.code||e.message)); }
+}
+
+/* ── phonemeStats ─────────────────────────────────────────── */
+async function updatePhonemeStats(words){
+  const per = new Map();
+  for(const w of words) for(const ph of w.phonemes){
+    if(!per.has(ph.phoneme)) per.set(ph.phoneme, { scores:[], words:new Set() });
+    const e = per.get(ph.phoneme);
+    e.scores.push(ph.accuracy);
+    if(w.accuracy < 70) e.words.add(w.word);
+  }
+  const entries = [...per.entries()];
+  const refs = entries.map(([p]) => doc(db, `users/${uid}/phonemeStats/${encodeURIComponent(p)}`));
+  await runTransaction(db, async tx => {
+    const snaps = await Promise.all(refs.map(r => tx.get(r)));
+    entries.forEach(([phoneme, e], i) => {
+      const prev = snaps[i].exists() ? snaps[i].data() : { attempts:0, last20:[], worstWords:[] };
+      const mean = e.scores.reduce((a,b)=>a+b,0)/e.scores.length;
+      const last20 = [...(prev.last20||[]), Math.round(mean)].slice(-20);
+      const avg = last20.reduce((a,b)=>a+b,0)/last20.length;
+      tx.set(refs[i], {
+        phoneme, attempts:(prev.attempts||0)+1,
+        avgScore: Math.round(avg*10)/10, last20,
+        worstWords: [...new Set([...(prev.worstWords||[]), ...e.words])].slice(0,10),
+        status: avg >= 85 ? "mastered" : avg >= 70 ? "improving" : "weak",
+        lastSeenAt: serverTimestamp()
+      });
+    });
+  });
+}
+</script>
+</body>
+</html>

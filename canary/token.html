@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Token">
+<meta name="robots" content="noindex, nofollow">
+<title>Teste de token — Pronunciation Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy-900:#080D17; --navy-850:#0B1220; --navy-800:#111A2B;
+  --navy-750:#16223A; --navy-700:#1D2C48;
+  --ink:#ECEFF4; --ink-dim:#94A1B8; --ink-faint:#5C6B85;
+  --brass:#D6B073; --brass-hi:#EFD3A0;
+  --amber:#CE9548; --rust:#A9482F;
+  --r-sm:10px; --r-md:14px; --r-lg:18px;
+  --ease:cubic-bezier(.2,.7,.2,1); --t:200ms;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{
+  background:var(--navy-900); color:var(--ink);
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-variant-numeric:tabular-nums; -webkit-font-smoothing:antialiased;
+  padding:max(18px,env(safe-area-inset-top)) 16px calc(18px + env(safe-area-inset-bottom));
+  display:flex; justify-content:center;
+}
+.app{width:100%; max-width:440px; display:flex; flex-direction:column; gap:14px}
+:focus-visible{outline:2px solid var(--brass); outline-offset:3px; border-radius:6px}
+h1{font-size:13px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-faint); margin:0}
+.sub{font-size:13px; line-height:1.55; color:var(--ink-dim); margin:0}
+.card{background:var(--navy-850); border-radius:var(--r-lg); padding:16px; box-shadow:0 1px 0 rgba(255,255,255,.03) inset, 0 8px 24px rgba(0,0,0,.35)}
+.card h2{font-size:10.5px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-faint); margin:0 0 12px}
+.kv{display:flex; justify-content:space-between; gap:12px; font-size:13px; padding:6px 0; border-bottom:1px solid var(--navy-800)}
+.kv:last-child{border-bottom:none}
+.kv .k{color:var(--ink-faint)}
+.kv .v{color:var(--ink); text-align:right; word-break:break-all}
+.v.ok{color:var(--brass)} .v.warn{color:var(--amber)} .v.bad{color:var(--rust)}
+button{font:inherit; cursor:pointer; border:none; border-radius:var(--r-md); transition:background var(--t) var(--ease)}
+.btn{width:100%; padding:13px 16px; font-size:15px; background:var(--navy-750); color:var(--ink); text-align:center; margin-top:8px}
+.btn:hover{background:var(--navy-700)}
+.btn.primary{background:var(--brass); color:#1A1206; font-weight:600; padding:17px 16px; font-size:16px}
+.btn.primary:hover{background:var(--brass-hi)}
+.btn[disabled]{background:var(--navy-700); color:var(--ink-faint); cursor:default}
+.verdict{border-left:3px solid var(--navy-700); padding:10px 0 10px 12px; margin-top:12px; font-size:13.5px; line-height:1.5}
+.verdict.pass{border-color:var(--brass)} .verdict.fail{border-color:var(--rust)}
+.verdict b{display:block; font-size:11px; letter-spacing:.14em; text-transform:uppercase; margin-bottom:4px; color:var(--ink-faint)}
+textarea{width:100%; height:160px; background:var(--navy-900); color:var(--ink-dim); border:1px solid var(--navy-700);
+  border-radius:var(--r-sm); padding:10px; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:11.5px; line-height:1.5; resize:vertical}
+.foot{text-align:center; font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:#2E3B52; padding:8px 0 4px}
+@media (prefers-reduced-motion:reduce){*{transition:none !important}}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div>
+    <h1>Teste de token</h1>
+    <p class="sub">Passo 2 da Fatia 1. Login com Google, chamada à função, e o token da Azure de volta. Sem microfone ainda.</p>
+  </div>
+
+  <div class="card">
+    <h2>Sessão</h2>
+    <div id="session"></div>
+    <button class="btn primary" id="login">Entrar com Google</button>
+    <button class="btn" id="logout" style="display:none">Sair</button>
+  </div>
+
+  <div class="card">
+    <h2>Token da Azure</h2>
+    <div id="tokeninfo"><p class="sub" style="margin:0">Faça login primeiro.</p></div>
+    <button class="btn primary" id="ask" disabled>Pedir token</button>
+    <div id="verdict"></div>
+  </div>
+
+  <div class="card">
+    <h2>Log</h2>
+    <textarea id="log" readonly></textarea>
+    <button class="btn" id="copy">Copiar log</button>
+  </div>
+
+  <div class="foot">Twenty Nine Cyber</div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+import {
+  getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect,
+  getRedirectResult, onAuthStateChanged, signOut
+} from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
+import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-functions.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAUi8gBzhogTS1qpAOk8nmwTGsP42URFnk",
+  authDomain: "pronunciation-lab-29cyber.firebaseapp.com",
+  projectId: "pronunciation-lab-29cyber",
+  storageBucket: "pronunciation-lab-29cyber.firebasestorage.app",
+  messagingSenderId: "228197203836",
+  appId: "1:228197203836:web:20397be05d1ed32aec2ef9"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const functions = getFunctions(app, "us-central1");
+const issueSpeechToken = httpsCallable(functions, "issueSpeechToken");
+
+const $ = id => document.getElementById(id);
+const lines = [];
+function log(s){ lines.push(new Date().toLocaleTimeString("pt-BR") + "  " + s); $("log").value = lines.join("\n"); }
+function kv(k, v, cls){ return `<div class="kv"><span class="k">${k}</span><span class="v ${cls||""}">${v}</span></div>`; }
+
+const standalone = window.matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+log("app aberto | " + (standalone ? "standalone" : "navegador") + " | origem " + location.origin);
+
+/* Em standalone no iOS o popup costuma falhar; o redirect é o plano B. */
+getRedirectResult(auth)
+  .then(res => { if(res && res.user) log("login concluído por redirect"); })
+  .catch(err => log("redirect falhou: " + err.code));
+
+$("login").addEventListener("click", async () => {
+  const provider = new GoogleAuthProvider();
+  $("login").disabled = true;
+  try{
+    await signInWithPopup(auth, provider);
+    log("login concluído por popup");
+  }catch(err){
+    log("popup falhou: " + err.code + " — tentando redirect");
+    if(["auth/popup-blocked","auth/popup-closed-by-user","auth/operation-not-supported-in-this-environment","auth/cancelled-popup-request"].includes(err.code)){
+      try{ await signInWithRedirect(auth, provider); }
+      catch(e2){ log("redirect também falhou: " + e2.code); $("login").disabled = false; }
+    }else{
+      log("erro de login: " + err.code + " — " + err.message);
+      $("login").disabled = false;
+    }
+  }
+});
+
+$("logout").addEventListener("click", () => signOut(auth).then(() => log("sessão encerrada")));
+
+onAuthStateChanged(auth, user => {
+  if(user){
+    $("session").innerHTML =
+      kv("Conta", user.email, "ok") +
+      kv("E-mail verificado", user.emailVerified ? "Sim" : "Não", user.emailVerified ? "ok" : "bad") +
+      kv("UID", user.uid);
+    $("login").style.display = "none";
+    $("logout").style.display = "block";
+    $("ask").disabled = false;
+    $("tokeninfo").innerHTML = '<p class="sub" style="margin:0">Pronto para pedir o token.</p>';
+    log("autenticado como " + user.email);
+  }else{
+    $("session").innerHTML = kv("Conta", "não autenticado", "warn");
+    $("login").style.display = "block";
+    $("login").disabled = false;
+    $("logout").style.display = "none";
+    $("ask").disabled = true;
+  }
+});
+
+$("ask").addEventListener("click", async () => {
+  $("ask").disabled = true;
+  $("ask").textContent = "Pedindo…";
+  $("verdict").innerHTML = "";
+  const t0 = performance.now();
+
+  try{
+    const res = await issueSpeechToken();
+    const ms = Math.round(performance.now() - t0);
+    const d = res.data || {};
+    const tok = d.token || "";
+
+    $("tokeninfo").innerHTML =
+      kv("Região", d.region || "?", "ok") +
+      kv("Validade declarada", (d.expiresInSeconds || "?") + " s") +
+      kv("Tamanho do token", tok.length + " caracteres") +
+      kv("Início do token", tok.slice(0, 24) + "…") +
+      kv("Ida e volta", ms + " ms");
+
+    log("token recebido | " + tok.length + " caracteres | " + ms + " ms | região " + d.region);
+
+    if(tok.length < 100){
+      $("verdict").innerHTML = '<div class="verdict fail"><b>Suspeito</b>A função respondeu, mas o token veio curto demais para ser válido.</div>';
+    }else{
+      $("verdict").innerHTML = '<div class="verdict pass"><b>Passou</b>Token emitido pela Azure e entregue ao navegador. A chave nunca saiu do servidor.</div>';
+    }
+  }catch(err){
+    const ms = Math.round(performance.now() - t0);
+    log("falhou em " + ms + " ms | code=" + err.code + " | " + err.message);
+    $("verdict").innerHTML = '<div class="verdict fail"><b>Falhou</b>' + err.code + " — " + err.message +
+      '<br><br>Rode <code>firebase functions:log</code> para ver o motivo real do lado do servidor.</div>';
+  }finally{
+    $("ask").disabled = false;
+    $("ask").textContent = "Pedir token";
+  }
+});
+
+$("copy").addEventListener("click", async () => {
+  try{ await navigator.clipboard.writeText($("log").value); $("copy").textContent = "Copiado"; }
+  catch(e){ const el = $("log"); el.removeAttribute("readonly"); el.select(); $("copy").textContent = "Selecionado — toque em copiar"; }
+  setTimeout(() => { $("copy").textContent = "Copiar log"; }, 2500);
+});
+</script>
+</body>
+</html>

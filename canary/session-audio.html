@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Sessão">
 <meta name="robots" content="noindex, nofollow">
-<title>Sessão com modelo — Pronunciation Lab</title>
+<title>Sessão — Pronunciation Lab</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
@@ -47,9 +47,34 @@ button{font:inherit; cursor:pointer; border:none; border-radius:var(--r-md); tra
 .btn.primary{background:var(--brass); color:#1A1206; font-weight:600; padding:18px 16px; font-size:17px}
 .btn.primary:hover{background:var(--brass-hi)}
 .btn[disabled]{background:var(--navy-700); color:var(--ink-faint); cursor:default}
+.btn.small{padding:9px 12px; font-size:13px}
 .row2{display:grid; grid-template-columns:1fr 1fr; gap:8px}
 .row2 .btn{margin-top:0}
-.phrase{background:var(--navy-900); border-radius:var(--r-sm); padding:14px; font-size:18px; line-height:1.5; border:1px solid var(--navy-700)}
+
+/* frase com palavras tocáveis */
+.phrase{background:var(--navy-900); border-radius:var(--r-sm); padding:14px 12px 12px; border:1px solid var(--navy-700);
+  font-size:19px; line-height:2.1; -webkit-user-select:none; user-select:none; -webkit-touch-callout:none}
+.w{display:inline-block; padding:1px 3px; margin:0 1px; border-radius:5px; cursor:pointer;
+   border-bottom:3px solid transparent; transition:background var(--t) var(--ease)}
+.w:hover{background:var(--navy-800)}
+.w.sel{background:var(--navy-750)}
+.w.playing{background:var(--brass); color:#1A1206}
+.w.s-hi{border-bottom-color:var(--brass)}
+.w.s-mid{border-bottom-color:var(--amber)}
+.w.s-low{border-bottom-color:var(--rust)}
+.syl{display:inline-block}
+.syl.s-hi{color:var(--ink)} .syl.s-mid{color:var(--amber)} .syl.s-low{color:var(--rust)}
+.hint{font-size:11px; color:var(--ink-faint); margin-top:8px; line-height:1.5}
+
+.detail{background:var(--navy-800); border-radius:var(--r-sm); padding:12px; margin-top:10px; font-size:13px}
+.detail .top{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px}
+.detail .wd{font-size:17px; font-weight:600}
+.detail .gl{color:var(--brass); font-size:13px}
+.detail .ph{display:flex; gap:6px; flex-wrap:wrap; margin-top:8px}
+.detail .ph span{background:var(--navy-850); border-radius:6px; padding:3px 8px; font-size:13px}
+.detail .ph span i{font-style:normal; color:var(--ink-faint); font-size:11px; margin-left:4px}
+
+.trans{background:var(--navy-800); border-radius:var(--r-sm); padding:12px; margin-top:10px; font-size:14px; line-height:1.5; color:var(--ink-dim)}
 .targets{display:flex; gap:6px; flex-wrap:wrap; margin-top:10px}
 .chip{background:var(--navy-800); color:var(--brass); border-radius:99px; padding:4px 11px; font-size:14px}
 .head{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px}
@@ -90,8 +115,8 @@ textarea{width:100%; height:120px; background:var(--navy-900); color:var(--ink-d
 <div class="app">
 
   <div>
-    <h1>Sessão com modelo</h1>
-    <p class="sub">Ouve o modelo, tenta, e compara sua gravação com a referência. O número vem depois da correção, não no lugar dela.</p>
+    <h1>Sessão</h1>
+    <p class="sub">Toque em qualquer palavra para ouvi-la. Segure para ouvir devagar.</p>
   </div>
 
   <div class="card">
@@ -99,7 +124,7 @@ textarea{width:100%; height:120px; background:var(--navy-900); color:var(--ink-d
     <div id="session"></div>
     <button class="btn primary" id="login">Entrar com Google</button>
     <button class="btn primary" id="start" style="display:none">Começar sessão</button>
-    <button class="btn" id="seed" style="display:none">Semear a fila (uma vez só)</button>
+    <button class="btn" id="seed" style="display:none">Semear a fila</button>
   </div>
 
   <div class="card" id="drillcard" style="display:none">
@@ -109,12 +134,19 @@ textarea{width:100%; height:120px; background:var(--navy-900); color:var(--ink-d
       <span class="pos" id="pos"></span>
       <span class="dots" id="dots"></span>
     </div>
+
     <div class="phrase" id="phrase"></div>
+    <p class="hint">Toque: ouvir a palavra · Segure: ouvir devagar</p>
+    <div id="detail"></div>
+
+    <button class="btn small" id="transbtn">Mostrar tradução</button>
+    <div id="transbox"></div>
+
     <div class="targets" id="targets"></div>
     <div id="notebox"></div>
 
     <div class="row2" style="margin-top:12px">
-      <button class="btn" id="model">Ouvir modelo</button>
+      <button class="btn" id="model">Ouvir frase</button>
       <button class="btn" id="modelslow">Devagar</button>
     </div>
 
@@ -167,29 +199,40 @@ const firebaseConfig = {
   appId: "1:228197203836:web:20397be05d1ed32aec2ef9"
 };
 
-/* Notas escritas à mão. Viram material gerado na Fatia 4. */
 const SEED = [
   { id:"i01", text:"They said that the other brother bothered them rather than the mother.", targets:["ð"],
-    note:"<b>ð</b> é a ponta da língua tocando de leve a borda dos dentes de cima, <b>com voz</b> — a garganta vibra. O português não tem esse som, então ele vira /d/ por reflexo. Teste: ponha a mão na garganta; se não vibrar, saiu errado. Em palavra átona como <i>that</i> o som encurta, mas não some." },
+    translation:"Eles disseram que o outro irmão incomodou eles, e não a mãe.",
+    note:"<b>ð</b> é a ponta da língua tocando de leve a borda dos dentes de cima, <b>com voz</b> — a garganta vibra. O português não tem esse som, então ele vira /d/ por reflexo. Mão na garganta: se não vibrar, saiu errado. Em palavra átona como <i>that</i> o som encurta, mas não some." },
   { id:"i02", text:"The cool girl felt the small ball still fell well.", targets:["l"],
-    note:"O <b>L final</b> do inglês americano é escuro: a ponta da língua sobe até o céu da boca <b>e o fundo da língua também sobe</b>. No português brasileiro esse L virou /u/ — <i>Brasil</i> sai <i>Brasiu</i>. Se <i>ball</i> soar como <i>bou</i>, a ponta da língua não encostou." },
+    translation:"A garota descolada sentiu que a bolinha ainda caiu bem. (é trava-língua: o sentido importa menos que o L)",
+    note:"O <b>L final</b> americano é escuro: a ponta da língua sobe até o céu da boca <b>e o fundo da língua também sobe</b>. No português brasileiro esse L virou /u/ — <i>Brasil</i> sai <i>Brasiu</i>. Se <i>ball</i> soar como <i>bou</i>, a ponta da língua não encostou." },
   { id:"i03", text:"She loves the gloves and believes the leaves have moved.", targets:["v","z"],
-    note:"O problema aqui é <b>ensurdecimento no fim</b>: /v/ vira /f/ e /z/ vira /s/. O português não sustenta sonoridade em final de palavra, e o inglês sustenta. Segure a vibração até o fim de <i>loves</i> e <i>leaves</i> — deve durar um pouco mais do que parece natural." },
+    translation:"Ela adora as luvas e acredita que as folhas se moveram.",
+    note:"O problema é <b>ensurdecimento no fim</b>: /v/ vira /f/ e /z/ vira /s/. O português não sustenta sonoridade em final de palavra; o inglês sustenta. Segure a vibração até o fim de <i>loves</i> e <i>leaves</i> — dura mais do que parece natural." },
   { id:"i04", text:"The three thrifty athletes threw the thick thread.", targets:["θ","ɹ"],
-    note:"<b>θɹ</b> é o cluster mais difícil da lista. Língua entre os dentes <b>sem voz</b> para o θ, e imediatamente o R americano, que não toca nada — a língua recua e as bordas encostam nos molares. O erro comum é meter uma vogal no meio: <i>ther-ee</i> em vez de <i>three</i>." },
+    translation:"Os três atletas econômicos jogaram a linha grossa.",
+    note:"<b>θɹ</b> é o cluster mais difícil da lista. Língua entre os dentes <b>sem voz</b> para o θ, e emenda o R americano, que não toca nada — a língua recua e as bordas encostam nos molares. O erro comum é meter uma vogal no meio: <i>ther-ee</i> em vez de <i>three</i>." },
   { id:"i05", text:"This thing is worth more than those three things.", targets:["θ","ð"],
+    translation:"Esta coisa vale mais do que aquelas três coisas.",
     note:"Mesma posição de língua, diferença só de <b>voz</b>: <i>thing</i> é surdo (θ), <i>this</i> é sonoro (ð). A frase alterna os dois de propósito. Mão na garganta: <i>this</i> vibra, <i>thing</i> não." },
   { id:"i06", text:"Every visitor believed the vivid village was very beautiful.", targets:["v"],
+    translation:"Todo visitante achou que a vila colorida era muito bonita.",
     note:"O <b>v</b> é lábio-dental: dente de cima sobre o lábio de baixo, com ar passando e vibrando. Os lábios <b>não</b> se fecham — se fecharem, vira /b/. Em <i>vivid village</i> o som aparece três vezes seguidas, o que expõe o deslize." }
 ];
 
-const PASS_ACCURACY = 85;
-const PASS_PHONEME  = 80;
-const MAX_ATTEMPTS  = 3;
-const SESSION_SIZE  = 10;
-const LADDER        = [1, 3, 7, 21];
-const VOICE         = "en-US-AriaNeural";
-const MAX_NOTES     = 2;   // §5: orçamento de correção
+/* Glossário das palavras menos óbvias. Aparece ao tocar a palavra. */
+const GLOSS = {
+  bothered:"incomodou", rather:"em vez de / bem", brother:"irmão", mother:"mãe", other:"outro",
+  cool:"legal, descolado", felt:"sentiu", small:"pequeno", ball:"bola", still:"ainda", fell:"caiu", well:"bem",
+  loves:"adora", gloves:"luvas", believes:"acredita", leaves:"folhas", moved:"se moveram",
+  three:"três", thrifty:"econômico, poupador", athletes:"atletas", threw:"jogou, lançou", thick:"grosso", thread:"linha, fio",
+  thing:"coisa", things:"coisas", worth:"vale, vale a pena", those:"aqueles", than:"do que",
+  every:"todo, cada", visitor:"visitante", believed:"acreditou", vivid:"vívido, colorido", village:"vila", beautiful:"bonito"
+};
+
+const PASS_ACCURACY = 85, PASS_PHONEME = 80, MAX_ATTEMPTS = 3;
+const SESSION_SIZE = 10, LADDER = [1,3,7,21];
+const VOICE = "en-US-AriaNeural", MAX_NOTES = 2;
 
 const app  = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -201,20 +244,20 @@ const lines = [];
 function log(s){ lines.push(new Date().toLocaleTimeString("pt-BR") + "  " + s); $("log").value = lines.join("\n"); $("log").scrollTop = 1e6; }
 function kv(k,v,c){ return `<div class="kv"><span class="k">${k}</span><span class="v ${c||""}">${v}</span></div>`; }
 function verdict(ok,msg){ $("verdict").innerHTML = `<div class="verdict ${ok?"pass":"fail"}"><b>${ok?"Aprovado":"Reprovado"}</b>${msg}</div>`; }
-const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const band = v => v >= 80 ? "s-hi" : v >= 60 ? "s-mid" : "s-low";
+const clean = w => w.toLowerCase().replace(/[^a-z'-]/g,"");
 
-let uid = null, sessionId = null;
-let plan = [], pos = 0, attemptNumber = 1;
-let results = [], accSum = 0, prosSum = 0, attemptsCount = 0;
-let lastUserAudio = null;   // Blob da última gravação do usuário
+let uid=null, sessionId=null, plan=[], pos=0, attemptNumber=1;
+let results=[], accSum=0, prosSum=0, attemptsCount=0;
+let lastUserAudio=null, lastWords=null;
 
-/* ── token com cache: vale 9 min, serve para TTS e assessment ─ */
+/* ── token ────────────────────────────────────────────────── */
 let tokenCache = { token:null, region:null, exp:0 };
 async function getToken(){
   if(tokenCache.token && Date.now() < tokenCache.exp) return tokenCache;
   const r = await issueSpeechToken();
-  tokenCache = { token:r.data.token, region:r.data.region,
-                 exp: Date.now() + (r.data.expiresInSeconds - 30) * 1000 };
+  tokenCache = { token:r.data.token, region:r.data.region, exp: Date.now() + (r.data.expiresInSeconds-30)*1000 };
   log("token novo | " + tokenCache.region);
   return tokenCache;
 }
@@ -222,30 +265,24 @@ async function getToken(){
 /* ── TTS ──────────────────────────────────────────────────── */
 const ttsCache = new Map();
 async function synth(text, rate){
-  const key = text + "|" + (rate || "1");
+  const key = text + "|" + (rate||"0%");
   if(ttsCache.has(key)) return ttsCache.get(key);
-
   const { token, region } = await getToken();
   const S = window.SpeechSDK;
   const cfg = S.SpeechConfig.fromAuthorizationToken(token, region);
   cfg.speechSynthesisVoiceName = VOICE;
   cfg.speechSynthesisOutputFormat = S.SpeechSynthesisOutputFormat.Audio16Khz32KBitRateMonoMp3;
-
   const ssml = `<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="en-US">
-    <voice name="${VOICE}"><prosody rate="${rate || "0%"}">${esc(text)}</prosody></voice></speak>`;
-
-  const blob = await new Promise((res, rej) => {
-    const syn = new S.SpeechSynthesizer(cfg, null);   // null = não toca sozinho
+    <voice name="${VOICE}"><prosody rate="${rate||"0%"}">${esc(text)}</prosody></voice></speak>`;
+  const blob = await new Promise((res,rej) => {
+    const syn = new S.SpeechSynthesizer(cfg, null);
     syn.speakSsmlAsync(ssml,
-      r => {
-        syn.close();
-        if(r.reason === S.ResultReason.SynthesizingAudioCompleted)
-          res(new Blob([r.audioData], { type:"audio/mpeg" }));
-        else rej(new Error("TTS falhou: " + r.errorDetails));
-      },
+      r => { syn.close();
+        r.reason === S.ResultReason.SynthesizingAudioCompleted
+          ? res(new Blob([r.audioData], { type:"audio/mpeg" }))
+          : rej(new Error(r.errorDetails || "TTS falhou")); },
       e => { syn.close(); rej(new Error(String(e))); });
   });
-
   ttsCache.set(key, blob);
   return blob;
 }
@@ -256,8 +293,7 @@ function playBlob(blob){
     if(currentAudio){ currentAudio.pause(); currentAudio = null; }
     const a = new Audio(URL.createObjectURL(blob));
     currentAudio = a;
-    a.onended = () => res();
-    a.onerror = () => res();
+    a.onended = a.onerror = () => res();
     a.play().catch(() => res());
   });
 }
@@ -266,20 +302,101 @@ async function playModel(btn, rate){
   const it = plan[pos];
   btn.disabled = true; btn.classList.add("playing");
   const old = btn.textContent; btn.textContent = "…";
-  try{ await playBlob(await synth(it.text, rate)); }
-  catch(e){ log("TTS falhou: " + e.message); }
+  try{ await playBlob(await synth(it.text, rate)); }catch(e){ log("TTS: " + e.message); }
   btn.disabled = false; btn.classList.remove("playing"); btn.textContent = old;
 }
-
 $("model").addEventListener("click", e => playModel(e.currentTarget, "0%"));
 $("modelslow").addEventListener("click", e => playModel(e.currentTarget, "-35%"));
+
+/* ── frase com palavras tocáveis ──────────────────────────── */
+function renderPhrase(){
+  const it = plan[pos];
+  const tokens = it.text.split(/\s+/);
+  const azure = lastWords;
+  const aligned = azure && azure.length === tokens.length;
+
+  $("phrase").innerHTML = tokens.map((tok, i) => {
+    const a = aligned ? azure[i] : null;
+    const cls = a ? " " + band(a.accuracy) : "";
+    let inner = esc(tok);
+    if(a && a.syllables && a.syllables.length > 1){
+      /* Pinta sílaba a sílaba quando a Azure devolveu mais de uma. */
+      const letters = tok.replace(/[^A-Za-z'-]/g,"");
+      const punct = tok.slice(letters.length);
+      let at = 0;
+      const total = a.syllables.reduce((s,y) => s + y.syllable.length, 0) || 1;
+      inner = a.syllables.map((y, k) => {
+        const share = Math.round(letters.length * (y.syllable.length / total));
+        const piece = k === a.syllables.length - 1 ? letters.slice(at) : letters.substr(at, Math.max(1, share));
+        at += piece.length;
+        return `<span class="syl ${band(y.PronunciationAssessment ? y.PronunciationAssessment.AccuracyScore : y.accuracy)}">${esc(piece)}</span>`;
+      }).join("") + esc(punct);
+    }
+    return `<span class="w${cls}" data-i="${i}" data-w="${esc(tok)}">${inner}</span>`;
+  }).join(" ");
+
+  bindWords();
+}
+
+let pressTimer = null, longFired = false;
+function bindWords(){
+  document.querySelectorAll(".w").forEach(el => {
+    el.addEventListener("pointerdown", ev => {
+      ev.preventDefault();
+      longFired = false;
+      pressTimer = setTimeout(() => { longFired = true; speakWord(el, true); }, 500);
+    });
+    el.addEventListener("pointerup", () => {
+      clearTimeout(pressTimer);
+      if(!longFired) speakWord(el, false);
+    });
+    el.addEventListener("pointerleave", () => clearTimeout(pressTimer));
+    el.addEventListener("contextmenu", ev => ev.preventDefault());
+  });
+}
+
+async function speakWord(el, slow){
+  const raw = el.dataset.w;
+  const word = raw.replace(/[^A-Za-z'-]/g,"");
+  if(!word) return;
+  document.querySelectorAll(".w").forEach(x => x.classList.remove("sel"));
+  el.classList.add("sel","playing");
+  showDetail(Number(el.dataset.i), word);
+  try{ await playBlob(await synth(word, slow ? "-45%" : "0%")); }
+  catch(e){ log("TTS palavra: " + e.message); }
+  el.classList.remove("playing");
+}
+
+function showDetail(i, word){
+  const g = GLOSS[clean(word)];
+  const a = lastWords && lastWords.length > i ? lastWords[i] : null;
+  let phon = "";
+  if(a && a.phonemes && a.phonemes.length)
+    phon = `<div class="ph">` + a.phonemes.map(p =>
+      `<span class="${band(p.accuracy)}">${esc(p.phoneme)}<i>${Math.round(p.accuracy)}</i></span>`).join("") + `</div>`;
+  $("detail").innerHTML = `<div class="detail">
+    <div class="top"><span class="wd">${esc(word)}</span>
+      <span class="gl">${g ? esc(g) : ""}</span></div>
+    ${a ? `<div class="sub" style="margin:0">Sua última tentativa: ${Math.round(a.accuracy)}${a.errorType && a.errorType !== "None" ? " · " + a.errorType : ""}</div>` : `<div class="sub" style="margin:0">Ainda sem medição desta palavra.</div>`}
+    ${phon}</div>`;
+}
+
+/* ── tradução ─────────────────────────────────────────────── */
+let transShown = false;
+function setTranslation(show){
+  const it = plan[pos];
+  transShown = show;
+  $("transbox").innerHTML = show ? `<div class="trans">${esc(it.translation || "(sem tradução)")}</div>` : "";
+  $("transbtn").textContent = show ? "Esconder tradução" : "Mostrar tradução";
+}
+$("transbtn").addEventListener("click", () => setTranslation(!transShown));
 
 /* ── auth ─────────────────────────────────────────────────── */
 getRedirectResult(auth).catch(e => log("redirect: " + e.code));
 $("login").addEventListener("click", async () => {
   const p = new GoogleAuthProvider();
   try{ await signInWithPopup(auth, p); }
-  catch(e){ log("popup falhou: " + e.code); try{ await signInWithRedirect(auth, p); }catch(e2){ log("redirect falhou: " + e2.code); } }
+  catch(e){ log("popup falhou: " + e.code); try{ await signInWithRedirect(auth,p); }catch(e2){ log("redirect falhou: " + e2.code); } }
 });
 
 onAuthStateChanged(auth, async user => {
@@ -290,7 +407,7 @@ onAuthStateChanged(auth, async user => {
     return;
   }
   uid = user.uid;
-  $("login").style.display = "none";
+  $("login").style.display="none";
   $("session").innerHTML = kv("Conta", user.email, "ok");
   log("autenticado como " + user.email);
   await loadQueue();
@@ -304,16 +421,16 @@ async function loadQueue(){
   const now = Date.now();
   const due = queue.filter(q => q.state !== "retired" && q.dueAt && q.dueAt.toMillis() <= now);
 
+  $("seed").style.display = "block";   // sempre disponível: reescreve texto, nota e tradução
   if(!queue.length){
     $("queue").innerHTML = '<p class="sub" style="margin:0">Fila vazia. Semeie para começar.</p>';
-    $("seed").style.display="block"; $("start").style.display="none"; return;
+    $("start").style.display="none"; return;
   }
-  $("seed").style.display = "none";
   queue.sort((a,b) => (a.dueAt?.toMillis()||0) - (b.dueAt?.toMillis()||0));
   $("queue").innerHTML = queue.map(q => {
     const ms = q.dueAt ? q.dueAt.toMillis() - now : 0;
     const label = ms <= 0 ? "vencido" : ms < 864e5 ? "em " + Math.round(ms/36e5) + " h" : "em " + Math.ceil(ms/864e5) + " d";
-    return `<div class="qrow"><span class="t">${q.text}</span>
+    return `<div class="qrow"><span class="t">${esc(q.text)}</span>
       <span class="d">${q.intervalDays}d · ${q.timesPassed}/${q.timesShown}</span>
       <span class="${ms<=0?"due":"d"}">${label}</span></div>`;
   }).join("");
@@ -328,11 +445,11 @@ $("seed").addEventListener("click", async () => {
   const now = Timestamp.now();
   for(const it of SEED)
     await setDoc(doc(db, `users/${uid}/drillQueue/${it.id}`), {
-      text: it.text, targetPhonemes: it.targets, note: it.note,
-      source: "manual", state: "new", dueAt: now,
-      intervalDays: 1, timesShown: 0, timesPassed: 0, lastResult: null
+      text: it.text, targetPhonemes: it.targets, note: it.note, translation: it.translation,
+      source:"manual", state:"new", dueAt: now,
+      intervalDays:1, timesShown:0, timesPassed:0, lastResult:null
     });
-  log("fila semeada com " + SEED.length + " itens");
+  log("fila semeada/atualizada com " + SEED.length + " itens");
   $("seed").disabled = false;
   await loadQueue();
 });
@@ -351,32 +468,33 @@ $("start").addEventListener("click", async () => {
     itemsAttempted:0, itemsPassed:0, avgAccuracy:0, avgProsody:0, warmupFlag:"ok"
   });
   sessionId = ref.id;
-  pos = 0; attemptNumber = 1; results = []; accSum = 0; prosSum = 0; attemptsCount = 0;
-  log("sessão " + sessionId.slice(0,8) + " montada com " + plan.length + " itens");
+  pos=0; attemptNumber=1; results=[]; accSum=0; prosSum=0; attemptsCount=0;
+  log("sessão " + sessionId.slice(0,8) + " com " + plan.length + " itens");
   $("start").style.display="none"; $("summary").style.display="none";
   renderItem();
 });
 
 function renderItem(){
   const it = plan[pos];
+  lastWords = null; lastUserAudio = null;
   $("drillcard").style.display = "block";
-  $("track").innerHTML = plan.map((_,i) => `<i class="${results[i] || (i===pos ? "now" : "")}"></i>`).join("");
+  $("track").innerHTML = plan.map((_,i) => `<i class="${results[i] || (i===pos?"now":"")}"></i>`).join("");
   $("pos").textContent = `Item ${pos+1} de ${plan.length}`;
   $("dots").innerHTML = [1,2,3].map(n => `<i class="${n<attemptNumber?"used":n===attemptNumber?"now":""}"></i>`).join("");
-  $("phrase").textContent = it.text;
-  $("targets").innerHTML = (it.targetPhonemes||[]).map(p => `<span class="chip">${p}</span>`).join("");
+  renderPhrase();
+  $("targets").innerHTML = (it.targetPhonemes||[]).map(p => `<span class="chip">${esc(p)}</span>`).join("");
   $("notebox").innerHTML = it.note ? `<div class="note">${it.note}</div>` : "";
+  $("detail").innerHTML = "";
+  setTranslation(false);
   $("verdict").innerHTML=""; $("scores").innerHTML=""; $("abbox").innerHTML="";
   $("next").style.display="none";
   $("rec").disabled=false; $("rec").textContent="Gravar";
-  lastUserAudio = null;
 }
 
 $("next").addEventListener("click", async () => {
-  pos++; attemptNumber = 1;
+  pos++; attemptNumber=1;
   if(pos < plan.length) return renderItem();
-
-  $("drillcard").style.display = "none";
+  $("drillcard").style.display="none";
   const passedCount = results.filter(r => r === "pass").length;
   const avgAcc = attemptsCount ? accSum/attemptsCount : 0;
   const avgPros = attemptsCount ? prosSum/attemptsCount : 0;
@@ -386,18 +504,17 @@ $("next").addEventListener("click", async () => {
       itemsAttempted: plan.length, itemsPassed: passedCount,
       avgAccuracy: Math.round(avgAcc*10)/10, avgProsody: Math.round(avgPros*10)/10
     });
-    log("sessão fechada | " + passedCount + "/" + plan.length + " aprovados");
+    log("sessão fechada | " + passedCount + "/" + plan.length);
   }catch(e){ log("FALHA ao fechar sessão: " + (e.code||e.message)); }
-
   $("summaryout").innerHTML = kv("Itens", plan.length) +
     kv("Aprovados", passedCount, passedCount===plan.length?"ok":"warn") +
     kv("Gravações", attemptsCount) + kv("Accuracy média", Math.round(avgAcc)) +
     kv("Prosódia média", Math.round(avgPros));
-  $("summary").style.display = "block";
+  $("summary").style.display="block";
   await loadQueue();
 });
 
-/* ── captura: um stream só, alimentando SDK e MediaRecorder ── */
+/* ── captura ──────────────────────────────────────────────── */
 async function startCapture(){
   const stream = await navigator.mediaDevices.getUserMedia({ audio:true });
   const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -414,34 +531,29 @@ async function startCapture(){
     $("level").style.width = Math.min(100, max*140) + "%";
     raf = requestAnimationFrame(tick);
   })();
-
-  /* Cópia local da fala, para a comparação A/B. */
-  let mr = null, chunks = [];
+  let mr=null, chunks=[];
   try{
-    const mime = ["audio/mp4","audio/webm;codecs=opus","audio/webm"]
-      .find(m => window.MediaRecorder?.isTypeSupported?.(m));
-    mr = mime ? new MediaRecorder(stream, { mimeType:mime }) : new MediaRecorder(stream);
+    const mime = ["audio/mp4","audio/webm;codecs=opus","audio/webm"].find(m => window.MediaRecorder?.isTypeSupported?.(m));
+    mr = mime ? new MediaRecorder(stream,{mimeType:mime}) : new MediaRecorder(stream);
     mr.ondataavailable = e => { if(e.data?.size) chunks.push(e.data); };
     mr.start();
   }catch(e){ log("cópia local indisponível: " + e.name); }
-
   return {
-    stream,
-    label: (stream.getAudioTracks()[0]||{}).label || "",
+    stream, label:(stream.getAudioTracks()[0]||{}).label||"",
     stop(){
-      cancelAnimationFrame(raf); $("level").style.width = "0%";
+      cancelAnimationFrame(raf); $("level").style.width="0%";
       if(mr && mr.state !== "inactive"){
-        mr.onstop = () => { if(chunks.length) lastUserAudio = new Blob(chunks, { type: mr.mimeType || "audio/mp4" }); };
+        mr.onstop = () => { if(chunks.length) lastUserAudio = new Blob(chunks,{type:mr.mimeType||"audio/mp4"}); };
         mr.stop();
       }
-      stream.getTracks().forEach(t => t.stop());
+      stream.getTracks().forEach(t=>t.stop());
       ctx.close().catch(()=>{});
       return peak;
     }
   };
 }
 
-/* ── gravar e avaliar ─────────────────────────────────────── */
+/* ── gravar ───────────────────────────────────────────────── */
 $("rec").addEventListener("click", async () => {
   const it = plan[pos];
   $("rec").disabled = true; $("rec").textContent = "Pedindo token…";
@@ -449,7 +561,7 @@ $("rec").addEventListener("click", async () => {
 
   let token, region;
   try{ ({ token, region } = await getToken()); }
-  catch(e){ $("rec").disabled=false; $("rec").textContent="Gravar"; log("token falhou: "+e.code);
+  catch(e){ $("rec").disabled=false; $("rec").textContent="Gravar";
             return verdict(false, "Não consegui token: " + e.code); }
 
   const S = window.SpeechSDK;
@@ -466,14 +578,13 @@ $("rec").addEventListener("click", async () => {
     cap = await startCapture();
     audioConfig = S.AudioConfig.fromStreamInput(cap.stream);
   }catch(e){
-    log("stream compartilhado falhou (" + e.message + ") — usando microfone direto, sem cópia local");
+    log("stream compartilhado falhou (" + e.message + ") — microfone direto, sem cópia local");
     if(cap) cap.stop();
     cap = { label:"", stop(){ return -1; } };
     audioConfig = S.AudioConfig.fromDefaultMicrophoneInput();
   }
-
   if(/bluetooth|airpod|headset|hands-?free/i.test(cap.label))
-    log("ATENÇÃO: entrada parece bluetooth (" + cap.label + ") — score não confiável");
+    log("ATENÇÃO: entrada parece bluetooth — score não confiável");
 
   const rec = new S.SpeechRecognizer(sc, audioConfig);
   pa.applyTo(rec);
@@ -481,11 +592,10 @@ $("rec").addEventListener("click", async () => {
 
   rec.recognizeOnceAsync(async result => {
     const peak = cap.stop();
-    $("rec").disabled = false; $("rec").textContent = "Gravar";
+    $("rec").disabled=false; $("rec").textContent="Gravar";
 
     if(result.reason === S.ResultReason.Canceled){
       const d = S.CancellationDetails.fromResult(result); rec.close();
-      log("cancelado: " + d.errorDetails);
       return verdict(false, "Cancelado pela Azure: " + d.errorDetails);
     }
     if(result.reason === S.ResultReason.NoMatch){
@@ -504,6 +614,9 @@ $("rec").addEventListener("click", async () => {
       syllables: (w.Syllables||[]).map(y => ({ syllable:y.Syllable, accuracy:y.PronunciationAssessment.AccuracyScore })),
       phonemes: (w.Phonemes||[]).map(p => ({ phoneme:p.Phoneme, accuracy:p.PronunciationAssessment.AccuracyScore }))
     }));
+    lastWords = words;
+    renderPhrase();
+    setTranslation(true);   /* depois da tentativa, a tradução aparece sozinha */
 
     const targets = it.targetPhonemes || [];
     const offenders = [];
@@ -511,11 +624,11 @@ $("rec").addEventListener("click", async () => {
       if(targets.includes(ph.phoneme) && ph.accuracy < PASS_PHONEME)
         offenders.push({ ph:ph.phoneme, word:w.word, score:ph.accuracy });
     offenders.sort((a,b) => a.score - b.score);
-
-    const passed = s.AccuracyScore >= PASS_ACCURACY && offenders.length === 0;
     const shown = offenders.slice(0, MAX_NOTES);
     if(offenders.length > MAX_NOTES)
-      log("outros alvos fracos (não mostrados): " + offenders.slice(MAX_NOTES).map(o => `${o.ph}/${o.word}=${Math.round(o.score)}`).join(", "));
+      log("outros alvos fracos: " + offenders.slice(MAX_NOTES).map(o=>`${o.ph}/${o.word}=${Math.round(o.score)}`).join(", "));
+
+    const passed = s.AccuracyScore >= PASS_ACCURACY && offenders.length === 0;
 
     $("scores").innerHTML = `<div class="scores">
       <div class="score"><b>${Math.round(s.PronScore)}</b><span>Geral</span></div>
@@ -529,35 +642,32 @@ $("rec").addEventListener("click", async () => {
       await addDoc(collection(db, `users/${uid}/attempts`), {
         sessionId, itemId: it.id, referenceText: it.text, attemptNumber,
         audioDurationMs: Math.round((result.duration||0)/10000),
-        scores: { accuracy:s.AccuracyScore, fluency:s.FluencyScore, completeness:s.CompletenessScore,
-                  prosody:s.ProsodyScore ?? 0, pronunciation:s.PronScore },
+        scores:{ accuracy:s.AccuracyScore, fluency:s.FluencyScore, completeness:s.CompletenessScore,
+                 prosody:s.ProsodyScore ?? 0, pronunciation:s.PronScore },
         words, targetPhonemes: targets, passed, createdAt: serverTimestamp()
       });
       await updatePhonemeStats(words);
-      log("attempt " + attemptNumber + " do item " + it.id + " | passed=" + passed);
+      log("attempt " + attemptNumber + " | " + it.id + " | passed=" + passed);
     }catch(e){ log("FALHA ao gravar attempt: " + (e.code||e.message)); }
 
-    const worst = shown[0] ? shown[0].word : null;
-    renderAB(worst);
+    renderAB();
 
     if(passed){
       await finishItem(it, true);
-      verdict(true, "Accuracy " + Math.round(s.AccuracyScore) + ", nenhum alvo abaixo de " + PASS_PHONEME +
-                    ". Próxima cobrança em " + nextInterval(it) + " dias.");
+      verdict(true, "Accuracy " + Math.round(s.AccuracyScore) + ". Próxima cobrança em " + nextInterval(it) + " dias.");
       $("next").style.display="block"; $("rec").disabled = true;
     }else if(attemptNumber >= MAX_ATTEMPTS){
       await finishItem(it, false);
-      verdict(false, "Três tentativas. O item volta amanhã e a sessão segue." +
-        (shown.length ? "<br>" + shown.map(o => `<b>${o.ph}</b> em "${o.word}" (${Math.round(o.score)})`).join("<br>") : ""));
+      verdict(false, "Três tentativas. O item volta amanhã." +
+        (shown.length ? "<br>" + shown.map(o=>`<b>${esc(o.ph)}</b> em "${esc(o.word)}" (${Math.round(o.score)})`).join("<br>") : ""));
       $("next").style.display="block"; $("rec").disabled = true;
-      /* Reprovou: ouve o modelo antes de seguir. */
       setTimeout(() => playModel($("model"), "0%"), 400);
     }else{
       attemptNumber++;
       verdict(false,
         (s.AccuracyScore < PASS_ACCURACY ? "Accuracy " + Math.round(s.AccuracyScore) + ", abaixo de " + PASS_ACCURACY + ".<br>" : "") +
-        (shown.length ? shown.map(o => `<b>${o.ph}</b> em "${o.word}" (${Math.round(o.score)})`).join("<br>") + "<br>" : "") +
-        "Ouça o modelo e tente de novo. Tentativa " + attemptNumber + " de " + MAX_ATTEMPTS + ".");
+        (shown.length ? shown.map(o=>`<b>${esc(o.ph)}</b> em "${esc(o.word)}" (${Math.round(o.score)})`).join("<br>") + "<br>" : "") +
+        "Toque nas palavras vermelhas para ouvi-las. Tentativa " + attemptNumber + " de " + MAX_ATTEMPTS + ".");
       $("dots").innerHTML = [1,2,3].map(n => `<i class="${n<attemptNumber?"used":n===attemptNumber?"now":""}"></i>`).join("");
       setTimeout(() => playModel($("model"), "0%"), 400);
     }
@@ -566,39 +676,27 @@ $("rec").addEventListener("click", async () => {
            log("erro do recognizer: " + err); verdict(false, String(err)); });
 });
 
-/* ── comparação A/B ───────────────────────────────────────── */
-function renderAB(worstWord){
+/* ── A/B ──────────────────────────────────────────────────── */
+function renderAB(){
   const it = plan[pos];
-  $("abbox").innerHTML = `
-    <div class="ab">
-      <div class="lbl">Comparar</div>
-      <div class="row2">
-        <button class="btn" id="abplay">Você × modelo</button>
-        <button class="btn" id="abmine">Só você</button>
-      </div>
-      ${worstWord ? `<button class="btn" id="abword">Ouvir só «${worstWord}» devagar</button>` : ""}
-    </div>`;
-
+  $("abbox").innerHTML = `<div class="ab"><div class="lbl">Comparar</div>
+    <div class="row2">
+      <button class="btn" id="abplay">Você × modelo</button>
+      <button class="btn" id="abmine">Só você</button>
+    </div></div>`;
   $("abplay").addEventListener("click", async e => {
-    const b = e.currentTarget; b.disabled = true; b.classList.add("playing");
-    const old = b.textContent;
-    if(lastUserAudio){ b.textContent = "você…"; await playBlob(lastUserAudio); await new Promise(r=>setTimeout(r,350)); }
+    const b = e.currentTarget, old = b.textContent;
+    b.disabled = true; b.classList.add("playing");
+    if(lastUserAudio){ b.textContent="você…"; await playBlob(lastUserAudio); await new Promise(r=>setTimeout(r,350)); }
     b.textContent = "modelo…";
-    try{ await playBlob(await synth(it.text, "0%")); }catch(err){ log("TTS falhou: " + err.message); }
-    b.disabled = false; b.classList.remove("playing"); b.textContent = old;
+    try{ await playBlob(await synth(it.text, "0%")); }catch(err){ log("TTS: " + err.message); }
+    b.disabled=false; b.classList.remove("playing"); b.textContent = old;
   });
-
   $("abmine").addEventListener("click", async e => {
     if(!lastUserAudio) return log("sem cópia local desta gravação");
-    const b = e.currentTarget; b.disabled = true; b.classList.add("playing");
+    const b = e.currentTarget; b.disabled=true; b.classList.add("playing");
     await playBlob(lastUserAudio);
-    b.disabled = false; b.classList.remove("playing");
-  });
-
-  if(worstWord) $("abword").addEventListener("click", async e => {
-    const b = e.currentTarget; b.disabled = true; b.classList.add("playing");
-    try{ await playBlob(await synth(worstWord, "-45%")); }catch(err){ log("TTS falhou: " + err.message); }
-    b.disabled = false; b.classList.remove("playing");
+    b.disabled=false; b.classList.remove("playing");
   });
 }
 
@@ -607,7 +705,6 @@ function nextInterval(it){
   const i = LADDER.indexOf(it.intervalDays);
   return LADDER[Math.min(i+1, LADDER.length-1)];
 }
-
 async function finishItem(it, passed){
   const days = passed ? nextInterval(it) : 1;
   const due = Timestamp.fromMillis(Date.now() + days*864e5);
@@ -615,21 +712,18 @@ async function finishItem(it, passed){
   try{
     await updateDoc(doc(db, `users/${uid}/drillQueue/${it.id}`), {
       text: it.text, state, dueAt: due, intervalDays: days,
-      timesShown: (it.timesShown||0)+1,
-      timesPassed: (it.timesPassed||0)+(passed?1:0),
+      timesShown:(it.timesShown||0)+1, timesPassed:(it.timesPassed||0)+(passed?1:0),
       lastResult: passed ? "pass" : "fail"
     });
-    it.intervalDays = days; it.timesShown = (it.timesShown||0)+1;
-    it.timesPassed = (it.timesPassed||0)+(passed?1:0); it.dueAt = due;
+    it.intervalDays = days; it.timesShown=(it.timesShown||0)+1;
+    it.timesPassed=(it.timesPassed||0)+(passed?1:0); it.dueAt = due;
     log("item " + it.id + " reagendado para " + days + " dia(s)");
   }catch(e){ log("FALHA ao reagendar: " + (e.code||e.message)); }
-
   results[pos] = passed ? "pass" : "fail";
   try{
     await updateDoc(doc(db, `users/${uid}/sessions/${sessionId}`), {
-      mode:"lesson",
-      itemsAttempted: results.filter(Boolean).length,
-      itemsPassed: results.filter(r => r === "pass").length
+      mode:"lesson", itemsAttempted: results.filter(Boolean).length,
+      itemsPassed: results.filter(r => r==="pass").length
     });
   }catch(e){ log("FALHA ao atualizar sessão: " + (e.code||e.message)); }
 }
@@ -647,7 +741,7 @@ async function updatePhonemeStats(words){
   const refs = entries.map(([p]) => doc(db, `users/${uid}/phonemeStats/${encodeURIComponent(p)}`));
   await runTransaction(db, async tx => {
     const snaps = await Promise.all(refs.map(r => tx.get(r)));
-    entries.forEach(([phoneme, e], i) => {
+    entries.forEach(([phoneme,e],i) => {
       const prev = snaps[i].exists() ? snaps[i].data() : { attempts:0, last20:[], worstWords:[] };
       const mean = e.scores.reduce((a,b)=>a+b,0)/e.scores.length;
       const last20 = [...(prev.last20||[]), Math.round(mean)].slice(-20);

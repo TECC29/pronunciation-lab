@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Vocabulário">
+<meta name="robots" content="noindex, nofollow">
+<title>Vocabulário — Pronunciation Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy-900:#080D17; --navy-850:#0B1220; --navy-800:#111A2B;
+  --navy-750:#16223A; --navy-700:#1D2C48;
+  --ink:#ECEFF4; --ink-dim:#94A1B8; --ink-faint:#5C6B85;
+  --brass:#D6B073; --brass-hi:#EFD3A0;
+  --amber:#CE9548; --copper:#BE6E3B; --rust:#A9482F;
+  --r-sm:10px; --r-md:14px; --r-lg:18px;
+  --ease:cubic-bezier(.2,.7,.2,1); --t:200ms;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{
+  background:var(--navy-900); color:var(--ink);
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-variant-numeric:tabular-nums; -webkit-font-smoothing:antialiased;
+  padding:max(18px,env(safe-area-inset-top)) 16px calc(18px + env(safe-area-inset-bottom));
+  display:flex; justify-content:center;
+}
+.app{width:100%; max-width:460px; display:flex; flex-direction:column; gap:14px}
+:focus-visible{outline:2px solid var(--brass); outline-offset:3px; border-radius:6px}
+h1{font-size:13px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-faint); margin:0}
+.sub{font-size:13px; line-height:1.55; color:var(--ink-dim); margin:0}
+.card{background:var(--navy-850); border-radius:var(--r-lg); padding:16px; box-shadow:0 1px 0 rgba(255,255,255,.03) inset, 0 8px 24px rgba(0,0,0,.35)}
+.card h2{font-size:10.5px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-faint); margin:0 0 12px}
+.kv{display:flex; justify-content:space-between; gap:12px; font-size:13px; padding:6px 0; border-bottom:1px solid var(--navy-800)}
+.kv:last-child{border-bottom:none}
+.kv .k{color:var(--ink-faint)}
+.kv .v{color:var(--ink); text-align:right; word-break:break-word}
+.v.ok{color:var(--brass)} .v.warn{color:var(--amber)} .v.bad{color:var(--rust)}
+button{font:inherit; cursor:pointer; border:none; border-radius:var(--r-md); transition:background var(--t) var(--ease), color var(--t) var(--ease)}
+.btn{width:100%; padding:13px 16px; font-size:15px; background:var(--navy-750); color:var(--ink); text-align:center; margin-top:8px}
+.btn:hover{background:var(--navy-700)}
+.btn.primary{background:var(--brass); color:#1A1206; font-weight:600; padding:17px 16px; font-size:16px}
+.btn.primary:hover{background:var(--brass-hi)}
+.btn[disabled]{background:var(--navy-700); color:var(--ink-faint); cursor:default}
+.btn.small{padding:9px 12px; font-size:13px; margin-top:0}
+.row2{display:grid; grid-template-columns:1fr 1fr; gap:8px}
+.row3{display:grid; grid-template-columns:auto 1fr 1fr; gap:8px}
+
+.doms{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:4px}
+.dom{background:var(--navy-800); color:var(--ink-dim); border-radius:99px; padding:8px 15px; font-size:14px}
+.dom.on{background:var(--brass); color:#1A1206; font-weight:600}
+
+.entry{background:var(--navy-800); border-radius:var(--r-md); padding:14px; margin-bottom:10px}
+.entry.done{opacity:.45}
+.etop{display:flex; justify-content:space-between; align-items:baseline; gap:10px}
+.eword{font-size:19px; font-weight:600}
+.eipa{color:var(--ink-faint); font-size:13px; margin-left:8px; font-weight:400}
+.epos{font-size:11px; color:var(--ink-faint); letter-spacing:.1em; text-transform:uppercase}
+.diff{display:flex; gap:3px; margin-top:2px}
+.diff i{width:16px; height:3px; border-radius:99px; background:var(--navy-700)}
+.diff i.on{background:var(--amber)}
+.etr{color:var(--brass); font-size:15px; margin-top:8px}
+.edef{color:var(--ink-dim); font-size:13px; line-height:1.5; margin-top:4px}
+.eex{background:var(--navy-900); border-radius:var(--r-sm); padding:11px; margin-top:10px; font-size:15px; line-height:1.5}
+.eexpt{color:var(--ink-faint); font-size:12.5px; margin-top:5px; line-height:1.45}
+.enote{font-size:12.5px; line-height:1.55; color:var(--ink-dim); margin-top:9px; padding-left:10px; border-left:2px solid var(--navy-700)}
+.tag{display:inline-block; background:var(--navy-750); color:var(--brass); border-radius:99px; padding:2px 9px; font-size:11px; margin-left:6px}
+.acts{margin-top:11px}
+textarea{width:100%; height:110px; background:var(--navy-900); color:var(--ink-dim); border:1px solid var(--navy-700);
+  border-radius:var(--r-sm); padding:10px; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:11px; line-height:1.45; resize:vertical}
+.foot{text-align:center; font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:#2E3B52; padding:8px 0 4px}
+@media (prefers-reduced-motion:reduce){*{transition:none !important}}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/microsoft-cognitiveservices-speech-sdk@1/distrib/browser/microsoft.cognitiveservices.speech.sdk.bundle-min.js"></script>
+</head>
+<body>
+<div class="app">
+
+  <div>
+    <h1>Vocabulário</h1>
+    <p class="sub">Gera palavras por domínio. Você marca o que já sabe; o resto vira frase de treino na fila.</p>
+  </div>
+
+  <div class="card">
+    <h2>Conta</h2>
+    <div id="session"></div>
+    <button class="btn primary" id="login">Entrar com Google</button>
+  </div>
+
+  <div class="card" id="gencard" style="display:none">
+    <h2>Gerar</h2>
+    <div class="doms" id="doms"></div>
+    <p class="sub" id="calibnote" style="margin:10px 0 0"></p>
+    <button class="btn primary" id="gen">Gerar 8 palavras</button>
+  </div>
+
+  <div class="card" id="results" style="display:none">
+    <h2>Resultado</h2>
+    <div id="list"></div>
+  </div>
+
+  <div class="card">
+    <h2>Log</h2>
+    <textarea id="log" readonly></textarea>
+  </div>
+
+  <div class="foot">Twenty Nine Cyber</div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+import {
+  getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect,
+  getRedirectResult, onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
+import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-functions.js";
+import {
+  getFirestore, doc, collection, setDoc, getDocs, serverTimestamp, Timestamp
+} from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAUi8gBzhogTS1qpAOk8nmwTGsP42URFnk",
+  authDomain: "pronunciation-lab-29cyber.firebaseapp.com",
+  projectId: "pronunciation-lab-29cyber",
+  storageBucket: "pronunciation-lab-29cyber.firebasestorage.app",
+  messagingSenderId: "228197203836",
+  appId: "1:228197203836:web:20397be05d1ed32aec2ef9"
+};
+
+const DOMAINS = [
+  { id:"cyber",     label:"Cibersegurança" },
+  { id:"interview", label:"Entrevista" },
+  { id:"travel",    label:"Viagem" },
+  { id:"daily",     label:"Cotidiano" }
+];
+const VOICE = "en-US-AriaNeural";
+
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+const fns  = getFunctions(app, "us-central1");
+const issueSpeechToken = httpsCallable(fns, "issueSpeechToken");
+const generateLexicon  = httpsCallable(fns, "generateLexicon");
+
+const $ = id => document.getElementById(id);
+const lines = [];
+function log(s){ lines.push(new Date().toLocaleTimeString("pt-BR") + "  " + s); $("log").value = lines.join("\n"); $("log").scrollTop = 1e6; }
+function kv(k,v,c){ return `<div class="kv"><span class="k">${k}</span><span class="v ${c||""}">${v}</span></div>`; }
+const esc = s => String(s ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const slug = s => s.toLowerCase().trim().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,60);
+
+let uid = null, domain = "daily", known = [], weak = [], lexCount = 0, entries = [];
+
+/* ── token e TTS ──────────────────────────────────────────── */
+let tokenCache = { token:null, region:null, exp:0 };
+async function getToken(){
+  if(tokenCache.token && Date.now() < tokenCache.exp) return tokenCache;
+  const r = await issueSpeechToken();
+  tokenCache = { token:r.data.token, region:r.data.region, exp: Date.now() + (r.data.expiresInSeconds-30)*1000 };
+  return tokenCache;
+}
+const ttsCache = new Map();
+async function synth(text, rate){
+  const key = text + "|" + (rate||"0%");
+  if(ttsCache.has(key)) return ttsCache.get(key);
+  const { token, region } = await getToken();
+  const S = window.SpeechSDK;
+  const cfg = S.SpeechConfig.fromAuthorizationToken(token, region);
+  cfg.speechSynthesisVoiceName = VOICE;
+  cfg.speechSynthesisOutputFormat = S.SpeechSynthesisOutputFormat.Audio16Khz32KBitRateMonoMp3;
+  const ssml = `<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="en-US">
+    <voice name="${VOICE}"><prosody rate="${rate||"0%"}">${esc(text)}</prosody></voice></speak>`;
+  const blob = await new Promise((res,rej) => {
+    const syn = new S.SpeechSynthesizer(cfg, null);
+    syn.speakSsmlAsync(ssml,
+      r => { syn.close(); r.reason === S.ResultReason.SynthesizingAudioCompleted
+        ? res(new Blob([r.audioData],{type:"audio/mpeg"})) : rej(new Error(r.errorDetails||"TTS falhou")); },
+      e => { syn.close(); rej(new Error(String(e))); });
+  });
+  ttsCache.set(key, blob);
+  return blob;
+}
+let cur = null;
+function playBlob(b){
+  return new Promise(res => {
+    if(cur){ cur.pause(); cur = null; }
+    const a = new Audio(URL.createObjectURL(b));
+    cur = a; a.onended = a.onerror = () => res();
+    a.play().catch(() => res());
+  });
+}
+
+/* ── auth ─────────────────────────────────────────────────── */
+getRedirectResult(auth).catch(e => log("redirect: " + e.code));
+$("login").addEventListener("click", async () => {
+  const p = new GoogleAuthProvider();
+  try{ await signInWithPopup(auth, p); }
+  catch(e){ log("popup falhou: " + e.code); try{ await signInWithRedirect(auth,p); }catch(e2){ log("redirect falhou: " + e2.code); } }
+});
+
+onAuthStateChanged(auth, async user => {
+  if(!user){
+    uid = null;
+    $("session").innerHTML = kv("Conta","não autenticado","warn");
+    $("login").style.display="block"; $("gencard").style.display="none";
+    return;
+  }
+  uid = user.uid;
+  $("login").style.display="none";
+  log("autenticado como " + user.email);
+  await loadContext();
+});
+
+/* ── contexto: o que já sei e onde erro ───────────────────── */
+async function loadContext(){
+  try{
+    const lex = await getDocs(collection(db, `users/${uid}/lexicon`));
+    known = lex.docs.map(d => d.data().word).filter(Boolean);
+    lexCount = lex.size;
+  }catch(e){ log("lexicon: " + (e.code||e.message)); }
+
+  try{
+    const st = await getDocs(collection(db, `users/${uid}/phonemeStats`));
+    weak = st.docs.map(d => d.data())
+      .filter(s => s.avgScore < 75)
+      .sort((a,b) => a.avgScore - b.avgScore)
+      .slice(0,5).map(s => s.phoneme);
+  }catch(e){ log("phonemeStats: " + (e.code||e.message)); }
+
+  $("session").innerHTML =
+    kv("Conta", auth.currentUser.email, "ok") +
+    kv("Palavras no lexicon", lexCount) +
+    kv("Fonemas fracos", weak.length ? weak.join("  ") : "nenhum ainda", weak.length ? "warn" : "");
+
+  $("gencard").style.display = "block";
+  $("doms").innerHTML = DOMAINS.map(d =>
+    `<button class="dom ${d.id===domain?"on":""}" data-d="${d.id}">${d.label}</button>`).join("");
+  document.querySelectorAll(".dom").forEach(b => b.addEventListener("click", () => {
+    domain = b.dataset.d;
+    document.querySelectorAll(".dom").forEach(x => x.classList.toggle("on", x.dataset.d === domain));
+  }));
+
+  $("calibnote").textContent = lexCount === 0
+    ? "Primeira rodada: as palavras vêm espalhadas do nível 1 ao 5, para calibrar. Marque com sinceridade o que você já sabe."
+    : "As palavras evitam o que já está no seu lexicon" + (weak.length ? " e tentam carregar seus fonemas fracos." : ".");
+}
+
+/* ── gerar ────────────────────────────────────────────────── */
+$("gen").addEventListener("click", async () => {
+  const b = $("gen");
+  b.disabled = true; b.textContent = "Gerando…";
+  $("results").style.display = "none";
+  const t0 = performance.now();
+  try{
+    const r = await generateLexicon({
+      domain, count: 8, weakPhonemes: weak, knownWords: known, calibrate: lexCount === 0
+    });
+    entries = r.data.entries || [];
+    log("geradas " + entries.length + " palavras em " + Math.round(performance.now()-t0) + " ms" + (r.data.calibrate ? " (calibração)" : ""));
+    render();
+  }catch(e){
+    log("FALHOU: " + (e.code||"") + " " + (e.message||""));
+    $("list").innerHTML = `<p class="sub" style="margin:0">Não consegui gerar: ${esc(e.code||e.message)}. Veja <code>firebase functions:log</code> para o motivo real.</p>`;
+    $("results").style.display = "block";
+  }finally{
+    b.disabled = false; b.textContent = "Gerar 8 palavras";
+  }
+});
+
+function render(){
+  $("results").style.display = "block";
+  if(!entries.length){ $("list").innerHTML = '<p class="sub" style="margin:0">Veio vazio.</p>'; return; }
+
+  $("list").innerHTML = entries.map((e,i) => `
+    <div class="entry" id="e${i}">
+      <div class="etop">
+        <div>
+          <span class="eword">${esc(e.word)}</span>
+          <span class="eipa">${esc(e.ipa)}</span>
+          ${e.isPhrasalVerb ? '<span class="tag">phrasal verb</span>' : ""}
+          <div class="diff">${[1,2,3,4,5].map(n => `<i class="${n <= e.difficulty ? "on":""}"></i>`).join("")}</div>
+        </div>
+        <span class="epos">${esc(e.partOfSpeech)}</span>
+      </div>
+      <div class="etr">${esc(e.translationPt)}</div>
+      <div class="edef">${esc(e.definitionEn)}</div>
+      <div class="eex">${esc(e.example)}
+        <div class="eexpt">${esc(e.exampleTransPt)}</div>
+      </div>
+      ${e.usageNotePt ? `<div class="enote">${esc(e.usageNotePt)}</div>` : ""}
+      <div class="acts row3">
+        <button class="btn small" data-play="${i}">Ouvir</button>
+        <button class="btn small" data-known="${i}">Já sei</button>
+        <button class="btn small primary" data-add="${i}">Estudar</button>
+      </div>
+    </div>`).join("");
+
+  document.querySelectorAll("[data-play]").forEach(b => b.addEventListener("click", async () => {
+    const e = entries[b.dataset.play];
+    b.disabled = true; const old = b.textContent; b.textContent = "…";
+    try{ await playBlob(await synth(e.word, "0%")); await new Promise(r=>setTimeout(r,250)); await playBlob(await synth(e.example, "0%")); }
+    catch(err){ log("TTS: " + err.message); }
+    b.disabled = false; b.textContent = old;
+  }));
+
+  document.querySelectorAll("[data-known]").forEach(b => b.addEventListener("click", () => save(b.dataset.known, "known", b)));
+  document.querySelectorAll("[data-add]").forEach(b => b.addEventListener("click", () => save(b.dataset.add, "learning", b)));
+}
+
+/* ── gravar ───────────────────────────────────────────────── */
+async function save(i, status, btn){
+  const e = entries[i];
+  const id = slug(e.word);
+  const card = $("e" + i);
+  card.querySelectorAll("button").forEach(x => x.disabled = true);
+
+  try{
+    await setDoc(doc(db, `users/${uid}/lexicon/${id}`), {
+      word: e.word, domain, difficulty: e.difficulty, status,
+      partOfSpeech: e.partOfSpeech, ipa: e.ipa,
+      definitionEn: e.definitionEn, translationPt: e.translationPt,
+      example: e.example, exampleTransPt: e.exampleTransPt,
+      usageNotePt: e.usageNotePt, isPhrasalVerb: e.isPhrasalVerb,
+      createdAt: serverTimestamp()
+    });
+
+    if(status === "learning"){
+      /* A frase de exemplo vira item de drill. Sem fonema-alvo:
+         item de vocabulário é julgado pela accuracy da frase, e o
+         drill por fonema continua com os itens de pronúncia. */
+      await setDoc(doc(db, `users/${uid}/drillQueue/lex-${id}`), {
+        text: e.example, targetPhonemes: [], note: e.usageNotePt || "",
+        translation: e.exampleTransPt || "", source: "lexicon", word: e.word,
+        state: "new", dueAt: Timestamp.now(), intervalDays: 1,
+        timesShown: 0, timesPassed: 0, lastResult: null
+      });
+      log("«" + e.word + "» salva e enfileirada");
+    }else{
+      log("«" + e.word + "» marcada como conhecida");
+    }
+
+    known.push(e.word); lexCount++;
+    card.classList.add("done");
+    btn.textContent = status === "known" ? "já sabia" : "na fila";
+  }catch(err){
+    log("FALHA ao salvar «" + e.word + "»: " + (err.code||err.message));
+    card.querySelectorAll("button").forEach(x => x.disabled = false);
+  }
+}
+</script>
+</body>
+</html>

@@ -5,311 +5,1233 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Canário">
+<meta name="apple-mobile-web-app-title" content="29 Lab">
 <meta name="robots" content="noindex, nofollow">
-<title>Canário do microfone — Pronunciation Lab</title>
+<title>29 Lab</title>
+<link rel="apple-touch-icon" sizes="180x180" href="/pronunciation-lab/assets/icon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/pronunciation-lab/assets/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --navy-900:#080D17;
-  --navy-850:#0B1220;
-  --navy-800:#111A2B;
-  --navy-750:#16223A;
-  --navy-700:#1D2C48;
-
-  --ink:#ECEFF4;
-  --ink-dim:#94A1B8;
-  --ink-faint:#5C6B85;
-
-  --brass:#D6B073;
-  --brass-hi:#EFD3A0;
-  --brass-dim:#8A7346;
-
-  --amber:#CE9548;
-  --copper:#BE6E3B;
-  --rust:#A9482F;
-
+  --navy-900:#080D17; --navy-850:#0B1220; --navy-800:#111A2B;
+  --navy-750:#16223A; --navy-700:#1D2C48;
+  --ink:#ECEFF4; --ink-dim:#94A1B8; --ink-faint:#5C6B85;
+  --brass:#D6B073; --brass-hi:#EFD3A0;
+  --amber:#CE9548; --copper:#BE6E3B; --rust:#A9482F;
   --r-sm:10px; --r-md:14px; --r-lg:18px;
-  --ease:cubic-bezier(.2,.7,.2,1);
-  --t:200ms;
+  --ease:cubic-bezier(.2,.7,.2,1); --t:200ms;
+  --tabbar:64px;
 }
 *{box-sizing:border-box}
 html,body{margin:0;min-height:100%}
 body{
-  background:var(--navy-900);
-  color:var(--ink);
+  background:var(--navy-900); color:var(--ink);
   font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  font-variant-numeric:tabular-nums;
-  -webkit-font-smoothing:antialiased;
-  padding:max(18px,env(safe-area-inset-top)) 16px calc(18px + env(safe-area-inset-bottom));
+  font-variant-numeric:tabular-nums; -webkit-font-smoothing:antialiased;
+  padding:max(14px,env(safe-area-inset-top)) 16px calc(var(--tabbar) + 24px + env(safe-area-inset-bottom));
   display:flex; justify-content:center;
 }
-.app{width:100%; max-width:440px; display:flex; flex-direction:column; gap:14px}
+.app{width:100%; max-width:460px; display:flex; flex-direction:column; gap:14px}
 :focus-visible{outline:2px solid var(--brass); outline-offset:3px; border-radius:6px}
-
 h1{font-size:13px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-faint); margin:0}
 .sub{font-size:13px; line-height:1.55; color:var(--ink-dim); margin:0}
-
+.brand{display:block; margin:0 auto 2px; height:64px; width:auto}
 .card{background:var(--navy-850); border-radius:var(--r-lg); padding:16px; box-shadow:0 1px 0 rgba(255,255,255,.03) inset, 0 8px 24px rgba(0,0,0,.35)}
 .card h2{font-size:10.5px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-faint); margin:0 0 12px}
-
 .kv{display:flex; justify-content:space-between; gap:12px; font-size:13px; padding:6px 0; border-bottom:1px solid var(--navy-800)}
 .kv:last-child{border-bottom:none}
 .kv .k{color:var(--ink-faint)}
 .kv .v{color:var(--ink); text-align:right; word-break:break-word}
 .v.ok{color:var(--brass)} .v.warn{color:var(--amber)} .v.bad{color:var(--rust)}
-
-.cycle{display:flex; gap:8px; margin-bottom:14px}
-.seg{flex:1; height:4px; border-radius:99px; background:var(--navy-700); transition:background var(--t) var(--ease)}
-.seg.pass{background:var(--brass)} .seg.fail{background:var(--copper)} .seg.now{background:var(--ink-dim)}
-
 button{font:inherit; cursor:pointer; border:none; border-radius:var(--r-md); transition:background var(--t) var(--ease), color var(--t) var(--ease)}
-.btn{width:100%; padding:13px 16px; font-size:15px; background:var(--navy-750); color:var(--ink); text-align:center}
+.btn{width:100%; padding:13px 16px; font-size:15px; background:var(--navy-750); color:var(--ink); text-align:center; margin-top:8px}
 .btn:hover{background:var(--navy-700)}
-.btn.primary{background:var(--brass); color:#1A1206; font-weight:600; padding:18px 16px; font-size:17px}
+.btn.primary{background:var(--brass); color:#1A1206; font-weight:600; padding:17px 16px; font-size:16px}
 .btn.primary:hover{background:var(--brass-hi)}
-.btn.primary[disabled]{background:var(--navy-700); color:var(--ink-faint); cursor:default}
-.row{display:flex; gap:8px}
+.btn[disabled]{background:var(--navy-700); color:var(--ink-faint); cursor:default}
+.btn.small{padding:9px 12px; font-size:13px; margin-top:0}
+.btn.ghost{background:transparent; color:var(--ink-faint); font-size:12.5px; padding:8px}
+.btn.ghost:hover{background:var(--navy-800)}
+.row2{display:grid; grid-template-columns:1fr 1fr; gap:8px}
+.row3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px}
+.playing{background:var(--brass) !important; color:#1A1206 !important}
 
-.meter{height:8px; border-radius:99px; background:var(--navy-800); overflow:hidden; margin:14px 0 8px}
+/* abas */
+.tabbar{position:fixed; left:0; right:0; bottom:0; height:calc(var(--tabbar) + env(safe-area-inset-bottom));
+  padding-bottom:env(safe-area-inset-bottom); background:rgba(11,18,32,.94);
+  -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px);
+  border-top:1px solid var(--navy-800); display:flex; z-index:50}
+.tabbar button{flex:1; background:none; border-radius:0; color:var(--ink-faint);
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;
+  font-size:10.5px; letter-spacing:.04em; padding:0}
+.tabbar button .ic{font-size:19px; line-height:1}
+.tabbar button.on{color:var(--brass)}
+.pane{display:none; flex-direction:column; gap:14px}
+.pane.on{display:flex}
+
+/* domínios */
+.doms{display:flex; gap:8px; flex-wrap:wrap}
+.dom{background:var(--navy-800); color:var(--ink-dim); border-radius:99px; padding:8px 15px; font-size:14px}
+.dom.on{background:var(--brass); color:#1A1206; font-weight:600}
+
+/* vocabulário */
+.entry{background:var(--navy-800); border-radius:var(--r-md); padding:14px; margin-bottom:10px}
+.entry.done{opacity:.5}
+.etop{display:flex; justify-content:space-between; align-items:baseline; gap:10px}
+.eword{font-size:19px; font-weight:600}
+.eipa{color:var(--ink-faint); font-size:13px; margin-left:8px; font-weight:400}
+.epos{font-size:11px; color:var(--ink-faint); letter-spacing:.1em; text-transform:uppercase}
+.diff{display:flex; gap:3px; margin-top:3px}
+.diff i{width:16px; height:3px; border-radius:99px; background:var(--navy-700)}
+.diff i.on{background:var(--amber)}
+.etr{color:var(--brass); font-size:15px; margin-top:8px}
+.edef{color:var(--ink-dim); font-size:13px; line-height:1.5; margin-top:4px}
+.eex{background:var(--navy-900); border-radius:var(--r-sm); padding:11px; margin-top:10px; font-size:15px; line-height:1.5}
+.eexpt{color:var(--ink-faint); font-size:12.5px; margin-top:5px; line-height:1.45}
+.enote{font-size:12.5px; line-height:1.55; color:var(--ink-dim); margin-top:9px; padding-left:10px; border-left:2px solid var(--navy-700)}
+.tag{display:inline-block; background:var(--navy-750); color:var(--brass); border-radius:99px; padding:2px 9px; font-size:11px; margin-left:6px}
+
+/* frase tocável */
+.phrase{background:var(--navy-900); border-radius:var(--r-sm); padding:14px 12px 12px; border:1px solid var(--navy-700);
+  font-size:19px; line-height:2.1; -webkit-user-select:none; user-select:none; -webkit-touch-callout:none}
+.w{display:inline-block; padding:1px 3px; margin:0 1px; border-radius:5px; cursor:pointer;
+   border-bottom:3px solid transparent; transition:background var(--t) var(--ease)}
+.w:hover{background:var(--navy-800)}
+.w.sel{background:var(--navy-750)}
+.w.playing{background:var(--brass); color:#1A1206}
+.w.s-hi{border-bottom-color:var(--brass)}
+.w.s-mid{border-bottom-color:var(--amber)}
+.w.s-low{border-bottom-color:var(--rust)}
+.syl{display:inline-block}
+.syl.s-hi{color:var(--ink)} .syl.s-mid{color:var(--amber)} .syl.s-low{color:var(--rust)}
+.hint{font-size:11px; color:var(--ink-faint); margin:8px 0 0; line-height:1.5}
+.detail{background:var(--navy-800); border-radius:var(--r-sm); padding:12px; margin-top:10px; font-size:13px}
+.detail .top{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px}
+.detail .wd{font-size:17px; font-weight:600}
+.detail .gl{color:var(--brass); font-size:13px}
+.detail .ph{display:flex; gap:6px; flex-wrap:wrap; margin-top:8px}
+.detail .ph span{background:var(--navy-850); border-radius:6px; padding:3px 8px; font-size:13px}
+.detail .ph span i{font-style:normal; color:var(--ink-faint); font-size:11px; margin-left:4px}
+.trans{background:var(--navy-800); border-radius:var(--r-sm); padding:12px; margin-top:10px; font-size:14px; line-height:1.5; color:var(--ink-dim)}
+.targets{display:flex; gap:6px; flex-wrap:wrap; margin-top:10px}
+.chip{background:var(--navy-800); color:var(--brass); border-radius:99px; padding:4px 11px; font-size:14px}
+.chip.pick{cursor:pointer; background:var(--navy-750); color:var(--ink-dim)}
+.chip.pick.on{background:var(--brass); color:#1A1206; font-weight:600}
+.head{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px}
+.head .pos{font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-faint)}
+.dots{display:flex; gap:5px}
+.dots i{width:7px; height:7px; border-radius:99px; background:var(--navy-700); display:block}
+.dots i.used{background:var(--copper)} .dots i.now{background:var(--ink-dim)}
+.track{display:flex; gap:3px; margin-bottom:12px}
+.track i{flex:1; height:3px; border-radius:99px; background:var(--navy-700)}
+.track i.pass{background:var(--brass)} .track i.fail{background:var(--copper)} .track i.now{background:var(--ink-dim)}
+.meter{height:8px; border-radius:99px; background:var(--navy-800); overflow:hidden; margin:14px 0 4px}
 .meter i{display:block; height:100%; width:0%; background:var(--brass); border-radius:99px}
-.timer{font-size:28px; font-weight:600; text-align:center; letter-spacing:.02em}
-.timer small{font-size:12px; font-weight:400; color:var(--ink-faint); display:block; letter-spacing:.14em; text-transform:uppercase; margin-top:4px}
-
+.scores{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px}
+.score{background:var(--navy-800); border-radius:var(--r-sm); padding:12px}
+.score b{display:block; font-size:24px; font-weight:600; color:var(--brass); line-height:1.1}
+.score span{display:block; font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-faint); margin-top:4px}
 .verdict{border-left:3px solid var(--navy-700); padding:10px 0 10px 12px; margin-top:12px; font-size:13.5px; line-height:1.5}
-.verdict.pass{border-color:var(--brass)}
-.verdict.fail{border-color:var(--rust)}
+.verdict.pass{border-color:var(--brass)} .verdict.fail{border-color:var(--rust)}
 .verdict b{display:block; font-size:11px; letter-spacing:.14em; text-transform:uppercase; margin-bottom:4px; color:var(--ink-faint)}
+.note{background:var(--navy-800); border-radius:var(--r-sm); padding:12px; font-size:13.5px; line-height:1.6; color:var(--ink-dim); margin-top:12px}
+.note b{color:var(--brass); font-weight:600}
+.ab{margin-top:12px; padding:12px; background:var(--navy-800); border-radius:var(--r-sm)}
+.ab .lbl{font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:8px}
+.qrow{display:flex; align-items:center; gap:10px; font-size:13px; padding:7px 0; border-bottom:1px solid var(--navy-800)}
+.qrow:last-child{border-bottom:none}
+.qrow .t{flex:1; color:var(--ink-dim); overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.qrow .d{color:var(--ink-faint); font-size:12px}
+.qrow .due{color:var(--brass)}
 
-ol.steps{margin:0; padding-left:18px; font-size:13.5px; line-height:1.65; color:var(--ink-dim)}
-ol.steps b{color:var(--ink); font-weight:600}
+/* escrita */
+textarea.write{width:100%; height:110px; background:var(--navy-900); color:var(--ink); border:1px solid var(--navy-700);
+  border-radius:var(--r-sm); padding:12px; font-family:inherit; font-size:16px; line-height:1.5; resize:vertical}
+.fix{background:var(--navy-800); border-radius:var(--r-sm); padding:12px; margin-top:10px}
+.fix .lbl{font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:6px}
+.fix .txt{font-size:15.5px; line-height:1.5}
+.issue{margin-top:10px; padding-left:10px; border-left:2px solid var(--copper); font-size:13px; line-height:1.55}
+.issue .ba{color:var(--ink-faint)}
+.issue .ba s{color:var(--rust); text-decoration-color:var(--rust)}
+.issue .ba b{color:var(--brass); font-weight:600}
 
-textarea{width:100%; height:150px; background:var(--navy-900); color:var(--ink-dim); border:1px solid var(--navy-700);
-  border-radius:var(--r-sm); padding:10px; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:11.5px; line-height:1.5; resize:vertical}
+/* progresso */
+.plist{display:flex; flex-direction:column; gap:2px}
+.prow{display:flex; align-items:center; gap:10px; padding:9px 8px; border-radius:var(--r-sm); cursor:pointer; background:transparent; width:100%; text-align:left; color:var(--ink)}
+.prow:hover{background:var(--navy-800)}
+.prow .sym{font-size:17px; width:38px; color:var(--brass)}
+.prow .bar{flex:1; height:6px; border-radius:99px; background:var(--navy-800); overflow:hidden}
+.prow .bar i{display:block; height:100%; border-radius:99px; background:var(--brass)}
+.prow .num{font-size:13px; width:34px; text-align:right; color:var(--ink-dim)}
+.prow .n{font-size:11px; width:44px; text-align:right; color:var(--ink-faint)}
+.st-weak .bar i{background:var(--rust)} .st-improving .bar i{background:var(--amber)}
+svg.curve{width:100%; height:130px; display:block; margin-top:12px}
+.grid30{display:grid; grid-template-columns:repeat(15,1fr); gap:4px; margin-top:10px}
+.grid30 i{aspect-ratio:1; border-radius:3px; background:var(--navy-800)}
+.grid30 i.on{background:var(--brass)}
+.grid30 i.half{background:var(--copper)}
 
-audio{width:100%; margin-top:12px}
-.foot{text-align:center; font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:#2E3B52; padding:8px 0 4px}
-@media (prefers-reduced-motion:reduce){*{transition:none !important; animation:none !important}}
+textarea.log{width:100%; height:110px; background:var(--navy-900); color:var(--ink-dim); border:1px solid var(--navy-700);
+  border-radius:var(--r-sm); padding:10px; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:11px; line-height:1.45; resize:vertical}
+.foot{text-align:center; font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:#2E3B52; padding:6px 0 2px}
+@media (prefers-reduced-motion:reduce){*{transition:none !important}}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/microsoft-cognitiveservices-speech-sdk@1/distrib/browser/microsoft.cognitiveservices.speech.sdk.bundle-min.js"></script>
 </head>
 <body>
 <div class="app">
 
   <div>
-    <h1>Canário do microfone</h1>
-    <p class="sub">Passo 1 da Fatia 1. Este teste decide se o PWA no iOS aguenta gravar mais de uma vez. Nada mais é construído antes de ele passar três ciclos.</p>
+    <img class="brand" src="/pronunciation-lab/assets/logo-header@3x.png" alt="Twenty Nine Cyber">
   </div>
 
-  <div class="card">
-    <h2>Ambiente</h2>
-    <div id="env"></div>
+  <div class="card" id="acct">
+    <div id="session"></div>
+    <button class="btn primary" id="login">Entrar com Google</button>
   </div>
 
+  <!-- ══════════ VOCABULÁRIO ══════════ -->
+  <section class="pane on" id="pane-vocab">
+    <div class="card">
+      <h2>Gerar vocabulário</h2>
+      <div class="doms" id="doms"></div>
+      <p class="sub" id="calibnote" style="margin:10px 0 0"></p>
+      <button class="btn primary" id="gen">Gerar 8 palavras</button>
+    </div>
+    <div class="card" id="results" style="display:none">
+      <h2>Resultado</h2>
+      <div id="list"></div>
+    </div>
+  </section>
+
+  <!-- ══════════ TREINO ══════════ -->
+  <section class="pane" id="pane-drill">
+    <div class="card">
+      <h2>Fila</h2>
+      <div id="qsummary"></div>
+      <button class="btn primary" id="start" style="display:none">Começar sessão</button>
+      <button class="btn" id="seed" style="display:none">Semear frases de fonema</button>
+      <button class="btn ghost" id="retire" style="display:none">Aposentar as frases de fonema</button>
+    </div>
+
+    <div class="card" id="drillcard" style="display:none">
+      <h2>Item</h2>
+      <div class="track" id="track"></div>
+      <div class="head">
+        <span class="pos" id="pos"></span>
+        <span class="dots" id="dots"></span>
+      </div>
+      <div class="phrase" id="phrase"></div>
+      <p class="hint">Toque: ouvir a palavra · Segure: ouvir devagar</p>
+      <div id="detail"></div>
+      <button class="btn small" id="transbtn">Mostrar tradução</button>
+      <div id="transbox"></div>
+      <div class="targets" id="targets"></div>
+      <div id="notebox"></div>
+      <div class="row2" style="margin-top:12px">
+        <button class="btn" id="model">Ouvir frase</button>
+        <button class="btn" id="modelslow">Devagar</button>
+      </div>
+      <div class="meter"><i id="level"></i></div>
+      <button class="btn primary" id="rec">Gravar</button>
+      <div id="verdict"></div>
+      <div id="abbox"></div>
+      <div id="scores"></div>
+      <button class="btn" id="next" style="display:none">Continuar</button>
+    </div>
+
+    <div class="card" id="summary" style="display:none">
+      <h2>Fim da sessão</h2>
+      <div id="summaryout"></div>
+    </div>
+
+    <div class="card">
+      <h2>Todos os itens</h2>
+      <div id="queue"></div>
+      <button class="btn" id="reloadq">Recarregar fila</button>
+    </div>
+  </section>
+
+  <!-- ══════════ ESCRITA ══════════ -->
+  <section class="pane" id="pane-write">
+    <div class="card">
+      <h2>Escreva você</h2>
+      <p class="sub" style="margin:0 0 10px">Monte uma frase sua usando as palavras marcadas. Errar aqui é o ponto.</p>
+      <div class="targets" id="wwords"></div>
+      <button class="btn small" id="wshuffle" style="margin-top:10px">Trocar palavras</button>
+      <textarea class="write" id="wtext" placeholder="Escreva em inglês…" style="margin-top:10px"></textarea>
+      <button class="btn primary" id="wsend">Corrigir</button>
+      <div id="wout"></div>
+    </div>
+    <div class="card" id="whist" style="display:none">
+      <h2>O que você já escreveu</h2>
+      <div id="whistout"></div>
+    </div>
+  </section>
+
+  <!-- ══════════ PROGRESSO ══════════ -->
+  <section class="pane" id="pane-prog">
+    <div class="card">
+      <h2>Resumo</h2>
+      <div id="progsum"></div>
+    </div>
+    <div class="card">
+      <h2>Últimos 30 dias</h2>
+      <p class="sub" style="margin:0">Cada quadrado é um dia. Aceso quando você gravou alguma coisa.</p>
+      <div class="grid30" id="grid30"></div>
+    </div>
+    <div class="card">
+      <h2>Curva por fonema</h2>
+      <div id="stats"></div>
+      <div id="curvebox"></div>
+      <button class="btn" id="reloadstats">Recarregar</button>
+    </div>
+  </section>
+
   <div class="card">
-    <h2>Ciclo <span id="cyclenum">1</span> de 3</h2>
-    <div class="cycle" id="cycle"><i class="seg now"></i><i class="seg"></i><i class="seg"></i></div>
-
-    <button class="btn" id="tone">Tocar tom de 1 s (testa a saída)</button>
-
-    <div class="meter"><i id="level"></i></div>
-    <div class="timer" id="timer">0,0<small>segundos gravados</small></div>
-
-    <button class="btn primary" id="rec" style="margin-top:14px">Gravar 3 segundos</button>
-
-    <div id="playback"></div>
-    <div id="verdict"></div>
-  </div>
-
-  <div class="card">
-    <h2>Como rodar</h2>
-    <ol class="steps">
-      <li>Abra pelo Safari, toque em compartilhar e <b>Adicionar à Tela de Início</b>. Feche o Safari.</li>
-      <li>Abra pelo ícone. Toque em gravar. Confira se o playback tem som.</li>
-      <li><b>Feche o app de verdade</b> — deslize para cima e remova do multitarefa. Não basta minimizar.</li>
-      <li>Reabra pelo ícone e grave de novo. Repita até o ciclo 3.</li>
-      <li>Repita o ciclo 1 com AirPods conectados, só para ver o que a leitura de dispositivo devolve.</li>
-    </ol>
-  </div>
-
-  <div class="card">
-    <h2>Relatório desta sessão</h2>
-    <p class="sub" style="margin:-4px 0 12px">O log zera quando o app fecha. Copie antes de fechar, ou anote só o veredito de cada ciclo.</p>
-    <textarea id="log" readonly></textarea>
-    <button class="btn" id="copy" style="margin-top:8px">Copiar relatório</button>
+    <h2>Log</h2>
+    <textarea class="log" id="log" readonly></textarea>
   </div>
 
   <div class="foot">Twenty Nine Cyber</div>
 </div>
 
-<script>
-(function(){
-  const $ = id => document.getElementById(id);
-  const DUR = 3000;
-  let cycle = 1, lines = [], lastStream = null, audioCtx = null;
+<nav class="tabbar">
+  <button data-tab="vocab" class="on"><span class="ic">✦</span>Vocabulário</button>
+  <button data-tab="drill"><span class="ic">◉</span>Treino</button>
+  <button data-tab="write"><span class="ic">✎</span>Escrita</button>
+  <button data-tab="prog"><span class="ic">▲</span>Progresso</button>
+</nav>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+import {
+  getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect,
+  getRedirectResult, onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
+import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-functions.js";
+import {
+  getFirestore, doc, collection, addDoc, setDoc, updateDoc, getDocs,
+  serverTimestamp, runTransaction, Timestamp, query, orderBy, limit
+} from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 
-  /* ── ambiente ─────────────────────────────────────────────── */
-  const standalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
-  function kv(k, v, cls){ return '<div class="kv"><span class="k">'+k+'</span><span class="v '+(cls||'')+'">'+v+'</span></div>'; }
+const firebaseConfig = {
+  apiKey: "AIzaSyAUi8gBzhogTS1qpAOk8nmwTGsP42URFnk",
+  authDomain: "pronunciation-lab-29cyber.firebaseapp.com",
+  projectId: "pronunciation-lab-29cyber",
+  storageBucket: "pronunciation-lab-29cyber.firebasestorage.app",
+  messagingSenderId: "228197203836",
+  appId: "1:228197203836:web:20397be05d1ed32aec2ef9"
+};
 
-  const env = [
-    kv('Modo', standalone ? 'Instalado (standalone)' : 'Aba do Safari', standalone ? 'ok' : 'warn'),
-    kv('Contexto seguro', window.isSecureContext ? 'HTTPS' : 'Inseguro — getUserMedia não roda', window.isSecureContext ? 'ok' : 'bad'),
-    kv('getUserMedia', navigator.mediaDevices && navigator.mediaDevices.getUserMedia ? 'Disponível' : 'Ausente', navigator.mediaDevices ? 'ok' : 'bad'),
-    kv('MediaRecorder', typeof MediaRecorder !== 'undefined' ? 'Disponível' : 'Ausente', typeof MediaRecorder !== 'undefined' ? 'ok' : 'bad'),
-    kv('Sistema', navigator.userAgent.replace(/^Mozilla\/5\.0 \(/, '').split(')')[0])
-  ].join('');
-  $('env').innerHTML = env;
-  log('--- app aberto | ' + (standalone ? 'standalone' : 'safari') + ' | ' + new Date().toLocaleTimeString('pt-BR'));
+const DOMAINS = [
+  { id:"cyber",     label:"Cibersegurança" },
+  { id:"interview", label:"Entrevista" },
+  { id:"client",    label:"Cliente" },
+  { id:"teaching",  label:"Aula" },
+  { id:"meeting",   label:"Reunião" },
+  { id:"incident",  label:"Incidente" },
+  { id:"phone",     label:"Telefone" },
+  { id:"services",  label:"Serviços" },
+  { id:"health",    label:"Saúde" },
+  { id:"travel",    label:"Viagem" },
+  { id:"daily",     label:"Cotidiano" }
+];
 
-  function log(s){ lines.push(s); $('log').value = lines.join('\n'); }
+const SEED = [
+  { id:"i01", text:"They said that the other brother bothered them rather than the mother.", targets:["ð"],
+    translation:"Eles disseram que o outro irmão incomodou eles, e não a mãe.",
+    note:"<b>ð</b> é a ponta da língua tocando de leve a borda dos dentes de cima, <b>com voz</b> — a garganta vibra. O português não tem esse som, então ele vira /d/ por reflexo." },
+  { id:"i02", text:"The cool girl felt the small ball still fell well.", targets:["l"],
+    translation:"A garota descolada sentiu que a bolinha ainda caiu bem.",
+    note:"O <b>L final</b> americano é escuro: a ponta da língua sobe e o fundo da língua também. No português brasileiro esse L virou /u/ — <i>Brasil</i> sai <i>Brasiu</i>." },
+  { id:"i03", text:"She loves the gloves and believes the leaves have moved.", targets:["v","z"],
+    translation:"Ela adora as luvas e acredita que as folhas se moveram.",
+    note:"O problema é <b>ensurdecimento no fim</b>: /v/ vira /f/ e /z/ vira /s/. Segure a vibração até o fim." },
+  { id:"i04", text:"The three thrifty athletes threw the thick thread.", targets:["θ","ɹ"],
+    translation:"Os três atletas econômicos jogaram a linha grossa.",
+    note:"<b>θɹ</b> é o cluster mais difícil. Língua entre os dentes <b>sem voz</b>, e emenda o R americano. O erro comum é meter uma vogal no meio." },
+  { id:"i05", text:"This thing is worth more than those three things.", targets:["θ","ð"],
+    translation:"Esta coisa vale mais do que aquelas três coisas.",
+    note:"Mesma posição de língua, diferença só de <b>voz</b>: <i>thing</i> é surdo, <i>this</i> é sonoro." },
+  { id:"i06", text:"Every visitor believed the vivid village was very beautiful.", targets:["v"],
+    translation:"Todo visitante achou que a vila colorida era muito bonita.",
+    note:"O <b>v</b> é lábio-dental: dente sobre o lábio. Os lábios <b>não</b> se fecham — se fecharem, vira /b/." }
+];
 
-  /* ── tom de saída (roda antes do microfone, de propósito) ── */
-  $('tone').addEventListener('click', async () => {
+const GLOSS = {
+  bothered:"incomodou", rather:"em vez de", brother:"irmão", mother:"mãe", other:"outro",
+  cool:"legal", felt:"sentiu", small:"pequeno", ball:"bola", still:"ainda", fell:"caiu", well:"bem",
+  loves:"adora", gloves:"luvas", believes:"acredita", leaves:"folhas", moved:"se moveram",
+  three:"três", thrifty:"econômico", athletes:"atletas", threw:"jogou", thick:"grosso", thread:"linha",
+  thing:"coisa", things:"coisas", worth:"vale", those:"aqueles", than:"do que",
+  every:"todo", visitor:"visitante", believed:"acreditou", vivid:"vívido", village:"vila", beautiful:"bonito"
+};
+
+const PASS_ACCURACY = 85, PASS_PHONEME = 80, MAX_ATTEMPTS = 3;
+const SESSION_SIZE = 10, LADDER = [1,3,7,21];
+const VOICE = "en-US-AriaNeural", MAX_NOTES = 2;
+
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+const fns  = getFunctions(app, "us-central1");
+const issueSpeechToken   = httpsCallable(fns, "issueSpeechToken");
+const generateLexicon    = httpsCallable(fns, "generateLexicon");
+const evaluateWriting    = httpsCallable(fns, "evaluateWriting");
+
+const $ = id => document.getElementById(id);
+const lines = [];
+function log(s){ lines.push(new Date().toLocaleTimeString("pt-BR") + "  " + s); $("log").value = lines.join("\n"); $("log").scrollTop = 1e6; }
+function kv(k,v,c){ return `<div class="kv"><span class="k">${k}</span><span class="v ${c||""}">${v}</span></div>`; }
+const esc = s => String(s ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const slug = s => s.toLowerCase().trim().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,60);
+const band = v => v >= 80 ? "s-hi" : v >= 60 ? "s-mid" : "s-low";
+const clean = w => w.toLowerCase().replace(/[^a-z'-]/g,"");
+const dayKey = d => new Date(d).toISOString().slice(0,10);
+
+let uid = null, domain = "cyber";
+let lexicon = [], known = [], learning = [], weak = [], queue = [];
+
+/* ── abas ─────────────────────────────────────────────────── */
+document.querySelectorAll(".tabbar button").forEach(b => b.addEventListener("click", () => {
+  const t = b.dataset.tab;
+  document.querySelectorAll(".tabbar button").forEach(x => x.classList.toggle("on", x === b));
+  document.querySelectorAll(".pane").forEach(p => p.classList.toggle("on", p.id === "pane-" + t));
+  window.scrollTo({ top:0, behavior:"instant" });
+  if(t === "drill") loadQueue();
+  if(t === "prog")  { loadStats(); loadDays(); }
+  if(t === "write") pickWriteWords();
+}));
+
+/* ── token e TTS ──────────────────────────────────────────── */
+let tokenCache = { token:null, region:null, exp:0 };
+async function getToken(){
+  if(tokenCache.token && Date.now() < tokenCache.exp) return tokenCache;
+  const r = await issueSpeechToken();
+  tokenCache = { token:r.data.token, region:r.data.region, exp: Date.now() + (r.data.expiresInSeconds-30)*1000 };
+  return tokenCache;
+}
+const ttsCache = new Map();
+async function synth(text, rate){
+  const key = text + "|" + (rate||"0%");
+  if(ttsCache.has(key)) return ttsCache.get(key);
+  const { token, region } = await getToken();
+  const S = window.SpeechSDK;
+  const cfg = S.SpeechConfig.fromAuthorizationToken(token, region);
+  cfg.speechSynthesisVoiceName = VOICE;
+  cfg.speechSynthesisOutputFormat = S.SpeechSynthesisOutputFormat.Audio16Khz32KBitRateMonoMp3;
+  const ssml = `<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="en-US">
+    <voice name="${VOICE}"><prosody rate="${rate||"0%"}">${esc(text)}</prosody></voice></speak>`;
+  const blob = await new Promise((res,rej) => {
+    const syn = new S.SpeechSynthesizer(cfg, null);
+    syn.speakSsmlAsync(ssml,
+      r => { syn.close(); r.reason === S.ResultReason.SynthesizingAudioCompleted
+        ? res(new Blob([r.audioData],{type:"audio/mpeg"})) : rej(new Error(r.errorDetails||"TTS falhou")); },
+      e => { syn.close(); rej(new Error(String(e))); });
+  });
+  ttsCache.set(key, blob);
+  return blob;
+}
+let currentAudio = null;
+function playBlob(b){
+  return new Promise(res => {
+    if(currentAudio){ currentAudio.pause(); currentAudio = null; }
+    const a = new Audio(URL.createObjectURL(b));
+    currentAudio = a; a.onended = a.onerror = () => res();
+    a.play().catch(() => res());
+  });
+}
+async function speakBtn(btn, text, rate){
+  btn.disabled = true; btn.classList.add("playing");
+  const old = btn.textContent; btn.textContent = "…";
+  try{ await playBlob(await synth(text, rate)); }catch(e){ log("TTS: " + e.message); }
+  btn.disabled = false; btn.classList.remove("playing"); btn.textContent = old;
+}
+
+/* ── captura de áudio ─────────────────────────────────────── */
+let lastUserAudio = null;
+async function startCapture(){
+  const stream = await navigator.mediaDevices.getUserMedia({ audio:true });
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+  await ctx.resume();
+  const an = ctx.createAnalyser(); an.fftSize = 1024;
+  ctx.createMediaStreamSource(stream).connect(an);
+  const buf = new Uint8Array(an.fftSize);
+  let peak = 0, raf;
+  (function tick(){
+    an.getByteTimeDomainData(buf);
+    let max = 0;
+    for(let i=0;i<buf.length;i++){ const d = Math.abs(buf[i]-128)/128; if(d>max) max=d; }
+    if(max>peak) peak = max;
+    const el = $("level"); if(el) el.style.width = Math.min(100, max*140) + "%";
+    raf = requestAnimationFrame(tick);
+  })();
+  let mr = null, chunks = [];
+  try{
+    const mime = ["audio/mp4","audio/webm;codecs=opus","audio/webm"].find(m => window.MediaRecorder?.isTypeSupported?.(m));
+    mr = mime ? new MediaRecorder(stream,{mimeType:mime}) : new MediaRecorder(stream);
+    mr.ondataavailable = e => { if(e.data?.size) chunks.push(e.data); };
+    mr.start();
+  }catch(e){ log("cópia local indisponível: " + e.name); }
+  return {
+    stream, label:(stream.getAudioTracks()[0]||{}).label||"",
+    stop(){
+      cancelAnimationFrame(raf);
+      const el = $("level"); if(el) el.style.width = "0%";
+      if(mr && mr.state !== "inactive"){
+        mr.onstop = () => { if(chunks.length) lastUserAudio = new Blob(chunks,{type:mr.mimeType||"audio/mp4"}); };
+        mr.stop();
+      }
+      stream.getTracks().forEach(t=>t.stop());
+      ctx.close().catch(()=>{});
+      return peak;
+    }
+  };
+}
+
+/* Avalia uma fala contra um texto. Devolve null se não deu para medir.
+   É o coração compartilhado por Vocabulário, Treino e Escrita. */
+async function assess(refText, targets){
+  const { token, region } = await getToken();
+  const S = window.SpeechSDK;
+  const sc = S.SpeechConfig.fromAuthorizationToken(token, region);
+  sc.speechRecognitionLanguage = "en-US";
+  const pa = new S.PronunciationAssessmentConfig(
+    refText, S.PronunciationAssessmentGradingSystem.HundredMark,
+    S.PronunciationAssessmentGranularity.Phoneme, true);
+  pa.phonemeAlphabet = "IPA";
+  pa.enableProsodyAssessment = true;
+
+  let cap, audioConfig;
+  try{
+    cap = await startCapture();
+    audioConfig = S.AudioConfig.fromStreamInput(cap.stream);
+  }catch(e){
+    log("stream compartilhado falhou — microfone direto");
+    if(cap) cap.stop();
+    cap = { label:"", stop(){ return -1; } };
+    audioConfig = S.AudioConfig.fromDefaultMicrophoneInput();
+  }
+  if(/bluetooth|airpod|headset|hands-?free/i.test(cap.label))
+    log("ATENÇÃO: entrada bluetooth — score não confiável");
+
+  const rec = new S.SpeechRecognizer(sc, audioConfig);
+  pa.applyTo(rec);
+
+  return await new Promise(resolve => {
+    rec.recognizeOnceAsync(result => {
+      const peak = cap.stop();
+      if(result.reason === S.ResultReason.Canceled){
+        const d = S.CancellationDetails.fromResult(result); rec.close();
+        return resolve({ error: "Cancelado pela Azure: " + d.errorDetails, peak });
+      }
+      if(result.reason === S.ResultReason.NoMatch){
+        rec.close();
+        return resolve({ error: "Não reconheci fala. Pico do microfone: " + Math.round(peak*100) + "%.", peak });
+      }
+      const parsed = JSON.parse(result.properties.getProperty(S.PropertyId.SpeechServiceResponse_JsonResult));
+      rec.close();
+      const best = parsed.NBest[0], s = best.PronunciationAssessment;
+      const words = (best.Words||[]).map(w => ({
+        word: w.Word,
+        accuracy: w.PronunciationAssessment ? w.PronunciationAssessment.AccuracyScore : 0,
+        errorType: w.PronunciationAssessment ? w.PronunciationAssessment.ErrorType : "None",
+        syllables: (w.Syllables||[]).map(y => ({ syllable:y.Syllable, accuracy:y.PronunciationAssessment.AccuracyScore })),
+        phonemes: (w.Phonemes||[]).map(p => ({ phoneme:p.Phoneme, accuracy:p.PronunciationAssessment.AccuracyScore }))
+      }));
+      const offenders = [];
+      for(const w of words) for(const ph of w.phonemes)
+        if((targets||[]).includes(ph.phoneme) && ph.accuracy < PASS_PHONEME)
+          offenders.push({ ph:ph.phoneme, word:w.word, score:ph.accuracy });
+      offenders.sort((a,b) => a.score - b.score);
+      resolve({
+        scores: { accuracy:s.AccuracyScore, fluency:s.FluencyScore, completeness:s.CompletenessScore,
+                  prosody:s.ProsodyScore ?? 0, pronunciation:s.PronScore },
+        words, offenders, peak,
+        durationMs: Math.round((result.duration||0)/10000),
+        passed: s.AccuracyScore >= PASS_ACCURACY && offenders.length === 0
+      });
+    },
+    err => { cap.stop(); rec.close(); resolve({ error: String(err), peak:-1 }); });
+  });
+}
+
+function scoreCard(s){
+  return `<div class="scores">
+    <div class="score"><b>${Math.round(s.pronunciation)}</b><span>Geral</span></div>
+    <div class="score"><b>${Math.round(s.accuracy)}</b><span>Accuracy</span></div>
+    <div class="score"><b>${Math.round(s.fluency)}</b><span>Fluency</span></div>
+    <div class="score"><b>${Math.round(s.prosody)}</b><span>Prosódia</span></div></div>`;
+}
+
+async function saveAttempt(o){
+  await addDoc(collection(db, `users/${uid}/attempts`), {
+    sessionId: o.sessionId || "adhoc", itemId: o.itemId, referenceText: o.text,
+    attemptNumber: o.attemptNumber || 1, audioDurationMs: o.durationMs,
+    scores: o.scores, words: o.words, targetPhonemes: o.targets || [],
+    passed: o.passed, createdAt: serverTimestamp()
+  });
+  await updatePhonemeStats(o.words);
+}
+
+async function updatePhonemeStats(words){
+  const per = new Map();
+  for(const w of words) for(const ph of w.phonemes){
+    if(!per.has(ph.phoneme)) per.set(ph.phoneme, { scores:[], words:new Set() });
+    const e = per.get(ph.phoneme);
+    e.scores.push(ph.accuracy);
+    if(w.accuracy < 70) e.words.add(w.word);
+  }
+  const entries = [...per.entries()];
+  const refs = entries.map(([p]) => doc(db, `users/${uid}/phonemeStats/${encodeURIComponent(p)}`));
+  await runTransaction(db, async tx => {
+    const snaps = await Promise.all(refs.map(r => tx.get(r)));
+    entries.forEach(([phoneme,e],i) => {
+      const prev = snaps[i].exists() ? snaps[i].data() : { attempts:0, last20:[], worstWords:[] };
+      const mean = e.scores.reduce((a,b)=>a+b,0)/e.scores.length;
+      const last20 = [...(prev.last20||[]), Math.round(mean)].slice(-20);
+      const avg = last20.reduce((a,b)=>a+b,0)/last20.length;
+      tx.set(refs[i], {
+        phoneme, attempts:(prev.attempts||0)+1,
+        avgScore: Math.round(avg*10)/10, last20,
+        worstWords: [...new Set([...(prev.worstWords||[]), ...e.words])].slice(0,10),
+        status: avg >= 85 ? "mastered" : avg >= 70 ? "improving" : "weak",
+        lastSeenAt: serverTimestamp()
+      });
+    });
+  });
+}
+
+/* ══════════ AUTH E CONTEXTO ══════════ */
+getRedirectResult(auth).catch(e => log("redirect: " + e.code));
+$("login").addEventListener("click", async () => {
+  const p = new GoogleAuthProvider();
+  try{ await signInWithPopup(auth, p); }
+  catch(e){ log("popup falhou: " + e.code); try{ await signInWithRedirect(auth,p); }catch(e2){ log("redirect falhou: " + e2.code); } }
+});
+
+onAuthStateChanged(auth, async user => {
+  if(!user){
+    uid = null;
+    $("session").innerHTML = kv("Conta","não autenticado","warn");
+    $("login").style.display = "block";
+    return;
+  }
+  uid = user.uid;
+  $("login").style.display = "none";
+  log("autenticado como " + user.email);
+  await loadContext();
+});
+
+async function loadContext(){
+  try{
+    const lex = await getDocs(collection(db, `users/${uid}/lexicon`));
+    lexicon  = lex.docs.map(d => ({ id:d.id, ...d.data() }));
+    known    = lexicon.map(e => e.word).filter(Boolean);
+    learning = lexicon.filter(e => e.status === "learning");
+  }catch(e){ log("lexicon: " + (e.code||e.message)); }
+
+  try{
+    const st = await getDocs(collection(db, `users/${uid}/phonemeStats`));
+    weak = st.docs.map(d => d.data()).filter(s => s.avgScore < 75)
+      .sort((a,b) => a.avgScore - b.avgScore).slice(0,5).map(s => s.phoneme);
+  }catch(e){ log("phonemeStats: " + (e.code||e.message)); }
+
+  $("session").innerHTML =
+    kv("Conta", auth.currentUser.email, "ok") +
+    kv("Palavras no lexicon", lexicon.length) +
+    kv("Fonemas fracos", weak.length ? weak.join("  ") : "nenhum ainda", weak.length ? "warn" : "");
+
+  renderDomains();
+  $("calibnote").textContent = lexicon.length === 0
+    ? "Primeira rodada: as palavras vêm espalhadas do nível 1 ao 5, para calibrar. Marque com sinceridade o que já sabe."
+    : "As palavras evitam o que já está no seu lexicon" + (weak.length ? " e tentam carregar seus fonemas fracos." : ".");
+}
+
+function renderDomains(){
+  $("doms").innerHTML = DOMAINS.map(d =>
+    `<button class="dom ${d.id===domain?"on":""}" data-d="${d.id}">${d.label}</button>`).join("");
+  document.querySelectorAll(".dom").forEach(b => b.addEventListener("click", () => {
+    domain = b.dataset.d;
+    document.querySelectorAll(".dom").forEach(x => x.classList.toggle("on", x.dataset.d === domain));
+  }));
+}
+
+/* ══════════ ABA VOCABULÁRIO ══════════ */
+let entries = [];
+
+$("gen").addEventListener("click", async () => {
+  const b = $("gen");
+  b.disabled = true; b.textContent = "Gerando…";
+  $("results").style.display = "none";
+  try{
+    const r = await generateLexicon({ domain, count:8, weakPhonemes:weak, knownWords:known, calibrate: lexicon.length === 0 });
+    entries = r.data.entries || [];
+    log("geradas " + entries.length + " palavras" + (r.data.calibrate ? " (calibração)" : ""));
+    renderEntries();
+  }catch(e){
+    log("FALHOU: " + (e.code||"") + " " + (e.message||""));
+    $("list").innerHTML = `<p class="sub" style="margin:0">Não consegui gerar: ${esc(e.code||e.message)}.</p>`;
+    $("results").style.display = "block";
+  }finally{ b.disabled = false; b.textContent = "Gerar 8 palavras"; }
+});
+
+function renderEntries(){
+  $("results").style.display = "block";
+  if(!entries.length){ $("list").innerHTML = '<p class="sub" style="margin:0">Veio vazio.</p>'; return; }
+  $("list").innerHTML = entries.map((e,i) => `
+    <div class="entry" id="e${i}">
+      <div class="etop">
+        <div>
+          <span class="eword">${esc(e.word)}</span>
+          <span class="eipa">${esc(e.ipa)}</span>
+          ${e.isPhrasalVerb ? '<span class="tag">phrasal verb</span>' : ""}
+          <div class="diff">${[1,2,3,4,5].map(n => `<i class="${n<=e.difficulty?"on":""}"></i>`).join("")}</div>
+        </div>
+        <span class="epos">${esc(e.partOfSpeech)}</span>
+      </div>
+      <div class="etr">${esc(e.translationPt)}</div>
+      <div class="edef">${esc(e.definitionEn)}</div>
+      <div class="eex">${esc(e.example)}<div class="eexpt">${esc(e.exampleTransPt)}</div></div>
+      ${e.usageNotePt ? `<div class="enote">${esc(e.usageNotePt)}</div>` : ""}
+      <div class="row3" style="margin-top:11px">
+        <button class="btn small" data-play="${i}">Ouvir</button>
+        <button class="btn small" data-say="${i}">Falar</button>
+        <button class="btn small" data-known="${i}">Já sei</button>
+      </div>
+      <button class="btn small primary" data-add="${i}" style="margin-top:8px">Estudar</button>
+      <div id="say${i}"></div>
+    </div>`).join("");
+
+  document.querySelectorAll("[data-play]").forEach(b => b.addEventListener("click", async () => {
+    const e = entries[b.dataset.play];
+    b.disabled = true; const old = b.textContent; b.textContent = "…";
+    try{ await playBlob(await synth(e.word,"0%")); await new Promise(r=>setTimeout(r,250)); await playBlob(await synth(e.example,"0%")); }
+    catch(err){ log("TTS: " + err.message); }
+    b.disabled = false; b.textContent = old;
+  }));
+
+  /* Gravar a frase de exemplo na hora, sem esperar a fila. */
+  document.querySelectorAll("[data-say]").forEach(b => b.addEventListener("click", async () => {
+    const i = b.dataset.say, e = entries[i];
+    b.disabled = true; b.textContent = "Fale…";
+    $("say"+i).innerHTML = '<div class="meter"><i id="level"></i></div>';
+    const r = await assess(e.example, weak);
+    b.disabled = false; b.textContent = "Falar";
+    if(r.error){ $("say"+i).innerHTML = `<div class="verdict fail"><b>Não deu</b>${esc(r.error)}</div>`; return; }
+    $("say"+i).innerHTML = scoreCard(r.scores) +
+      `<div class="verdict ${r.scores.accuracy>=PASS_ACCURACY?"pass":"fail"}">
+        <b>${r.scores.accuracy>=PASS_ACCURACY?"Boa":"Ainda não"}</b>
+        ${r.words.filter(w=>w.accuracy<70).length
+          ? "Palavras fracas: " + r.words.filter(w=>w.accuracy<70).map(w=>esc(w.word)+" ("+Math.round(w.accuracy)+")").join(", ")
+          : "Nenhuma palavra abaixo de 70."}</div>`;
     try{
-      audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
-      await audioCtx.resume();
-      const osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
-      osc.frequency.value = 440; gain.gain.value = .0001;
-      osc.connect(gain).connect(audioCtx.destination);
-      const t = audioCtx.currentTime;
-      gain.gain.exponentialRampToValueAtTime(.25, t + .05);
-      gain.gain.exponentialRampToValueAtTime(.0001, t + 1);
-      osc.start(t); osc.stop(t + 1.05);
-      log('tom tocado | contexto ' + audioCtx.state + ' | saída ' + audioCtx.sampleRate + ' Hz');
-    }catch(e){ log('tom FALHOU: ' + e.name + ' — ' + e.message); }
+      await saveAttempt({ itemId:"vocab-"+slug(e.word), text:e.example, ...r, targets:weak });
+      log("«" + e.word + "» falada e medida");
+    }catch(err){ log("não gravei a tentativa: " + (err.code||err.message)); }
+  }));
+
+  document.querySelectorAll("[data-known]").forEach(b => b.addEventListener("click", () => saveWord(b.dataset.known, "known", b)));
+  document.querySelectorAll("[data-add]").forEach(b => b.addEventListener("click", () => saveWord(b.dataset.add, "learning", b)));
+}
+
+async function saveWord(i, status, btn){
+  const e = entries[i], id = slug(e.word), card = $("e"+i);
+  card.querySelectorAll("button").forEach(x => x.disabled = true);
+  try{
+    await setDoc(doc(db, `users/${uid}/lexicon/${id}`), {
+      word:e.word, domain, difficulty:e.difficulty, status,
+      partOfSpeech:e.partOfSpeech, ipa:e.ipa, definitionEn:e.definitionEn,
+      translationPt:e.translationPt, example:e.example, exampleTransPt:e.exampleTransPt,
+      usageNotePt:e.usageNotePt, isPhrasalVerb:e.isPhrasalVerb, createdAt: serverTimestamp()
+    });
+    if(status === "learning"){
+      await setDoc(doc(db, `users/${uid}/drillQueue/lex-${id}`), {
+        text:e.example, targetPhonemes:[], note:e.usageNotePt||"", translation:e.exampleTransPt||"",
+        source:"lexicon", word:e.word, state:"new", dueAt: Timestamp.now(),
+        intervalDays:1, timesShown:0, timesPassed:0, lastResult:null
+      });
+      log("«" + e.word + "» salva e enfileirada");
+    }else log("«" + e.word + "» marcada como conhecida");
+    known.push(e.word);
+    lexicon.push({ word:e.word, status, example:e.example, domain });
+    if(status === "learning") learning.push({ word:e.word, example:e.example });
+    card.classList.add("done");
+    btn.textContent = status === "known" ? "já sabia" : "na fila";
+  }catch(err){
+    log("FALHA ao salvar: " + (err.code||err.message));
+    card.querySelectorAll("button").forEach(x => x.disabled = false);
+  }
+}
+
+/* ══════════ ABA TREINO ══════════ */
+let sessionId = null, plan = [], pos = 0, attemptNumber = 1;
+let results = [], accSum = 0, prosSum = 0, attemptsCount = 0, lastWords = null;
+
+async function loadQueue(){
+  if(!uid) return;
+  const snap = await getDocs(collection(db, `users/${uid}/drillQueue`));
+  queue = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+  const now = Date.now();
+  const live = queue.filter(q => q.state !== "retired");
+  const due  = live.filter(q => q.dueAt && q.dueAt.toMillis() <= now);
+  const phon = live.filter(q => q.source !== "lexicon");
+
+  $("qsummary").innerHTML =
+    kv("Vencidos agora", due.length, due.length ? "ok" : "warn") +
+    kv("Itens ativos", live.length) +
+    kv("Suas palavras", live.filter(q => q.source === "lexicon").length, "ok");
+
+  $("start").style.display  = due.length ? "block" : "none";
+  $("seed").style.display   = live.length ? "none" : "block";
+  $("retire").style.display = phon.length ? "block" : "none";
+  $("retire").textContent   = `Aposentar as ${phon.length} frases de fonema`;
+
+  live.sort((a,b) => (a.dueAt?.toMillis()||0) - (b.dueAt?.toMillis()||0));
+  $("queue").innerHTML = live.length ? live.map(q => {
+    const ms = q.dueAt ? q.dueAt.toMillis() - now : 0;
+    const label = ms <= 0 ? "vencido" : ms < 864e5 ? "em " + Math.round(ms/36e5) + " h" : "em " + Math.ceil(ms/864e5) + " d";
+    return `<div class="qrow"><span class="t">${esc(q.text)}</span>
+      <span class="d">${q.intervalDays}d · ${q.timesPassed}/${q.timesShown}</span>
+      <span class="${ms<=0?"due":"d"}">${label}</span></div>`;
+  }).join("") : '<p class="sub" style="margin:0">Fila vazia. Marque palavras como "Estudar" na aba Vocabulário.</p>';
+}
+$("reloadq").addEventListener("click", loadQueue);
+
+$("seed").addEventListener("click", async () => {
+  $("seed").disabled = true;
+  const now = Timestamp.now();
+  for(const it of SEED)
+    await setDoc(doc(db, `users/${uid}/drillQueue/${it.id}`), {
+      text:it.text, targetPhonemes:it.targets, note:it.note, translation:it.translation,
+      source:"phoneme", state:"new", dueAt:now, intervalDays:1,
+      timesShown:0, timesPassed:0, lastResult:null
+    });
+  log("frases de fonema semeadas");
+  $("seed").disabled = false;
+  await loadQueue();
+});
+
+/* Tira as frases de fonema da frente sem apagar o histórico delas. */
+$("retire").addEventListener("click", async () => {
+  const b = $("retire"); b.disabled = true;
+  const phon = queue.filter(q => q.state !== "retired" && q.source !== "lexicon");
+  for(const q of phon){
+    try{
+      await updateDoc(doc(db, `users/${uid}/drillQueue/${q.id}`), {
+        text:q.text, state:"retired", intervalDays:q.intervalDays || 1
+      });
+    }catch(e){ log("não aposentei " + q.id + ": " + (e.code||e.message)); }
+  }
+  log(phon.length + " frases de fonema aposentadas");
+  b.disabled = false;
+  await loadQueue();
+});
+
+$("start").addEventListener("click", async () => {
+  const now = Date.now();
+  const due = queue.filter(q => q.state !== "retired" && q.dueAt && q.dueAt.toMillis() <= now);
+  /* Suas palavras primeiro; as frases de fonema só depois. */
+  due.sort((a,b) => (a.source === "lexicon" ? 0 : 1) - (b.source === "lexicon" ? 0 : 1)
+                 || a.dueAt.toMillis() - b.dueAt.toMillis());
+  plan = due.slice(0, SESSION_SIZE);
+  if(plan.length < SESSION_SIZE && due.length)
+    while(plan.length < SESSION_SIZE) plan.push(due[plan.length % due.length]);
+
+  const ref = await addDoc(collection(db, `users/${uid}/sessions`), {
+    startedAt: serverTimestamp(), endedAt:null, mode:"lesson",
+    itemsAttempted:0, itemsPassed:0, avgAccuracy:0, avgProsody:0, warmupFlag:"ok"
+  });
+  sessionId = ref.id;
+  pos=0; attemptNumber=1; results=[]; accSum=0; prosSum=0; attemptsCount=0;
+  log("sessão com " + plan.length + " itens");
+  $("start").style.display="none"; $("summary").style.display="none";
+  renderItem();
+});
+
+function renderItem(){
+  const it = plan[pos];
+  lastWords = null; lastUserAudio = null;
+  $("drillcard").style.display = "block";
+  $("track").innerHTML = plan.map((_,i) => `<i class="${results[i] || (i===pos?"now":"")}"></i>`).join("");
+  $("pos").textContent = `Item ${pos+1} de ${plan.length}`;
+  $("dots").innerHTML = [1,2,3].map(n => `<i class="${n<attemptNumber?"used":n===attemptNumber?"now":""}"></i>`).join("");
+  renderPhrase();
+  $("targets").innerHTML = (it.targetPhonemes||[]).map(p => `<span class="chip">${esc(p)}</span>`).join("");
+  $("notebox").innerHTML = it.note ? `<div class="note">${it.note}</div>` : "";
+  $("detail").innerHTML=""; setTranslation(false);
+  $("verdict").innerHTML=""; $("scores").innerHTML=""; $("abbox").innerHTML="";
+  $("next").style.display="none";
+  $("rec").disabled=false; $("rec").textContent="Gravar";
+}
+
+function renderPhrase(){
+  const it = plan[pos];
+  const tokens = it.text.split(/\s+/);
+  const aligned = lastWords && lastWords.length === tokens.length;
+  $("phrase").innerHTML = tokens.map((tok,i) => {
+    const a = aligned ? lastWords[i] : null;
+    const cls = a ? " " + band(a.accuracy) : "";
+    let inner = esc(tok);
+    if(a && a.syllables && a.syllables.length > 1){
+      const letters = tok.replace(/[^A-Za-z'-]/g,"");
+      const punct = tok.slice(letters.length);
+      let at = 0;
+      const total = a.syllables.reduce((s,y)=>s+y.syllable.length,0) || 1;
+      inner = a.syllables.map((y,k) => {
+        const share = Math.round(letters.length * (y.syllable.length/total));
+        const piece = k === a.syllables.length-1 ? letters.slice(at) : letters.substr(at, Math.max(1,share));
+        at += piece.length;
+        return `<span class="syl ${band(y.accuracy)}">${esc(piece)}</span>`;
+      }).join("") + esc(punct);
+    }
+    return `<span class="w${cls}" data-i="${i}" data-w="${esc(tok)}">${inner}</span>`;
+  }).join(" ");
+  bindWords();
+}
+
+let pressTimer = null, longFired = false;
+function bindWords(){
+  document.querySelectorAll("#phrase .w").forEach(el => {
+    el.addEventListener("pointerdown", ev => {
+      ev.preventDefault(); longFired = false;
+      pressTimer = setTimeout(() => { longFired = true; speakWord(el, true); }, 500);
+    });
+    el.addEventListener("pointerup", () => { clearTimeout(pressTimer); if(!longFired) speakWord(el, false); });
+    el.addEventListener("pointerleave", () => clearTimeout(pressTimer));
+    el.addEventListener("contextmenu", ev => ev.preventDefault());
+  });
+}
+
+async function speakWord(el, slow){
+  const word = el.dataset.w.replace(/[^A-Za-z'-]/g,"");
+  if(!word) return;
+  document.querySelectorAll("#phrase .w").forEach(x => x.classList.remove("sel"));
+  el.classList.add("sel","playing");
+  showDetail(Number(el.dataset.i), word);
+  try{ await playBlob(await synth(word, slow ? "-45%" : "0%")); }catch(e){ log("TTS: " + e.message); }
+  el.classList.remove("playing");
+}
+
+function showDetail(i, word){
+  const g = GLOSS[clean(word)];
+  const a = lastWords && lastWords.length > i ? lastWords[i] : null;
+  const phon = a && a.phonemes?.length
+    ? `<div class="ph">` + a.phonemes.map(p => `<span class="${band(p.accuracy)}">${esc(p.phoneme)}<i>${Math.round(p.accuracy)}</i></span>`).join("") + `</div>` : "";
+  $("detail").innerHTML = `<div class="detail">
+    <div class="top"><span class="wd">${esc(word)}</span><span class="gl">${g?esc(g):""}</span></div>
+    ${a ? `<div class="sub" style="margin:0">Sua última tentativa: ${Math.round(a.accuracy)}${a.errorType&&a.errorType!=="None"?" · "+a.errorType:""}</div>`
+        : `<div class="sub" style="margin:0">Ainda sem medição desta palavra.</div>`}
+    ${phon}</div>`;
+}
+
+let transShown = false;
+function setTranslation(show){
+  const it = plan[pos];
+  transShown = show;
+  $("transbox").innerHTML = show ? `<div class="trans">${esc(it.translation || "(sem tradução)")}</div>` : "";
+  $("transbtn").textContent = show ? "Esconder tradução" : "Mostrar tradução";
+}
+$("transbtn").addEventListener("click", () => setTranslation(!transShown));
+$("model").addEventListener("click", e => speakBtn(e.currentTarget, plan[pos].text, "0%"));
+$("modelslow").addEventListener("click", e => speakBtn(e.currentTarget, plan[pos].text, "-35%"));
+
+$("rec").addEventListener("click", async () => {
+  const it = plan[pos];
+  $("rec").disabled = true; $("rec").textContent = "Fale agora…";
+  $("abbox").innerHTML = "";
+  const r = await assess(it.text, it.targetPhonemes || []);
+  $("rec").disabled = false; $("rec").textContent = "Gravar";
+
+  if(r.error){
+    $("verdict").innerHTML = `<div class="verdict fail"><b>Não deu</b>${esc(r.error)} Isto não conta como tentativa.</div>`;
+    return;
+  }
+
+  lastWords = r.words; renderPhrase(); setTranslation(true);
+  $("scores").innerHTML = scoreCard(r.scores);
+  accSum += r.scores.accuracy; prosSum += r.scores.prosody; attemptsCount++;
+
+  try{
+    await saveAttempt({ sessionId, itemId:it.id, text:it.text, attemptNumber, ...r, targets:it.targetPhonemes||[] });
+    log("tentativa " + attemptNumber + " · " + it.id + " · passou=" + r.passed);
+  }catch(e){ log("FALHA ao gravar: " + (e.code||e.message)); }
+
+  renderAB();
+  const shown = r.offenders.slice(0, MAX_NOTES);
+
+  if(r.passed){
+    await finishItem(it, true);
+    $("verdict").innerHTML = `<div class="verdict pass"><b>Aprovado</b>Accuracy ${Math.round(r.scores.accuracy)}. Próxima cobrança em ${nextInterval(it)} dias.</div>`;
+    $("next").style.display="block"; $("rec").disabled = true;
+  }else if(attemptNumber >= MAX_ATTEMPTS){
+    await finishItem(it, false);
+    $("verdict").innerHTML = `<div class="verdict fail"><b>Reprovado</b>Três tentativas. O item volta amanhã.${
+      shown.length ? "<br>" + shown.map(o=>`<b>${esc(o.ph)}</b> em "${esc(o.word)}" (${Math.round(o.score)})`).join("<br>") : ""}</div>`;
+    $("next").style.display="block"; $("rec").disabled = true;
+    setTimeout(() => speakBtn($("model"), it.text, "0%"), 400);
+  }else{
+    attemptNumber++;
+    $("verdict").innerHTML = `<div class="verdict fail"><b>Ainda não</b>${
+      r.scores.accuracy < PASS_ACCURACY ? "Accuracy " + Math.round(r.scores.accuracy) + ", abaixo de " + PASS_ACCURACY + ".<br>" : ""}${
+      shown.length ? shown.map(o=>`<b>${esc(o.ph)}</b> em "${esc(o.word)}" (${Math.round(o.score)})`).join("<br>") + "<br>" : ""}
+      Toque nas palavras vermelhas para ouvi-las. Tentativa ${attemptNumber} de ${MAX_ATTEMPTS}.</div>`;
+    $("dots").innerHTML = [1,2,3].map(n => `<i class="${n<attemptNumber?"used":n===attemptNumber?"now":""}"></i>`).join("");
+    setTimeout(() => speakBtn($("model"), it.text, "0%"), 400);
+  }
+});
+
+function renderAB(){
+  const it = plan[pos];
+  $("abbox").innerHTML = `<div class="ab"><div class="lbl">Comparar</div>
+    <div class="row2"><button class="btn" id="abplay">Você × modelo</button>
+    <button class="btn" id="abmine">Só você</button></div></div>`;
+  $("abplay").addEventListener("click", async e => {
+    const b = e.currentTarget, old = b.textContent;
+    b.disabled = true; b.classList.add("playing");
+    if(lastUserAudio){ b.textContent="você…"; await playBlob(lastUserAudio); await new Promise(r=>setTimeout(r,350)); }
+    b.textContent = "modelo…";
+    try{ await playBlob(await synth(it.text,"0%")); }catch(err){ log("TTS: " + err.message); }
+    b.disabled=false; b.classList.remove("playing"); b.textContent = old;
+  });
+  $("abmine").addEventListener("click", async e => {
+    if(!lastUserAudio) return log("sem cópia local desta gravação");
+    const b = e.currentTarget; b.disabled=true; b.classList.add("playing");
+    await playBlob(lastUserAudio);
+    b.disabled=false; b.classList.remove("playing");
+  });
+}
+
+function nextInterval(it){
+  const i = LADDER.indexOf(it.intervalDays);
+  return LADDER[Math.min(i+1, LADDER.length-1)];
+}
+
+async function finishItem(it, passed){
+  const days = passed ? nextInterval(it) : 1;
+  const due = Timestamp.fromMillis(Date.now() + days*864e5);
+  try{
+    await updateDoc(doc(db, `users/${uid}/drillQueue/${it.id}`), {
+      text:it.text, state: passed ? (days >= 21 ? "review" : "learning") : "hard",
+      dueAt:due, intervalDays:days,
+      timesShown:(it.timesShown||0)+1, timesPassed:(it.timesPassed||0)+(passed?1:0),
+      lastResult: passed ? "pass" : "fail"
+    });
+    it.intervalDays = days; it.timesShown=(it.timesShown||0)+1;
+    it.timesPassed=(it.timesPassed||0)+(passed?1:0); it.dueAt = due;
+  }catch(e){ log("FALHA ao reagendar: " + (e.code||e.message)); }
+  results[pos] = passed ? "pass" : "fail";
+  try{
+    await updateDoc(doc(db, `users/${uid}/sessions/${sessionId}`), {
+      mode:"lesson", itemsAttempted: results.filter(Boolean).length,
+      itemsPassed: results.filter(r => r==="pass").length
+    });
+  }catch(e){ log("FALHA ao atualizar sessão: " + (e.code||e.message)); }
+}
+
+$("next").addEventListener("click", async () => {
+  pos++; attemptNumber = 1;
+  if(pos < plan.length) return renderItem();
+  $("drillcard").style.display = "none";
+  const passedCount = results.filter(r => r==="pass").length;
+  const avgAcc = attemptsCount ? accSum/attemptsCount : 0;
+  const avgPros = attemptsCount ? prosSum/attemptsCount : 0;
+  try{
+    await updateDoc(doc(db, `users/${uid}/sessions/${sessionId}`), {
+      mode:"lesson", endedAt: serverTimestamp(),
+      itemsAttempted: plan.length, itemsPassed: passedCount,
+      avgAccuracy: Math.round(avgAcc*10)/10, avgProsody: Math.round(avgPros*10)/10
+    });
+    log("sessão fechada · " + passedCount + "/" + plan.length);
+  }catch(e){ log("FALHA ao fechar sessão: " + (e.code||e.message)); }
+  $("summaryout").innerHTML = kv("Itens", plan.length) +
+    kv("Aprovados", passedCount, passedCount===plan.length?"ok":"warn") +
+    kv("Gravações", attemptsCount) + kv("Accuracy média", Math.round(avgAcc)) +
+    kv("Prosódia média", Math.round(avgPros));
+  $("summary").style.display = "block";
+  await loadQueue();
+});
+
+/* ══════════ ABA ESCRITA ══════════ */
+let writeWords = [], lastWriting = null;
+
+function pickWriteWords(){
+  if(!uid) return;
+  const pool = learning.length ? learning : lexicon;
+  if(!pool.length){
+    $("wwords").innerHTML = '<p class="sub" style="margin:0">Sem palavras ainda. Gere vocabulário primeiro.</p>';
+    return;
+  }
+  const shuffled = [...pool].sort(() => Math.random() - .5);
+  writeWords = shuffled.slice(0, Math.min(3, pool.length)).map(e => e.word);
+  $("wwords").innerHTML = writeWords.map(w => `<span class="chip">${esc(w)}</span>`).join("");
+}
+$("wshuffle").addEventListener("click", pickWriteWords);
+
+$("wsend").addEventListener("click", async () => {
+  const text = $("wtext").value.trim();
+  if(text.length < 3) return log("escreva alguma coisa antes");
+  const b = $("wsend");
+  b.disabled = true; b.textContent = "Corrigindo…";
+  try{
+    const r = await evaluateWriting({ userText:text, words:writeWords, domain });
+    lastWriting = { text, ...r.data };
+    renderWriting(lastWriting);
+    try{
+      await addDoc(collection(db, `users/${uid}/writings`), {
+        userText: text, domain, promptWords: writeWords,
+        corrected: r.data.corrected, natural: r.data.natural,
+        understood: r.data.understood, issueCount: r.data.issues.length,
+        createdAt: serverTimestamp()
+      });
+    }catch(e){ log("não gravei a escrita: " + (e.code||e.message)); }
+    log("escrita corrigida · " + r.data.issues.length + " apontamento(s)");
+  }catch(e){
+    log("FALHOU: " + (e.code||"") + " " + (e.message||""));
+    $("wout").innerHTML = `<div class="verdict fail"><b>Não deu</b>${esc(e.code||e.message)}</div>`;
+  }finally{ b.disabled = false; b.textContent = "Corrigir"; }
+});
+
+function renderWriting(w){
+  const sameNatural = w.natural && w.natural.toLowerCase() !== w.corrected.toLowerCase();
+  $("wout").innerHTML = `
+    <div class="verdict ${w.understood ? "pass" : "fail"}">
+      <b>${w.understood ? "Entendi você" : "Ficou confuso"}</b>${esc(w.verdictPt)}</div>
+
+    <div class="fix">
+      <div class="lbl">Sua frase, corrigida</div>
+      <div class="txt">${esc(w.corrected)}</div>
+    </div>
+
+    ${sameNatural ? `<div class="fix">
+      <div class="lbl">Como um americano diria</div>
+      <div class="txt">${esc(w.natural)}</div>
+    </div>` : ""}
+
+    ${w.issues.map(i => `<div class="issue">
+      <div class="ba"><s>${esc(i.before)}</s> → <b>${esc(i.after)}</b></div>
+      ${esc(i.whyPt)}</div>`).join("")}
+
+    <div class="row2" style="margin-top:12px">
+      <button class="btn" id="wlisten">Ouvir</button>
+      <button class="btn" id="wsay">Falar isso</button>
+    </div>
+    <button class="btn small" id="wqueue" style="margin-top:8px">Mandar para a fila</button>
+    <div id="wsayout"></div>`;
+
+  const target = sameNatural ? w.natural : w.corrected;
+
+  $("wlisten").addEventListener("click", e => speakBtn(e.currentTarget, target, "0%"));
+
+  /* A frase que você escreveu vira treino de pronúncia na hora. */
+  $("wsay").addEventListener("click", async e => {
+    const b = e.currentTarget;
+    b.disabled = true; b.textContent = "Fale…";
+    $("wsayout").innerHTML = '<div class="meter"><i id="level"></i></div>';
+    const r = await assess(target, weak);
+    b.disabled = false; b.textContent = "Falar isso";
+    if(r.error){ $("wsayout").innerHTML = `<div class="verdict fail"><b>Não deu</b>${esc(r.error)}</div>`; return; }
+    $("wsayout").innerHTML = scoreCard(r.scores);
+    try{ await saveAttempt({ itemId:"writing", text:target, ...r, targets:weak }); }
+    catch(err){ log("não gravei a tentativa: " + (err.code||err.message)); }
   });
 
-  /* ── gravação ─────────────────────────────────────────────── */
-  document.addEventListener('keydown', e => { if(e.code === 'Space' && !e.repeat){ e.preventDefault(); $('rec').click(); } });
-  $('rec').addEventListener('click', run);
-
-  async function run(){
-    const btn = $('rec');
-    btn.disabled = true; btn.textContent = 'Pedindo permissão…';
-    $('verdict').innerHTML = ''; $('playback').innerHTML = '';
-    const t0 = performance.now();
-
-    let stream;
+  $("wqueue").addEventListener("click", async e => {
+    const b = e.currentTarget; b.disabled = true;
     try{
-      stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation:false, noiseSuppression:false, autoGainControl:false } });
-    }catch(e){
-      return fail('getUserMedia recusou: ' + e.name + ' — ' + e.message);
-    }
-    lastStream = stream;
-
-    const track = stream.getAudioTracks()[0];
-    const st = track.getSettings ? track.getSettings() : {};
-    let label = track.label || '(sem rótulo)';
-    const bt = /bluetooth|airpod|headset|hands-?free/i.test(label);
-    const rate = st.sampleRate || (audioCtx && audioCtx.sampleRate) || 0;
-
-    log('ciclo ' + cycle + ' | permissão em ' + Math.round(performance.now() - t0) + ' ms | entrada: ' + label +
-        ' | sampleRate ' + (rate || '?') + ' | canais ' + (st.channelCount || '?') + (bt ? ' | BLUETOOTH DETECTADO' : ''));
-
-    /* medidor de nível */
-    let meterCtx, analyser, raf, peak = 0;
-    try{
-      meterCtx = new (window.AudioContext || window.webkitAudioContext)();
-      await meterCtx.resume();
-      analyser = meterCtx.createAnalyser(); analyser.fftSize = 1024;
-      meterCtx.createMediaStreamSource(stream).connect(analyser);
-      const buf = new Uint8Array(analyser.fftSize);
-      const tick = () => {
-        analyser.getByteTimeDomainData(buf);
-        let max = 0;
-        for(let i=0;i<buf.length;i++){ const d = Math.abs(buf[i] - 128) / 128; if(d > max) max = d; }
-        if(max > peak) peak = max;
-        $('level').style.width = Math.min(100, max * 140) + '%';
-        raf = requestAnimationFrame(tick);
-      };
-      tick();
-    }catch(e){ log('medidor indisponível: ' + e.name); }
-
-    /* MediaRecorder */
-    let mr, chunks = [];
-    const mime = ['audio/mp4','audio/webm;codecs=opus','audio/webm'].find(m => window.MediaRecorder && MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(m)) || '';
-    try{
-      mr = mime ? new MediaRecorder(stream, { mimeType: mime }) : new MediaRecorder(stream);
-    }catch(e){
-      cleanup(); return fail('MediaRecorder não pôde iniciar: ' + e.name + ' — ' + e.message);
-    }
-    mr.ondataavailable = ev => { if(ev.data && ev.data.size) chunks.push(ev.data); };
-
-    mr.onstop = () => {
-      cleanup();
-      const blob = new Blob(chunks, { type: mime || 'audio/mp4' });
-      log('ciclo ' + cycle + ' | formato ' + (mime || 'default') + ' | ' + blob.size + ' bytes | pico ' + Math.round(peak * 100) + '%');
-
-      if(blob.size < 1000) return fail('Gravou, mas o arquivo veio vazio (' + blob.size + ' bytes). É o sintoma do bug de standalone no iOS.');
-      if(peak < 0.02)      return fail('Arquivo gerado, mas sem sinal audível (pico ' + Math.round(peak*100) + '%). Microfone mudo ou capturado por outro app.');
-
-      const a = document.createElement('audio'); a.controls = true; a.src = URL.createObjectURL(blob);
-      $('playback').appendChild(a);
-      pass('Gravou ' + blob.size + ' bytes, pico de ' + Math.round(peak*100) + '%, entrada "' + label + '"' +
-           (bt ? '. Atenção: entrada bluetooth — o score da Azure não seria confiável assim.' : '. Escute o playback antes de dar o ciclo por bom.'));
-    };
-
-    function cleanup(){
-      if(raf) cancelAnimationFrame(raf);
-      $('level').style.width = '0%';
-      if(meterCtx) meterCtx.close().catch(()=>{});
-      stream.getTracks().forEach(t => t.stop());
-      lastStream = null;
-    }
-
-    try{ mr.start(); }
-    catch(e){ cleanup(); return fail('start() falhou: ' + e.name + ' — ' + e.message); }
-
-    btn.textContent = 'Gravando…';
-    const started = performance.now();
-    const tick = setInterval(() => {
-      const s = (performance.now() - started) / 1000;
-      $('timer').innerHTML = s.toFixed(1).replace('.', ',') + '<small>segundos gravados</small>';
-    }, 60);
-
-    setTimeout(() => {
-      clearInterval(tick);
-      $('timer').innerHTML = '3,0<small>segundos gravados</small>';
-      if(mr.state !== 'inactive') mr.stop();
-    }, DUR);
-  }
-
-  /* ── veredito ─────────────────────────────────────────────── */
-  function pass(msg){ verdict(true, msg); }
-  function fail(msg){
-    if(lastStream){ lastStream.getTracks().forEach(t => t.stop()); lastStream = null; }
-    verdict(false, msg);
-  }
-  function verdict(ok, msg){
-    $('verdict').innerHTML = '<div class="verdict ' + (ok ? 'pass' : 'fail') + '"><b>' +
-      (ok ? 'Ciclo ' + cycle + ' passou' : 'Ciclo ' + cycle + ' falhou') + '</b>' + msg + '</div>';
-    log('ciclo ' + cycle + ' => ' + (ok ? 'PASSOU' : 'FALHOU') + ' — ' + msg);
-
-    const segs = $('cycle').children;
-    if(segs[cycle-1]) segs[cycle-1].className = 'seg ' + (ok ? 'pass' : 'fail');
-
-    const btn = $('rec');
-    if(cycle < 3){
-      cycle++;
-      $('cyclenum').textContent = cycle;
-      if(segs[cycle-1]) segs[cycle-1].className = 'seg now';
-      btn.disabled = false;
-      btn.textContent = 'Gravar 3 segundos';
-    }else{
-      btn.textContent = 'Três ciclos registrados';
-    }
-  }
-
-  /* ── relatório ────────────────────────────────────────────── */
-  $('copy').addEventListener('click', async () => {
-    const el = $('log');
-    try{ await navigator.clipboard.writeText(el.value); $('copy').textContent = 'Copiado'; }
-    catch(e){ el.removeAttribute('readonly'); el.select(); el.setSelectionRange(0, 99999); $('copy').textContent = 'Selecionado — toque em copiar'; }
-    setTimeout(() => { $('copy').textContent = 'Copiar relatório'; }, 2500);
+      await setDoc(doc(db, `users/${uid}/drillQueue/w-${Date.now()}`), {
+        text: target, targetPhonemes: [], note: "Frase que você mesmo escreveu.",
+        translation: "", source: "lexicon", state:"new", dueAt: Timestamp.now(),
+        intervalDays:1, timesShown:0, timesPassed:0, lastResult:null
+      });
+      b.textContent = "na fila"; log("frase sua enfileirada");
+    }catch(err){ log("não enfileirei: " + (err.code||err.message)); b.disabled = false; }
   });
-})();
+}
+
+/* ══════════ ABA PROGRESSO ══════════ */
+let stats = [];
+
+async function loadStats(){
+  if(!uid) return;
+  try{
+    const snap = await getDocs(collection(db, `users/${uid}/phonemeStats`));
+    stats = snap.docs.map(d => d.data()).sort((a,b) => a.avgScore - b.avgScore);
+  }catch(e){ return log("phonemeStats: " + (e.code||e.message)); }
+
+  $("progsum").innerHTML =
+    kv("Palavras no lexicon", lexicon.length) +
+    kv("Em estudo", learning.length) +
+    kv("Fonemas medidos", stats.length) +
+    kv("Pior fonema", stats.length ? stats[0].phoneme + "  (" + Math.round(stats[0].avgScore) + ")" : "—",
+       stats.length ? "warn" : "");
+
+  $("stats").innerHTML = stats.length ? '<div class="plist">' + stats.map((s,i) =>
+    `<button class="prow st-${s.status}" data-i="${i}">
+       <span class="sym">${esc(s.phoneme)}</span>
+       <span class="bar"><i style="width:${Math.max(2, s.avgScore)}%"></i></span>
+       <span class="num">${Math.round(s.avgScore)}</span>
+       <span class="n">${s.attempts}×</span>
+     </button>`).join("") + '</div>'
+    : '<p class="sub" style="margin:0">Nada medido ainda.</p>';
+
+  document.querySelectorAll(".prow").forEach(b =>
+    b.addEventListener("click", () => drawCurve(Number(b.dataset.i))));
+}
+$("reloadstats").addEventListener("click", () => { loadStats(); loadDays(); });
+
+function drawCurve(i){
+  const s = stats[i], pts = s.last20 || [];
+  if(pts.length < 2){
+    $("curvebox").innerHTML = `<p class="sub" style="margin-top:12px">${esc(s.phoneme)}: só ${pts.length} ponto. A curva aparece a partir do segundo.</p>`;
+    return;
+  }
+  const W = 400, H = 130, PAD = 8;
+  const x = j => PAD + j * (W - PAD*2) / (pts.length - 1);
+  const y = v => H - PAD - (v/100) * (H - PAD*2);
+  const line = pts.map((v,j) => `${j?"L":"M"}${x(j).toFixed(1)},${y(v).toFixed(1)}`).join(" ");
+  const dots = pts.map((v,j) => `<circle cx="${x(j).toFixed(1)}" cy="${y(v).toFixed(1)}" r="2.5" fill="var(--brass)"/>`).join("");
+  $("curvebox").innerHTML = `
+    <p class="sub" style="margin:12px 0 0">${esc(s.phoneme)} · média ${Math.round(s.avgScore)} · ${s.attempts} tentativas
+    ${s.worstWords?.length ? "<br>Palavras problemáticas: " + esc(s.worstWords.join(", ")) : ""}</p>
+    <svg class="curve" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+      <line x1="${PAD}" y1="${y(80)}" x2="${W-PAD}" y2="${y(80)}" stroke="var(--navy-700)" stroke-dasharray="4 4"/>
+      <path d="${line}" fill="none" stroke="var(--brass)" stroke-width="2" stroke-linejoin="round"/>
+      ${dots}</svg>`;
+}
+
+/* Os dias vêm das tentativas gravadas — nada de contar tempo de app aberto. */
+async function loadDays(){
+  if(!uid) return;
+  let byDay = new Map();
+  try{
+    const snap = await getDocs(query(collection(db, `users/${uid}/attempts`), orderBy("createdAt","desc"), limit(400)));
+    snap.docs.forEach(d => {
+      const t = d.data().createdAt;
+      if(!t) return;
+      const k = dayKey(t.toDate());
+      byDay.set(k, (byDay.get(k)||0) + 1);
+    });
+  }catch(e){ return log("dias: " + (e.code||e.message)); }
+
+  const today = new Date();
+  let cells = "", streak = 0, broke = false;
+  for(let i = 29; i >= 0; i--){
+    const d = new Date(today); d.setDate(today.getDate() - i);
+    const n = byDay.get(dayKey(d)) || 0;
+    cells += `<i class="${n >= 8 ? "on" : n > 0 ? "half" : ""}" title="${dayKey(d)}: ${n}"></i>`;
+  }
+  for(let i = 0; i < 30; i++){
+    const d = new Date(today); d.setDate(today.getDate() - i);
+    const n = byDay.get(dayKey(d)) || 0;
+    if(n > 0 && !broke) streak++;
+    else if(i > 0) broke = true;
+  }
+  $("grid30").innerHTML = cells;
+  $("progsum").innerHTML += kv("Sequência atual", streak + (streak === 1 ? " dia" : " dias"), streak ? "ok" : "warn");
+}
 </script>
 </body>
 </html>

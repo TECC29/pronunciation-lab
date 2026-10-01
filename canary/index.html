@@ -58,25 +58,26 @@ button{font:inherit; cursor:pointer; border:none; border-radius:var(--r-md); tra
 .row3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px}
 .playing{background:var(--brass) !important; color:#1A1206 !important}
 
-/* abas */
 .tabbar{position:fixed; left:0; right:0; bottom:0; height:calc(var(--tabbar) + env(safe-area-inset-bottom));
   padding-bottom:env(safe-area-inset-bottom); background:rgba(11,18,32,.94);
   -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px);
   border-top:1px solid var(--navy-800); display:flex; z-index:50}
 .tabbar button{flex:1; background:none; border-radius:0; color:var(--ink-faint);
   display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;
-  font-size:10.5px; letter-spacing:.04em; padding:0}
-.tabbar button .ic{font-size:19px; line-height:1}
+  font-size:9.5px; letter-spacing:.02em; padding:0}
+.tabbar button .ic{font-size:18px; line-height:1}
 .tabbar button.on{color:var(--brass)}
 .pane{display:none; flex-direction:column; gap:14px}
 .pane.on{display:flex}
 
-/* domínios */
+.speeds{display:flex; gap:6px; margin-top:4px}
+.sp{flex:1; background:var(--navy-800); color:var(--ink-dim); border-radius:99px; padding:7px 4px; font-size:12px; text-align:center}
+.sp.on{background:var(--brass); color:#1A1206; font-weight:600}
+
 .doms{display:flex; gap:8px; flex-wrap:wrap}
 .dom{background:var(--navy-800); color:var(--ink-dim); border-radius:99px; padding:8px 15px; font-size:14px}
 .dom.on{background:var(--brass); color:#1A1206; font-weight:600}
 
-/* vocabulário */
 .entry{background:var(--navy-800); border-radius:var(--r-md); padding:14px; margin-bottom:10px}
 .entry.done{opacity:.5}
 .etop{display:flex; justify-content:space-between; align-items:baseline; gap:10px}
@@ -93,7 +94,6 @@ button{font:inherit; cursor:pointer; border:none; border-radius:var(--r-md); tra
 .enote{font-size:12.5px; line-height:1.55; color:var(--ink-dim); margin-top:9px; padding-left:10px; border-left:2px solid var(--navy-700)}
 .tag{display:inline-block; background:var(--navy-750); color:var(--brass); border-radius:99px; padding:2px 9px; font-size:11px; margin-left:6px}
 
-/* frase tocável */
 .phrase{background:var(--navy-900); border-radius:var(--r-sm); padding:14px 12px 12px; border:1px solid var(--navy-700);
   font-size:19px; line-height:2.1; -webkit-user-select:none; user-select:none; -webkit-touch-callout:none}
 .w{display:inline-block; padding:1px 3px; margin:0 1px; border-radius:5px; cursor:pointer;
@@ -115,10 +115,13 @@ button{font:inherit; cursor:pointer; border:none; border-radius:var(--r-md); tra
 .detail .ph span{background:var(--navy-850); border-radius:6px; padding:3px 8px; font-size:13px}
 .detail .ph span i{font-style:normal; color:var(--ink-faint); font-size:11px; margin-left:4px}
 .trans{background:var(--navy-800); border-radius:var(--r-sm); padding:12px; margin-top:10px; font-size:14px; line-height:1.5; color:var(--ink-dim)}
+.wordcard{background:var(--navy-800); border-radius:var(--r-sm); padding:12px; margin-top:10px}
+.wordcard .top{display:flex; justify-content:space-between; align-items:baseline; gap:10px}
+.wordcard .w1{font-size:17px; font-weight:600}
+.wordcard .t1{color:var(--brass); font-size:14px}
+.wordcard .d1{color:var(--ink-dim); font-size:12.5px; line-height:1.5; margin-top:6px}
 .targets{display:flex; gap:6px; flex-wrap:wrap; margin-top:10px}
 .chip{background:var(--navy-800); color:var(--brass); border-radius:99px; padding:4px 11px; font-size:14px}
-.chip.pick{cursor:pointer; background:var(--navy-750); color:var(--ink-dim)}
-.chip.pick.on{background:var(--brass); color:#1A1206; font-weight:600}
 .head{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px}
 .head .pos{font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-faint)}
 .dots{display:flex; gap:5px}
@@ -146,6 +149,24 @@ button{font:inherit; cursor:pointer; border:none; border-radius:var(--r-md); tra
 .qrow .d{color:var(--ink-faint); font-size:12px}
 .qrow .due{color:var(--brass)}
 
+/* leitura */
+.sent{padding:11px 12px; border-radius:var(--r-sm); margin-bottom:6px; background:var(--navy-800); cursor:pointer;
+  border-left:3px solid transparent}
+.sent.now{background:var(--navy-750); border-left-color:var(--brass)}
+.sent.done{border-left-color:var(--brass)}
+.sent.weak{border-left-color:var(--rust)}
+.sent .en{font-size:16px; line-height:1.55}
+.sent .pt{font-size:12.5px; color:var(--ink-faint); margin-top:5px; line-height:1.45}
+.sent .red{font-size:13px; color:var(--amber); margin-top:5px; font-style:italic}
+.sent .sc{font-size:11.5px; color:var(--ink-faint); margin-top:6px; letter-spacing:.05em}
+.qbox{background:var(--navy-800); border-radius:var(--r-sm); padding:14px; margin-top:10px}
+.qbox .qq{font-size:17px; line-height:1.5}
+.qbox .kind{font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:7px}
+.qbox .hint{color:var(--ink-dim); font-size:12.5px; margin-top:8px}
+.said{background:var(--navy-900); border-radius:var(--r-sm); padding:11px; margin-top:10px; font-size:14.5px; line-height:1.5}
+.said .lbl{font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:5px}
+.reply{border-left:3px solid var(--brass); padding:10px 0 10px 12px; margin-top:12px; font-size:15px; line-height:1.55}
+
 /* escrita */
 textarea.write{width:100%; height:110px; background:var(--navy-900); color:var(--ink); border:1px solid var(--navy-700);
   border-radius:var(--r-sm); padding:12px; font-family:inherit; font-size:16px; line-height:1.5; resize:vertical}
@@ -172,6 +193,9 @@ svg.curve{width:100%; height:130px; display:block; margin-top:12px}
 .grid30 i{aspect-ratio:1; border-radius:3px; background:var(--navy-800)}
 .grid30 i.on{background:var(--brass)}
 .grid30 i.half{background:var(--copper)}
+.quota{height:10px; border-radius:99px; background:var(--navy-800); overflow:hidden; margin:10px 0 6px}
+.quota i{display:block; height:100%; background:var(--brass); border-radius:99px}
+.quota i.warn{background:var(--amber)} .quota i.bad{background:var(--rust)}
 
 textarea.log{width:100%; height:110px; background:var(--navy-900); color:var(--ink-dim); border:1px solid var(--navy-700);
   border-radius:var(--r-sm); padding:10px; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:11px; line-height:1.45; resize:vertical}
@@ -187,13 +211,21 @@ textarea.log{width:100%; height:110px; background:var(--navy-900); color:var(--i
     <img class="brand" src="/pronunciation-lab/assets/logo-header@3x.png" alt="Twenty Nine Cyber">
   </div>
 
-  <div class="card" id="acct">
+  <div class="card">
     <div id="session"></div>
     <button class="btn primary" id="login">Entrar com Google</button>
+    <div style="margin-top:12px">
+      <div class="sub" style="font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-faint)">Velocidade da fala</div>
+      <div class="speeds" id="speeds"></div>
+    </div>
   </div>
 
   <!-- ══════════ VOCABULÁRIO ══════════ -->
   <section class="pane on" id="pane-vocab">
+    <div class="card">
+      <h2>Lote do dia</h2>
+      <div id="batchbox"></div>
+    </div>
     <div class="card">
       <h2>Gerar vocabulário</h2>
       <div class="doms" id="doms"></div>
@@ -212,7 +244,6 @@ textarea.log{width:100%; height:110px; background:var(--navy-900); color:var(--i
       <h2>Fila</h2>
       <div id="qsummary"></div>
       <button class="btn primary" id="start" style="display:none">Começar sessão</button>
-      <button class="btn" id="seed" style="display:none">Semear frases de fonema</button>
       <button class="btn ghost" id="retire" style="display:none">Aposentar as frases de fonema</button>
     </div>
 
@@ -226,13 +257,15 @@ textarea.log{width:100%; height:110px; background:var(--navy-900); color:var(--i
       <div class="phrase" id="phrase"></div>
       <p class="hint">Toque: ouvir a palavra · Segure: ouvir devagar</p>
       <div id="detail"></div>
+      <div id="wordbox"></div>
       <button class="btn small" id="transbtn">Mostrar tradução</button>
       <div id="transbox"></div>
       <div class="targets" id="targets"></div>
       <div id="notebox"></div>
-      <div class="row2" style="margin-top:12px">
-        <button class="btn" id="model">Ouvir frase</button>
+      <div class="row3" style="margin-top:12px">
+        <button class="btn" id="model">Ouvir</button>
         <button class="btn" id="modelslow">Devagar</button>
+        <button class="btn" id="modelreal">Colado</button>
       </div>
       <div class="meter"><i id="level"></i></div>
       <button class="btn primary" id="rec">Gravar</button>
@@ -254,20 +287,47 @@ textarea.log{width:100%; height:110px; background:var(--navy-900); color:var(--i
     </div>
   </section>
 
+  <!-- ══════════ LEITURA ══════════ -->
+  <section class="pane" id="pane-read">
+    <div class="card">
+      <h2>Texto</h2>
+      <div id="readhead"></div>
+      <button class="btn primary" id="newtext">Gerar texto novo</button>
+      <button class="btn" id="lasttext" style="display:none">Continuar o último texto</button>
+    </div>
+
+    <div class="card" id="readcard" style="display:none">
+      <h2 id="readtitle">Leitura</h2>
+      <div id="readnote"></div>
+      <div id="sentences" style="margin-top:10px"></div>
+      <div class="meter"><i id="rlevel"></i></div>
+      <div class="row3">
+        <button class="btn" id="rmodel">Ouvir</button>
+        <button class="btn" id="rslow">Devagar</button>
+        <button class="btn" id="rreal">Colado</button>
+      </div>
+      <button class="btn primary" id="rrec">Ler esta frase</button>
+      <div id="rverdict"></div>
+      <button class="btn" id="rnext" style="display:none">Próxima frase</button>
+    </div>
+
+    <div class="card" id="qcard" style="display:none">
+      <h2>Conversa sobre o texto</h2>
+      <p class="sub" id="qintro" style="margin:0 0 10px"></p>
+      <button class="btn primary" id="startq">Começar as perguntas</button>
+      <div id="qbody"></div>
+    </div>
+  </section>
+
   <!-- ══════════ ESCRITA ══════════ -->
   <section class="pane" id="pane-write">
     <div class="card">
       <h2>Escreva você</h2>
-      <p class="sub" style="margin:0 0 10px">Monte uma frase sua usando as palavras marcadas. Errar aqui é o ponto.</p>
-      <div class="targets" id="wwords"></div>
-      <button class="btn small" id="wshuffle" style="margin-top:10px">Trocar palavras</button>
+      <p class="sub" style="margin:0 0 10px">Monte uma frase sua com as palavras do lote. Errar aqui é o ponto.</p>
+      <div id="wbatch"></div>
       <textarea class="write" id="wtext" placeholder="Escreva em inglês…" style="margin-top:10px"></textarea>
       <button class="btn primary" id="wsend">Corrigir</button>
       <div id="wout"></div>
-    </div>
-    <div class="card" id="whist" style="display:none">
-      <h2>O que você já escreveu</h2>
-      <div id="whistout"></div>
     </div>
   </section>
 
@@ -276,6 +336,11 @@ textarea.log{width:100%; height:110px; background:var(--navy-900); color:var(--i
     <div class="card">
       <h2>Resumo</h2>
       <div id="progsum"></div>
+    </div>
+    <div class="card">
+      <h2>Consumo de áudio no mês</h2>
+      <div class="quota"><i id="quotabar"></i></div>
+      <div id="quotatxt"></div>
     </div>
     <div class="card">
       <h2>Últimos 30 dias</h2>
@@ -301,6 +366,7 @@ textarea.log{width:100%; height:110px; background:var(--navy-900); color:var(--i
 <nav class="tabbar">
   <button data-tab="vocab" class="on"><span class="ic">✦</span>Vocabulário</button>
   <button data-tab="drill"><span class="ic">◉</span>Treino</button>
+  <button data-tab="read"><span class="ic">▤</span>Leitura</button>
   <button data-tab="write"><span class="ic">✎</span>Escrita</button>
   <button data-tab="prog"><span class="ic">▲</span>Progresso</button>
 </nav>
@@ -339,47 +405,31 @@ const DOMAINS = [
   { id:"daily",     label:"Cotidiano" }
 ];
 
-const SEED = [
-  { id:"i01", text:"They said that the other brother bothered them rather than the mother.", targets:["ð"],
-    translation:"Eles disseram que o outro irmão incomodou eles, e não a mãe.",
-    note:"<b>ð</b> é a ponta da língua tocando de leve a borda dos dentes de cima, <b>com voz</b> — a garganta vibra. O português não tem esse som, então ele vira /d/ por reflexo." },
-  { id:"i02", text:"The cool girl felt the small ball still fell well.", targets:["l"],
-    translation:"A garota descolada sentiu que a bolinha ainda caiu bem.",
-    note:"O <b>L final</b> americano é escuro: a ponta da língua sobe e o fundo da língua também. No português brasileiro esse L virou /u/ — <i>Brasil</i> sai <i>Brasiu</i>." },
-  { id:"i03", text:"She loves the gloves and believes the leaves have moved.", targets:["v","z"],
-    translation:"Ela adora as luvas e acredita que as folhas se moveram.",
-    note:"O problema é <b>ensurdecimento no fim</b>: /v/ vira /f/ e /z/ vira /s/. Segure a vibração até o fim." },
-  { id:"i04", text:"The three thrifty athletes threw the thick thread.", targets:["θ","ɹ"],
-    translation:"Os três atletas econômicos jogaram a linha grossa.",
-    note:"<b>θɹ</b> é o cluster mais difícil. Língua entre os dentes <b>sem voz</b>, e emenda o R americano. O erro comum é meter uma vogal no meio." },
-  { id:"i05", text:"This thing is worth more than those three things.", targets:["θ","ð"],
-    translation:"Esta coisa vale mais do que aquelas três coisas.",
-    note:"Mesma posição de língua, diferença só de <b>voz</b>: <i>thing</i> é surdo, <i>this</i> é sonoro." },
-  { id:"i06", text:"Every visitor believed the vivid village was very beautiful.", targets:["v"],
-    translation:"Todo visitante achou que a vila colorida era muito bonita.",
-    note:"O <b>v</b> é lábio-dental: dente sobre o lábio. Os lábios <b>não</b> se fecham — se fecharem, vira /b/." }
+/* Velocidades. "Colado" não é só rápido: é o texto reduzido,
+   escrito como americano fala, lido em ritmo normal. */
+const SPEEDS = [
+  { id:"slow",   label:"Devagar", rate:"-35%" },
+  { id:"normal", label:"Normal",  rate:"0%"   },
+  { id:"fast",   label:"Rápido",  rate:"+18%" },
+  { id:"native", label:"Nativo",  rate:"+32%" }
 ];
-
-const GLOSS = {
-  bothered:"incomodou", rather:"em vez de", brother:"irmão", mother:"mãe", other:"outro",
-  cool:"legal", felt:"sentiu", small:"pequeno", ball:"bola", still:"ainda", fell:"caiu", well:"bem",
-  loves:"adora", gloves:"luvas", believes:"acredita", leaves:"folhas", moved:"se moveram",
-  three:"três", thrifty:"econômico", athletes:"atletas", threw:"jogou", thick:"grosso", thread:"linha",
-  thing:"coisa", things:"coisas", worth:"vale", those:"aqueles", than:"do que",
-  every:"todo", visitor:"visitante", believed:"acreditou", vivid:"vívido", village:"vila", beautiful:"bonito"
-};
 
 const PASS_ACCURACY = 85, PASS_PHONEME = 80, MAX_ATTEMPTS = 3;
 const SESSION_SIZE = 10, LADDER = [1,3,7,21];
 const VOICE = "en-US-AriaNeural", MAX_NOTES = 2;
+const BATCH_SIZE = 8;
+const FREE_TIER_MINUTES = 300;   /* 5 h/mês do F0 */
 
 const app  = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db   = getFirestore(app);
 const fns  = getFunctions(app, "us-central1");
-const issueSpeechToken   = httpsCallable(fns, "issueSpeechToken");
-const generateLexicon    = httpsCallable(fns, "generateLexicon");
-const evaluateWriting    = httpsCallable(fns, "evaluateWriting");
+const issueSpeechToken  = httpsCallable(fns, "issueSpeechToken");
+const generateLexicon   = httpsCallable(fns, "generateLexicon");
+const evaluateWriting   = httpsCallable(fns, "evaluateWriting");
+const generatePassage   = httpsCallable(fns, "generatePassage");
+const generateQuestions = httpsCallable(fns, "generateQuestions");
+const evaluateAnswer    = httpsCallable(fns, "evaluateAnswer");
 
 const $ = id => document.getElementById(id);
 const lines = [];
@@ -388,11 +438,25 @@ function kv(k,v,c){ return `<div class="kv"><span class="k">${k}</span><span cla
 const esc = s => String(s ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
 const slug = s => s.toLowerCase().trim().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,60);
 const band = v => v >= 80 ? "s-hi" : v >= 60 ? "s-mid" : "s-low";
-const clean = w => w.toLowerCase().replace(/[^a-z'-]/g,"");
 const dayKey = d => new Date(d).toISOString().slice(0,10);
 
 let uid = null, domain = "cyber";
-let lexicon = [], known = [], learning = [], weak = [], queue = [];
+let lexicon = [], known = [], learning = [], weak = [], queue = [], batch = [];
+
+/* ── velocidade escolhida, guardada neste aparelho ────────── */
+let speed = "normal";
+try{ speed = localStorage.getItem("lab.speed") || "normal"; }catch(e){}
+function rateOf(){ return (SPEEDS.find(s => s.id === speed) || SPEEDS[1]).rate; }
+function renderSpeeds(){
+  $("speeds").innerHTML = SPEEDS.map(s =>
+    `<button class="sp ${s.id===speed?"on":""}" data-s="${s.id}">${s.label}</button>`).join("");
+  document.querySelectorAll(".sp").forEach(b => b.addEventListener("click", () => {
+    speed = b.dataset.s;
+    try{ localStorage.setItem("lab.speed", speed); }catch(e){}
+    document.querySelectorAll(".sp").forEach(x => x.classList.toggle("on", x.dataset.s === speed));
+  }));
+}
+renderSpeeds();
 
 /* ── abas ─────────────────────────────────────────────────── */
 document.querySelectorAll(".tabbar button").forEach(b => b.addEventListener("click", () => {
@@ -402,7 +466,8 @@ document.querySelectorAll(".tabbar button").forEach(b => b.addEventListener("cli
   window.scrollTo({ top:0, behavior:"instant" });
   if(t === "drill") loadQueue();
   if(t === "prog")  { loadStats(); loadDays(); }
-  if(t === "write") pickWriteWords();
+  if(t === "write") renderWriteBatch();
+  if(t === "read")  enterReading();
 }));
 
 /* ── token e TTS ──────────────────────────────────────────── */
@@ -444,15 +509,16 @@ function playBlob(b){
   });
 }
 async function speakBtn(btn, text, rate){
+  if(!text) return;
   btn.disabled = true; btn.classList.add("playing");
   const old = btn.textContent; btn.textContent = "…";
-  try{ await playBlob(await synth(text, rate)); }catch(e){ log("TTS: " + e.message); }
+  try{ await playBlob(await synth(text, rate ?? rateOf())); }catch(e){ log("TTS: " + e.message); }
   btn.disabled = false; btn.classList.remove("playing"); btn.textContent = old;
 }
 
-/* ── captura de áudio ─────────────────────────────────────── */
+/* ── captura e avaliação ──────────────────────────────────── */
 let lastUserAudio = null;
-async function startCapture(){
+async function startCapture(meterId){
   const stream = await navigator.mediaDevices.getUserMedia({ audio:true });
   const ctx = new (window.AudioContext || window.webkitAudioContext)();
   await ctx.resume();
@@ -465,7 +531,7 @@ async function startCapture(){
     let max = 0;
     for(let i=0;i<buf.length;i++){ const d = Math.abs(buf[i]-128)/128; if(d>max) max=d; }
     if(max>peak) peak = max;
-    const el = $("level"); if(el) el.style.width = Math.min(100, max*140) + "%";
+    const el = $(meterId || "level"); if(el) el.style.width = Math.min(100, max*140) + "%";
     raf = requestAnimationFrame(tick);
   })();
   let mr = null, chunks = [];
@@ -479,7 +545,7 @@ async function startCapture(){
     stream, label:(stream.getAudioTracks()[0]||{}).label||"",
     stop(){
       cancelAnimationFrame(raf);
-      const el = $("level"); if(el) el.style.width = "0%";
+      const el = $(meterId || "level"); if(el) el.style.width = "0%";
       if(mr && mr.state !== "inactive"){
         mr.onstop = () => { if(chunks.length) lastUserAudio = new Blob(chunks,{type:mr.mimeType||"audio/mp4"}); };
         mr.stop();
@@ -491,22 +557,21 @@ async function startCapture(){
   };
 }
 
-/* Avalia uma fala contra um texto. Devolve null se não deu para medir.
-   É o coração compartilhado por Vocabulário, Treino e Escrita. */
-async function assess(refText, targets){
+/* refText vazio = fala livre: a Azure mede sem comparar com roteiro. */
+async function assess(refText, targets, meterId){
   const { token, region } = await getToken();
   const S = window.SpeechSDK;
   const sc = S.SpeechConfig.fromAuthorizationToken(token, region);
   sc.speechRecognitionLanguage = "en-US";
   const pa = new S.PronunciationAssessmentConfig(
-    refText, S.PronunciationAssessmentGradingSystem.HundredMark,
-    S.PronunciationAssessmentGranularity.Phoneme, true);
+    refText || "", S.PronunciationAssessmentGradingSystem.HundredMark,
+    S.PronunciationAssessmentGranularity.Phoneme, !!refText);
   pa.phonemeAlphabet = "IPA";
   pa.enableProsodyAssessment = true;
 
   let cap, audioConfig;
   try{
-    cap = await startCapture();
+    cap = await startCapture(meterId);
     audioConfig = S.AudioConfig.fromStreamInput(cap.stream);
   }catch(e){
     log("stream compartilhado falhou — microfone direto");
@@ -533,7 +598,8 @@ async function assess(refText, targets){
       }
       const parsed = JSON.parse(result.properties.getProperty(S.PropertyId.SpeechServiceResponse_JsonResult));
       rec.close();
-      const best = parsed.NBest[0], s = best.PronunciationAssessment;
+      const best = parsed.NBest?.[0] || {};
+      const s = best.PronunciationAssessment || {};
       const words = (best.Words||[]).map(w => ({
         word: w.Word,
         accuracy: w.PronunciationAssessment ? w.PronunciationAssessment.AccuracyScore : 0,
@@ -547,11 +613,12 @@ async function assess(refText, targets){
           offenders.push({ ph:ph.phoneme, word:w.word, score:ph.accuracy });
       offenders.sort((a,b) => a.score - b.score);
       resolve({
-        scores: { accuracy:s.AccuracyScore, fluency:s.FluencyScore, completeness:s.CompletenessScore,
-                  prosody:s.ProsodyScore ?? 0, pronunciation:s.PronScore },
+        transcript: result.text || "",
+        scores: { accuracy:s.AccuracyScore ?? 0, fluency:s.FluencyScore ?? 0, completeness:s.CompletenessScore ?? 0,
+                  prosody:s.ProsodyScore ?? 0, pronunciation:s.PronScore ?? 0 },
         words, offenders, peak,
         durationMs: Math.round((result.duration||0)/10000),
-        passed: s.AccuracyScore >= PASS_ACCURACY && offenders.length === 0
+        passed: (s.AccuracyScore ?? 0) >= PASS_ACCURACY && offenders.length === 0
       });
     },
     err => { cap.stop(); rec.close(); resolve({ error: String(err), peak:-1 }); });
@@ -577,6 +644,7 @@ async function saveAttempt(o){
 }
 
 async function updatePhonemeStats(words){
+  if(!words?.length) return;
   const per = new Map();
   for(const w of words) for(const ph of w.phonemes){
     if(!per.has(ph.phoneme)) per.set(ph.phoneme, { scores:[], words:new Set() });
@@ -585,6 +653,7 @@ async function updatePhonemeStats(words){
     if(w.accuracy < 70) e.words.add(w.word);
   }
   const entries = [...per.entries()];
+  if(!entries.length) return;
   const refs = entries.map(([p]) => doc(db, `users/${uid}/phonemeStats/${encodeURIComponent(p)}`));
   await runTransaction(db, async tx => {
     const snaps = await Promise.all(refs.map(r => tx.get(r)));
@@ -604,7 +673,7 @@ async function updatePhonemeStats(words){
   });
 }
 
-/* ══════════ AUTH E CONTEXTO ══════════ */
+/* ══════════ AUTH, CONTEXTO E LOTE DO DIA ══════════ */
 getRedirectResult(auth).catch(e => log("redirect: " + e.code));
 $("login").addEventListener("click", async () => {
   const p = new GoogleAuthProvider();
@@ -639,15 +708,40 @@ async function loadContext(){
       .sort((a,b) => a.avgScore - b.avgScore).slice(0,5).map(s => s.phoneme);
   }catch(e){ log("phonemeStats: " + (e.code||e.message)); }
 
+  computeBatch();
+
   $("session").innerHTML =
     kv("Conta", auth.currentUser.email, "ok") +
     kv("Palavras no lexicon", lexicon.length) +
     kv("Fonemas fracos", weak.length ? weak.join("  ") : "nenhum ainda", weak.length ? "warn" : "");
 
   renderDomains();
+  renderBatch();
   $("calibnote").textContent = lexicon.length === 0
     ? "Primeira rodada: as palavras vêm espalhadas do nível 1 ao 5, para calibrar. Marque com sinceridade o que já sabe."
     : "As palavras evitam o que já está no seu lexicon" + (weak.length ? " e tentam carregar seus fonemas fracos." : ".");
+}
+
+/* O lote é o que as três abas compartilham: as últimas palavras que
+   você mandou estudar. Treino começa por elas, Escrita sorteia
+   dentro delas, Leitura escreve o texto com elas. */
+function computeBatch(){
+  batch = [...learning]
+    .sort((a,b) => (b.createdAt?.toMillis?.() || 0) - (a.createdAt?.toMillis?.() || 0))
+    .slice(0, BATCH_SIZE);
+}
+const inBatch = w => batch.some(b => (b.word||"").toLowerCase() === String(w||"").toLowerCase());
+const lexOf = w => lexicon.find(e => (e.word||"").toLowerCase() === String(w||"").toLowerCase());
+
+function renderBatch(){
+  if(!batch.length){
+    $("batchbox").innerHTML = '<p class="sub" style="margin:0">Nenhuma palavra em estudo. Gere vocabulário e marque "Estudar" — o que você marcar vira o lote que as três abas usam.</p>';
+    return;
+  }
+  $("batchbox").innerHTML =
+    '<p class="sub" style="margin:0 0 10px">Treino, Leitura e Escrita trabalham com estas palavras.</p>' +
+    '<div class="targets" style="margin-top:0">' +
+    batch.map(b => `<span class="chip">${esc(b.word)}</span>`).join("") + '</div>';
 }
 
 function renderDomains(){
@@ -708,12 +802,11 @@ function renderEntries(){
   document.querySelectorAll("[data-play]").forEach(b => b.addEventListener("click", async () => {
     const e = entries[b.dataset.play];
     b.disabled = true; const old = b.textContent; b.textContent = "…";
-    try{ await playBlob(await synth(e.word,"0%")); await new Promise(r=>setTimeout(r,250)); await playBlob(await synth(e.example,"0%")); }
+    try{ await playBlob(await synth(e.word, rateOf())); await new Promise(r=>setTimeout(r,250)); await playBlob(await synth(e.example, rateOf())); }
     catch(err){ log("TTS: " + err.message); }
     b.disabled = false; b.textContent = old;
   }));
 
-  /* Gravar a frase de exemplo na hora, sem esperar a fila. */
   document.querySelectorAll("[data-say]").forEach(b => b.addEventListener("click", async () => {
     const i = b.dataset.say, e = entries[i];
     b.disabled = true; b.textContent = "Fale…";
@@ -721,16 +814,14 @@ function renderEntries(){
     const r = await assess(e.example, weak);
     b.disabled = false; b.textContent = "Falar";
     if(r.error){ $("say"+i).innerHTML = `<div class="verdict fail"><b>Não deu</b>${esc(r.error)}</div>`; return; }
+    const fracas = r.words.filter(w=>w.accuracy<70);
     $("say"+i).innerHTML = scoreCard(r.scores) +
       `<div class="verdict ${r.scores.accuracy>=PASS_ACCURACY?"pass":"fail"}">
         <b>${r.scores.accuracy>=PASS_ACCURACY?"Boa":"Ainda não"}</b>
-        ${r.words.filter(w=>w.accuracy<70).length
-          ? "Palavras fracas: " + r.words.filter(w=>w.accuracy<70).map(w=>esc(w.word)+" ("+Math.round(w.accuracy)+")").join(", ")
-          : "Nenhuma palavra abaixo de 70."}</div>`;
-    try{
-      await saveAttempt({ itemId:"vocab-"+slug(e.word), text:e.example, ...r, targets:weak });
-      log("«" + e.word + "» falada e medida");
-    }catch(err){ log("não gravei a tentativa: " + (err.code||err.message)); }
+        ${fracas.length ? "Palavras fracas: " + fracas.map(w=>esc(w.word)+" ("+Math.round(w.accuracy)+")").join(", ")
+                        : "Nenhuma palavra abaixo de 70."}</div>`;
+    try{ await saveAttempt({ itemId:"vocab-"+slug(e.word), text:e.example, ...r, targets:weak }); }
+    catch(err){ log("não gravei a tentativa: " + (err.code||err.message)); }
   }));
 
   document.querySelectorAll("[data-known]").forEach(b => b.addEventListener("click", () => saveWord(b.dataset.known, "known", b)));
@@ -741,12 +832,13 @@ async function saveWord(i, status, btn){
   const e = entries[i], id = slug(e.word), card = $("e"+i);
   card.querySelectorAll("button").forEach(x => x.disabled = true);
   try{
-    await setDoc(doc(db, `users/${uid}/lexicon/${id}`), {
+    const docData = {
       word:e.word, domain, difficulty:e.difficulty, status,
       partOfSpeech:e.partOfSpeech, ipa:e.ipa, definitionEn:e.definitionEn,
       translationPt:e.translationPt, example:e.example, exampleTransPt:e.exampleTransPt,
       usageNotePt:e.usageNotePt, isPhrasalVerb:e.isPhrasalVerb, createdAt: serverTimestamp()
-    });
+    };
+    await setDoc(doc(db, `users/${uid}/lexicon/${id}`), docData);
     if(status === "learning"){
       await setDoc(doc(db, `users/${uid}/drillQueue/lex-${id}`), {
         text:e.example, targetPhonemes:[], note:e.usageNotePt||"", translation:e.exampleTransPt||"",
@@ -755,11 +847,13 @@ async function saveWord(i, status, btn){
       });
       log("«" + e.word + "» salva e enfileirada");
     }else log("«" + e.word + "» marcada como conhecida");
+
     known.push(e.word);
-    lexicon.push({ word:e.word, status, example:e.example, domain });
-    if(status === "learning") learning.push({ word:e.word, example:e.example });
+    const local = { ...docData, id, createdAt: { toMillis: () => Date.now() } };
+    lexicon.push(local);
+    if(status === "learning"){ learning.push(local); computeBatch(); renderBatch(); }
     card.classList.add("done");
-    btn.textContent = status === "known" ? "já sabia" : "na fila";
+    btn.textContent = status === "known" ? "já sabia" : "no lote";
   }catch(err){
     log("FALHA ao salvar: " + (err.code||err.message));
     card.querySelectorAll("button").forEach(x => x.disabled = false);
@@ -778,14 +872,14 @@ async function loadQueue(){
   const live = queue.filter(q => q.state !== "retired");
   const due  = live.filter(q => q.dueAt && q.dueAt.toMillis() <= now);
   const phon = live.filter(q => q.source !== "lexicon");
+  const dueBatch = due.filter(q => inBatch(q.word));
 
   $("qsummary").innerHTML =
-    kv("Vencidos agora", due.length, due.length ? "ok" : "warn") +
-    kv("Itens ativos", live.length) +
-    kv("Suas palavras", live.filter(q => q.source === "lexicon").length, "ok");
+    kv("Do lote de hoje", dueBatch.length, dueBatch.length ? "ok" : "warn") +
+    kv("Revisões vencidas", due.length - dueBatch.length) +
+    kv("Itens ativos", live.length);
 
   $("start").style.display  = due.length ? "block" : "none";
-  $("seed").style.display   = live.length ? "none" : "block";
   $("retire").style.display = phon.length ? "block" : "none";
   $("retire").textContent   = `Aposentar as ${phon.length} frases de fonema`;
 
@@ -793,28 +887,13 @@ async function loadQueue(){
   $("queue").innerHTML = live.length ? live.map(q => {
     const ms = q.dueAt ? q.dueAt.toMillis() - now : 0;
     const label = ms <= 0 ? "vencido" : ms < 864e5 ? "em " + Math.round(ms/36e5) + " h" : "em " + Math.ceil(ms/864e5) + " d";
-    return `<div class="qrow"><span class="t">${esc(q.text)}</span>
+    return `<div class="qrow"><span class="t">${inBatch(q.word) ? "● " : ""}${esc(q.text)}</span>
       <span class="d">${q.intervalDays}d · ${q.timesPassed}/${q.timesShown}</span>
       <span class="${ms<=0?"due":"d"}">${label}</span></div>`;
   }).join("") : '<p class="sub" style="margin:0">Fila vazia. Marque palavras como "Estudar" na aba Vocabulário.</p>';
 }
 $("reloadq").addEventListener("click", loadQueue);
 
-$("seed").addEventListener("click", async () => {
-  $("seed").disabled = true;
-  const now = Timestamp.now();
-  for(const it of SEED)
-    await setDoc(doc(db, `users/${uid}/drillQueue/${it.id}`), {
-      text:it.text, targetPhonemes:it.targets, note:it.note, translation:it.translation,
-      source:"phoneme", state:"new", dueAt:now, intervalDays:1,
-      timesShown:0, timesPassed:0, lastResult:null
-    });
-  log("frases de fonema semeadas");
-  $("seed").disabled = false;
-  await loadQueue();
-});
-
-/* Tira as frases de fonema da frente sem apagar o histórico delas. */
 $("retire").addEventListener("click", async () => {
   const b = $("retire"); b.disabled = true;
   const phon = queue.filter(q => q.state !== "retired" && q.source !== "lexicon");
@@ -833,8 +912,8 @@ $("retire").addEventListener("click", async () => {
 $("start").addEventListener("click", async () => {
   const now = Date.now();
   const due = queue.filter(q => q.state !== "retired" && q.dueAt && q.dueAt.toMillis() <= now);
-  /* Suas palavras primeiro; as frases de fonema só depois. */
-  due.sort((a,b) => (a.source === "lexicon" ? 0 : 1) - (b.source === "lexicon" ? 0 : 1)
+  /* Lote do dia primeiro; revisões antigas preenchem o resto. */
+  due.sort((a,b) => (inBatch(a.word) ? 0 : 1) - (inBatch(b.word) ? 0 : 1)
                  || a.dueAt.toMillis() - b.dueAt.toMillis());
   plan = due.slice(0, SESSION_SIZE);
   if(plan.length < SESSION_SIZE && due.length)
@@ -859,12 +938,25 @@ function renderItem(){
   $("pos").textContent = `Item ${pos+1} de ${plan.length}`;
   $("dots").innerHTML = [1,2,3].map(n => `<i class="${n<attemptNumber?"used":n===attemptNumber?"now":""}"></i>`).join("");
   renderPhrase();
+  renderWordCard(it);
   $("targets").innerHTML = (it.targetPhonemes||[]).map(p => `<span class="chip">${esc(p)}</span>`).join("");
   $("notebox").innerHTML = it.note ? `<div class="note">${it.note}</div>` : "";
   $("detail").innerHTML=""; setTranslation(false);
   $("verdict").innerHTML=""; $("scores").innerHTML=""; $("abbox").innerHTML="";
   $("next").style.display="none";
   $("rec").disabled=false; $("rec").textContent="Gravar";
+}
+
+/* O significado da palavra fica à vista no treino — era o que
+   faltava quando o item aparecia dias depois do vocabulário. */
+function renderWordCard(it){
+  const e = it.word ? lexOf(it.word) : null;
+  if(!e){ $("wordbox").innerHTML = ""; return; }
+  $("wordbox").innerHTML = `<div class="wordcard">
+    <div class="top"><span class="w1">${esc(e.word)} <span class="eipa">${esc(e.ipa||"")}</span></span>
+      <span class="t1">${esc(e.translationPt||"")}</span></div>
+    ${e.definitionEn ? `<div class="d1">${esc(e.definitionEn)}</div>` : ""}
+  </div>`;
 }
 
 function renderPhrase(){
@@ -911,17 +1003,17 @@ async function speakWord(el, slow){
   document.querySelectorAll("#phrase .w").forEach(x => x.classList.remove("sel"));
   el.classList.add("sel","playing");
   showDetail(Number(el.dataset.i), word);
-  try{ await playBlob(await synth(word, slow ? "-45%" : "0%")); }catch(e){ log("TTS: " + e.message); }
+  try{ await playBlob(await synth(word, slow ? "-45%" : rateOf())); }catch(e){ log("TTS: " + e.message); }
   el.classList.remove("playing");
 }
 
 function showDetail(i, word){
-  const g = GLOSS[clean(word)];
+  const e = lexOf(word);
   const a = lastWords && lastWords.length > i ? lastWords[i] : null;
   const phon = a && a.phonemes?.length
     ? `<div class="ph">` + a.phonemes.map(p => `<span class="${band(p.accuracy)}">${esc(p.phoneme)}<i>${Math.round(p.accuracy)}</i></span>`).join("") + `</div>` : "";
   $("detail").innerHTML = `<div class="detail">
-    <div class="top"><span class="wd">${esc(word)}</span><span class="gl">${g?esc(g):""}</span></div>
+    <div class="top"><span class="wd">${esc(word)}</span><span class="gl">${e ? esc(e.translationPt||"") : ""}</span></div>
     ${a ? `<div class="sub" style="margin:0">Sua última tentativa: ${Math.round(a.accuracy)}${a.errorType&&a.errorType!=="None"?" · "+a.errorType:""}</div>`
         : `<div class="sub" style="margin:0">Ainda sem medição desta palavra.</div>`}
     ${phon}</div>`;
@@ -935,8 +1027,9 @@ function setTranslation(show){
   $("transbtn").textContent = show ? "Esconder tradução" : "Mostrar tradução";
 }
 $("transbtn").addEventListener("click", () => setTranslation(!transShown));
-$("model").addEventListener("click", e => speakBtn(e.currentTarget, plan[pos].text, "0%"));
+$("model").addEventListener("click", e => speakBtn(e.currentTarget, plan[pos].text));
 $("modelslow").addEventListener("click", e => speakBtn(e.currentTarget, plan[pos].text, "-35%"));
+$("modelreal").addEventListener("click", e => speakBtn(e.currentTarget, plan[pos].reduced || plan[pos].text, "+15%"));
 
 $("rec").addEventListener("click", async () => {
   const it = plan[pos];
@@ -971,7 +1064,7 @@ $("rec").addEventListener("click", async () => {
     $("verdict").innerHTML = `<div class="verdict fail"><b>Reprovado</b>Três tentativas. O item volta amanhã.${
       shown.length ? "<br>" + shown.map(o=>`<b>${esc(o.ph)}</b> em "${esc(o.word)}" (${Math.round(o.score)})`).join("<br>") : ""}</div>`;
     $("next").style.display="block"; $("rec").disabled = true;
-    setTimeout(() => speakBtn($("model"), it.text, "0%"), 400);
+    setTimeout(() => speakBtn($("model"), it.text), 400);
   }else{
     attemptNumber++;
     $("verdict").innerHTML = `<div class="verdict fail"><b>Ainda não</b>${
@@ -979,7 +1072,7 @@ $("rec").addEventListener("click", async () => {
       shown.length ? shown.map(o=>`<b>${esc(o.ph)}</b> em "${esc(o.word)}" (${Math.round(o.score)})`).join("<br>") + "<br>" : ""}
       Toque nas palavras vermelhas para ouvi-las. Tentativa ${attemptNumber} de ${MAX_ATTEMPTS}.</div>`;
     $("dots").innerHTML = [1,2,3].map(n => `<i class="${n<attemptNumber?"used":n===attemptNumber?"now":""}"></i>`).join("");
-    setTimeout(() => speakBtn($("model"), it.text, "0%"), 400);
+    setTimeout(() => speakBtn($("model"), it.text), 400);
   }
 });
 
@@ -993,7 +1086,7 @@ function renderAB(){
     b.disabled = true; b.classList.add("playing");
     if(lastUserAudio){ b.textContent="você…"; await playBlob(lastUserAudio); await new Promise(r=>setTimeout(r,350)); }
     b.textContent = "modelo…";
-    try{ await playBlob(await synth(it.text,"0%")); }catch(err){ log("TTS: " + err.message); }
+    try{ await playBlob(await synth(it.text, rateOf())); }catch(err){ log("TTS: " + err.message); }
     b.disabled=false; b.classList.remove("playing"); b.textContent = old;
   });
   $("abmine").addEventListener("click", async e => {
@@ -1054,21 +1147,290 @@ $("next").addEventListener("click", async () => {
   await loadQueue();
 });
 
-/* ══════════ ABA ESCRITA ══════════ */
-let writeWords = [], lastWriting = null;
+/* ══════════ ABA LEITURA ══════════ */
+let passage = null, passageId = null, sIdx = 0, sScores = [];
+let questions = [], qIdx = 0, qAnswered = 0;
 
-function pickWriteWords(){
+function enterReading(){
   if(!uid) return;
-  const pool = learning.length ? learning : lexicon;
-  if(!pool.length){
-    $("wwords").innerHTML = '<p class="sub" style="margin:0">Sem palavras ainda. Gere vocabulário primeiro.</p>';
+  $("readhead").innerHTML = batch.length
+    ? kv("Palavras do lote", batch.length) + kv("Domínio", (DOMAINS.find(d=>d.id===domain)||{}).label)
+    : '<p class="sub" style="margin:0">Sem palavras no lote. Gere vocabulário e marque "Estudar" primeiro.</p>';
+  $("newtext").disabled = !batch.length;
+  if(passage) $("lasttext").style.display = "block";
+}
+
+$("newtext").addEventListener("click", async () => {
+  const b = $("newtext");
+  b.disabled = true; b.textContent = "Escrevendo…";
+  try{
+    let seenTitles = [];
+    try{
+      const prev = await getDocs(query(collection(db, `users/${uid}/passages`), orderBy("createdAt","desc"), limit(15)));
+      seenTitles = prev.docs.map(d => d.data().title).filter(Boolean);
+    }catch(e){}
+
+    const r = await generatePassage({
+      domain, words: batch.map(e => e.word), weakPhonemes: weak, seenTitles, length: 100
+    });
+    passage = r.data;
+    sIdx = 0; sScores = []; questions = []; qIdx = 0; qAnswered = 0;
+
+    try{
+      const ref = await addDoc(collection(db, `users/${uid}/passages`), {
+        title: passage.title, domain, sentences: passage.sentences,
+        wordsUsed: passage.wordsUsed || [], notePt: passage.notePt || "",
+        askedQuestions: [], createdAt: serverTimestamp()
+      });
+      passageId = ref.id;
+    }catch(e){ log("não gravei o texto: " + (e.code||e.message)); passageId = null; }
+
+    log("texto gerado: " + passage.title + " · " + passage.sentences.length + " frases · " + passage.wordCount + " palavras");
+    renderPassage();
+  }catch(e){
+    log("FALHOU: " + (e.code||"") + " " + (e.message||""));
+    $("readhead").innerHTML += `<div class="verdict fail"><b>Não deu</b>${esc(e.code||e.message)}</div>`;
+  }finally{ b.disabled = false; b.textContent = "Gerar texto novo"; }
+});
+
+$("lasttext").addEventListener("click", () => { if(passage) renderPassage(); });
+
+function passageText(){
+  return passage ? passage.sentences.map(s => s.en).join(" ") : "";
+}
+
+function renderPassage(){
+  $("readcard").style.display = "block";
+  $("qcard").style.display = "block";
+  $("readtitle").textContent = passage.title;
+  $("readnote").innerHTML = passage.notePt ? `<div class="note">${esc(passage.notePt)}</div>` : "";
+  $("qintro").textContent = "Leia o texto inteiro primeiro. As perguntas são novas a cada vez, e o texto fica escondido enquanto você responde.";
+  renderSentences();
+  $("rverdict").innerHTML = ""; $("rnext").style.display = "none";
+  $("rrec").disabled = false; $("rrec").textContent = "Ler esta frase";
+  $("qbody").innerHTML = "";
+  $("startq").style.display = "block";
+  $("startq").textContent = "Começar as perguntas";
+}
+
+function renderSentences(){
+  $("sentences").innerHTML = passage.sentences.map((s,i) => {
+    const sc = sScores[i];
+    const cls = i === sIdx ? "now" : sc == null ? "" : sc >= PASS_ACCURACY ? "done" : "weak";
+    return `<div class="sent ${cls}" data-i="${i}">
+      <div class="en">${esc(s.en)}</div>
+      <div class="pt">${esc(s.pt)}</div>
+      ${i === sIdx ? `<div class="red">colado: ${esc(s.reduced)}</div>` : ""}
+      ${sc != null ? `<div class="sc">accuracy ${Math.round(sc)}</div>` : ""}
+    </div>`;
+  }).join("");
+  document.querySelectorAll(".sent").forEach(el => el.addEventListener("click", () => {
+    sIdx = Number(el.dataset.i);
+    $("rverdict").innerHTML = ""; $("rnext").style.display = "none";
+    $("rrec").disabled = false;
+    renderSentences();
+  }));
+}
+
+$("rmodel").addEventListener("click", e => speakBtn(e.currentTarget, passage?.sentences[sIdx]?.en));
+$("rslow").addEventListener("click",  e => speakBtn(e.currentTarget, passage?.sentences[sIdx]?.en, "-35%"));
+$("rreal").addEventListener("click",  e => speakBtn(e.currentTarget, passage?.sentences[sIdx]?.reduced || passage?.sentences[sIdx]?.en, "+15%"));
+
+$("rrec").addEventListener("click", async () => {
+  const s = passage.sentences[sIdx];
+  $("rrec").disabled = true; $("rrec").textContent = "Fale agora…";
+  const r = await assess(s.en, weak, "rlevel");
+  $("rrec").disabled = false; $("rrec").textContent = "Ler esta frase";
+
+  if(r.error){
+    $("rverdict").innerHTML = `<div class="verdict fail"><b>Não deu</b>${esc(r.error)}</div>`;
     return;
   }
-  const shuffled = [...pool].sort(() => Math.random() - .5);
-  writeWords = shuffled.slice(0, Math.min(3, pool.length)).map(e => e.word);
-  $("wwords").innerHTML = writeWords.map(w => `<span class="chip">${esc(w)}</span>`).join("");
+  sScores[sIdx] = r.scores.accuracy;
+  const fracas = r.words.filter(w => w.accuracy < 70);
+  $("rverdict").innerHTML = scoreCard(r.scores) +
+    `<div class="verdict ${r.scores.accuracy>=PASS_ACCURACY?"pass":"fail"}">
+      <b>Frase ${sIdx+1} de ${passage.sentences.length}</b>
+      ${fracas.length ? "Palavras fracas: " + fracas.map(w=>esc(w.word)+" ("+Math.round(w.accuracy)+")").join(", ")
+                      : "Nenhuma palavra abaixo de 70."}</div>`;
+  renderSentences();
+  $("rnext").style.display = sIdx < passage.sentences.length - 1 ? "block" : "none";
+
+  try{ await saveAttempt({ itemId:"read-" + (passageId||"x") + "-" + sIdx, text:s.en, ...r, targets:weak }); }
+  catch(e){ log("não gravei a leitura: " + (e.code||e.message)); }
+});
+
+$("rnext").addEventListener("click", () => {
+  if(sIdx < passage.sentences.length - 1) sIdx++;
+  $("rverdict").innerHTML = ""; $("rnext").style.display = "none";
+  renderSentences();
+  window.scrollTo({ top: $("readcard").offsetTop - 10, behavior:"smooth" });
+});
+
+/* ── perguntas sobre o texto ──────────────────────────────── */
+$("startq").addEventListener("click", async () => {
+  const b = $("startq");
+  b.disabled = true; b.textContent = "Pensando nas perguntas…";
+  try{
+    let asked = [];
+    if(passageId){
+      try{
+        const snap = await getDocs(collection(db, `users/${uid}/passages`));
+        const d = snap.docs.find(x => x.id === passageId);
+        asked = d?.data()?.askedQuestions || [];
+      }catch(e){}
+    }
+    const r = await generateQuestions({ passage: passageText(), count: 4, asked });
+    questions = r.data.questions || [];
+    qIdx = 0; qAnswered = 0;
+    if(!questions.length) throw new Error("não vieram perguntas");
+
+    if(passageId){
+      try{
+        const snap = await getDocs(collection(db, `users/${uid}/passages`));
+        const d = snap.docs.find(x => x.id === passageId);
+        const prev = d?.data() || {};
+        await updateDoc(doc(db, `users/${uid}/passages/${passageId}`), {
+          title: prev.title, sentences: prev.sentences,
+          askedQuestions: [...(prev.askedQuestions||[]), ...questions.map(q => q.question)].slice(-60)
+        });
+      }catch(e){ log("não registrei as perguntas: " + (e.code||e.message)); }
+    }
+
+    log(questions.length + " perguntas novas · já feitas antes: " + asked.length);
+    b.style.display = "none";
+    $("readcard").style.display = "none";   /* texto escondido durante as perguntas */
+    renderQuestion();
+  }catch(e){
+    log("FALHOU: " + (e.code||"") + " " + (e.message||""));
+    $("qbody").innerHTML = `<div class="verdict fail"><b>Não deu</b>${esc(e.code||e.message)}</div>`;
+    b.disabled = false; b.textContent = "Tentar de novo";
+  }
+});
+
+const KINDS = { fact:"Fato do texto", inference:"Leitura nas entrelinhas", retell:"Conte com suas palavras" };
+
+function renderQuestion(){
+  const q = questions[qIdx];
+  $("qbody").innerHTML = `
+    <div class="qbox">
+      <div class="kind">${KINDS[q.kind] || "Pergunta"} · ${qIdx+1} de ${questions.length}</div>
+      <div class="qq">${esc(q.question)}</div>
+      <button class="btn small" id="qhear" style="margin-top:10px">Ouvir a pergunta</button>
+      <div id="qhintbox"></div>
+      <button class="btn ghost" id="qhint">Preciso de uma pista</button>
+    </div>
+    <div class="meter"><i id="qlevel"></i></div>
+    <button class="btn primary" id="qrec">Responder falando</button>
+    <button class="btn ghost" id="qshow">Mostrar o texto</button>
+    <div id="qout"></div>`;
+
+  $("qhear").addEventListener("click", e => speakBtn(e.currentTarget, q.question));
+  $("qhint").addEventListener("click", () => {
+    $("qhintbox").innerHTML = `<div class="hint">${esc(q.hintPt || "Sem pista para esta.")}</div>`;
+    log("pediu pista na pergunta " + (qIdx+1));
+  });
+  $("qshow").addEventListener("click", () => {
+    $("readcard").style.display = $("readcard").style.display === "none" ? "block" : "none";
+    log("texto reexibido durante as perguntas");
+  });
+  $("qrec").addEventListener("click", answerQuestion);
 }
-$("wshuffle").addEventListener("click", pickWriteWords);
+
+async function answerQuestion(){
+  const q = questions[qIdx];
+  const b = $("qrec");
+  b.disabled = true; b.textContent = "Fale agora…";
+
+  /* Sem texto de referência: fala livre. */
+  const r = await assess("", [], "qlevel");
+  b.disabled = false; b.textContent = "Responder falando";
+
+  if(r.error){
+    $("qout").innerHTML = `<div class="verdict fail"><b>Não deu</b>${esc(r.error)}</div>`;
+    return;
+  }
+  const said = (r.transcript || "").trim();
+  if(!said){
+    $("qout").innerHTML = `<div class="verdict fail"><b>Não entendi</b>Não saiu transcrição. Fale um pouco mais alto ou mais perto.</div>`;
+    return;
+  }
+
+  $("qout").innerHTML = `<div class="said"><div class="lbl">Você disse</div>${esc(said)}</div>
+    <p class="sub" style="margin-top:10px">Avaliando…</p>`;
+
+  try{
+    const e = await evaluateAnswer({
+      passage: passageText(), question: q.question, answer: said, idealAnswer: q.idealAnswer
+    });
+    const d = e.data;
+    qAnswered++;
+
+    $("qout").innerHTML = `
+      <div class="said"><div class="lbl">Você disse</div>${esc(said)}</div>
+      <div class="reply">${esc(d.replyEn)}
+        <button class="btn small" id="qreplyhear" style="margin-top:10px;width:auto;padding:7px 14px">Ouvir</button>
+      </div>
+      <div class="verdict ${d.correct ? "pass" : "fail"}">
+        <b>${d.correct ? "Entendeu o texto" : d.onTopic ? "Quase" : "Fora do ponto"}</b>${esc(d.feedbackPt)}</div>
+      ${d.betterEn && d.betterEn.toLowerCase() !== said.toLowerCase() ? `
+        <div class="fix"><div class="lbl">Como dizer isso melhor</div>
+          <div class="txt">${esc(d.betterEn)}</div></div>` : ""}
+      ${d.fixPt ? `<div class="issue">${esc(d.fixPt)}</div>` : ""}
+      <div class="scores" style="margin-top:12px">
+        <div class="score"><b>${Math.round(r.scores.accuracy)}</b><span>Accuracy</span></div>
+        <div class="score"><b>${Math.round(r.scores.fluency)}</b><span>Fluency</span></div>
+      </div>
+      <p class="hint">Fala livre não entra na sua curva por fonema — sem roteiro, o score não é comparável com o do treino.</p>
+      <button class="btn primary" id="qnext">${qIdx < questions.length-1 ? "Próxima pergunta" : "Terminar"}</button>`;
+
+    $("qreplyhear").addEventListener("click", ev => speakBtn(ev.currentTarget, d.replyEn));
+    $("qnext").addEventListener("click", () => {
+      if(qIdx < questions.length - 1){ qIdx++; renderQuestion(); }
+      else{
+        $("qbody").innerHTML = `<div class="verdict pass"><b>Fim</b>Você respondeu ${qAnswered} de ${questions.length}. Entre de novo nesta aba e as perguntas serão outras.</div>`;
+        $("readcard").style.display = "block";
+        $("startq").style.display = "block";
+        $("startq").disabled = false;
+        $("startq").textContent = "Novas perguntas";
+      }
+    });
+    log("resposta " + (qIdx+1) + " · correta=" + d.correct);
+  }catch(err){
+    log("avaliação falhou: " + (err.code||err.message));
+    $("qout").innerHTML = `<div class="said"><div class="lbl">Você disse</div>${esc(said)}</div>
+      <div class="verdict fail"><b>Não deu</b>${esc(err.code||err.message)}</div>`;
+  }
+}
+
+/* ══════════ ABA ESCRITA ══════════ */
+let writeWords = [];
+
+function renderWriteBatch(){
+  if(!uid) return;
+  if(!batch.length){
+    $("wbatch").innerHTML = '<p class="sub" style="margin:0">Sem palavras no lote. Gere vocabulário e marque "Estudar".</p>';
+    writeWords = [];
+    return;
+  }
+  /* Mesmas palavras do lote — é o que amarra as três abas. */
+  writeWords = batch.slice(0, 3).map(e => e.word);
+  $("wbatch").innerHTML = `<div class="targets" style="margin-top:0">` +
+    writeWords.map(w => {
+      const e = lexOf(w);
+      return `<span class="chip">${esc(w)}${e?.translationPt ? " · " + esc(e.translationPt) : ""}</span>`;
+    }).join("") + `</div>
+    <button class="btn small" id="wshuffle" style="margin-top:10px">Trocar as palavras do lote</button>`;
+
+  $("wshuffle").addEventListener("click", () => {
+    const shuffled = [...batch].sort(() => Math.random() - .5);
+    writeWords = shuffled.slice(0, 3).map(e => e.word);
+    $("wbatch").querySelector(".targets").innerHTML = writeWords.map(w => {
+      const e = lexOf(w);
+      return `<span class="chip">${esc(w)}${e?.translationPt ? " · " + esc(e.translationPt) : ""}</span>`;
+    }).join("");
+  });
+}
 
 $("wsend").addEventListener("click", async () => {
   const text = $("wtext").value.trim();
@@ -1077,8 +1439,7 @@ $("wsend").addEventListener("click", async () => {
   b.disabled = true; b.textContent = "Corrigindo…";
   try{
     const r = await evaluateWriting({ userText:text, words:writeWords, domain });
-    lastWriting = { text, ...r.data };
-    renderWriting(lastWriting);
+    renderWriting({ text, ...r.data });
     try{
       await addDoc(collection(db, `users/${uid}/writings`), {
         userText: text, domain, promptWords: writeWords,
@@ -1095,25 +1456,14 @@ $("wsend").addEventListener("click", async () => {
 });
 
 function renderWriting(w){
-  const sameNatural = w.natural && w.natural.toLowerCase() !== w.corrected.toLowerCase();
+  const diff = w.natural && w.natural.toLowerCase() !== w.corrected.toLowerCase();
   $("wout").innerHTML = `
     <div class="verdict ${w.understood ? "pass" : "fail"}">
       <b>${w.understood ? "Entendi você" : "Ficou confuso"}</b>${esc(w.verdictPt)}</div>
-
-    <div class="fix">
-      <div class="lbl">Sua frase, corrigida</div>
-      <div class="txt">${esc(w.corrected)}</div>
-    </div>
-
-    ${sameNatural ? `<div class="fix">
-      <div class="lbl">Como um americano diria</div>
-      <div class="txt">${esc(w.natural)}</div>
-    </div>` : ""}
-
+    <div class="fix"><div class="lbl">Sua frase, corrigida</div><div class="txt">${esc(w.corrected)}</div></div>
+    ${diff ? `<div class="fix"><div class="lbl">Como um americano diria</div><div class="txt">${esc(w.natural)}</div></div>` : ""}
     ${w.issues.map(i => `<div class="issue">
-      <div class="ba"><s>${esc(i.before)}</s> → <b>${esc(i.after)}</b></div>
-      ${esc(i.whyPt)}</div>`).join("")}
-
+      <div class="ba"><s>${esc(i.before)}</s> → <b>${esc(i.after)}</b></div>${esc(i.whyPt)}</div>`).join("")}
     <div class="row2" style="margin-top:12px">
       <button class="btn" id="wlisten">Ouvir</button>
       <button class="btn" id="wsay">Falar isso</button>
@@ -1121,11 +1471,9 @@ function renderWriting(w){
     <button class="btn small" id="wqueue" style="margin-top:8px">Mandar para a fila</button>
     <div id="wsayout"></div>`;
 
-  const target = sameNatural ? w.natural : w.corrected;
+  const target = diff ? w.natural : w.corrected;
+  $("wlisten").addEventListener("click", e => speakBtn(e.currentTarget, target));
 
-  $("wlisten").addEventListener("click", e => speakBtn(e.currentTarget, target, "0%"));
-
-  /* A frase que você escreveu vira treino de pronúncia na hora. */
   $("wsay").addEventListener("click", async e => {
     const b = e.currentTarget;
     b.disabled = true; b.textContent = "Fale…";
@@ -1143,8 +1491,9 @@ function renderWriting(w){
     try{
       await setDoc(doc(db, `users/${uid}/drillQueue/w-${Date.now()}`), {
         text: target, targetPhonemes: [], note: "Frase que você mesmo escreveu.",
-        translation: "", source: "lexicon", state:"new", dueAt: Timestamp.now(),
-        intervalDays:1, timesShown:0, timesPassed:0, lastResult:null
+        translation: "", source: "lexicon", word: writeWords[0] || "",
+        state:"new", dueAt: Timestamp.now(), intervalDays:1,
+        timesShown:0, timesPassed:0, lastResult:null
       });
       b.textContent = "na fila"; log("frase sua enfileirada");
     }catch(err){ log("não enfileirei: " + (err.code||err.message)); b.disabled = false; }
@@ -1163,7 +1512,7 @@ async function loadStats(){
 
   $("progsum").innerHTML =
     kv("Palavras no lexicon", lexicon.length) +
-    kv("Em estudo", learning.length) +
+    kv("No lote de hoje", batch.length) +
     kv("Fonemas medidos", stats.length) +
     kv("Pior fonema", stats.length ? stats[0].phoneme + "  (" + Math.round(stats[0].avgScore) + ")" : "—",
        stats.length ? "warn" : "");
@@ -1202,17 +1551,21 @@ function drawCurve(i){
       ${dots}</svg>`;
 }
 
-/* Os dias vêm das tentativas gravadas — nada de contar tempo de app aberto. */
+/* Dias e minutos vêm das tentativas gravadas — é o mesmo áudio que
+   a Azure cobra, então o contador mede o que importa. */
 async function loadDays(){
   if(!uid) return;
-  let byDay = new Map();
+  const byDay = new Map();
+  let msThisMonth = 0;
+  const monthKey = new Date().toISOString().slice(0,7);
   try{
-    const snap = await getDocs(query(collection(db, `users/${uid}/attempts`), orderBy("createdAt","desc"), limit(400)));
+    const snap = await getDocs(query(collection(db, `users/${uid}/attempts`), orderBy("createdAt","desc"), limit(600)));
     snap.docs.forEach(d => {
-      const t = d.data().createdAt;
+      const v = d.data(), t = v.createdAt;
       if(!t) return;
       const k = dayKey(t.toDate());
       byDay.set(k, (byDay.get(k)||0) + 1);
+      if(k.slice(0,7) === monthKey) msThisMonth += (v.audioDurationMs || 0);
     });
   }catch(e){ return log("dias: " + (e.code||e.message)); }
 
@@ -1231,6 +1584,17 @@ async function loadDays(){
   }
   $("grid30").innerHTML = cells;
   $("progsum").innerHTML += kv("Sequência atual", streak + (streak === 1 ? " dia" : " dias"), streak ? "ok" : "warn");
+
+  const min = msThisMonth / 60000;
+  const pct = Math.min(100, (min / FREE_TIER_MINUTES) * 100);
+  const cls = pct >= 90 ? "bad" : pct >= 70 ? "warn" : "";
+  $("quotabar").className = cls;
+  $("quotabar").style.width = Math.max(1, pct) + "%";
+  $("quotatxt").innerHTML =
+    kv("Gravado neste mês", min.toFixed(1) + " min") +
+    kv("Cota do tier grátis", FREE_TIER_MINUTES + " min") +
+    kv("Restante", Math.max(0, FREE_TIER_MINUTES - min).toFixed(1) + " min", pct >= 70 ? "warn" : "ok") +
+    (pct >= 70 ? '<p class="hint">Chegando no limite do F0. Trocar para o S0 é um clique no portal da Azure e não muda nada no código — custa cerca de US$ 1,30 por hora de áudio.</p>' : "");
 }
 </script>
 </body>
